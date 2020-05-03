@@ -1,32 +1,33 @@
 import os
 import sys
+import util
 import pygame
 from card import Card
 from cardstack import CardStack
 
 pygame.init()
 
-size = width, height = 1000, 600
+screen_size = width, height = 1000, 600
+card_size = 154, 239
+real_card_size = 150, 235
 speed = [0, 0]
 black = 0, 0, 0
 
-screen = pygame.display.set_mode(size)
+screen = pygame.display.set_mode(screen_size)
 
-card_names = [filename for filename in os.listdir('images')]
-cards = [Card(name) for name in card_names]
-# copper = Card('copper.jpg')
-# silver = Card('silver.jpg')
-# gold = Card('gold.jpg')
-cardstack = CardStack(cards)
-cardstack.scale(300, 480)
+image_folder = 'images'
+card_images = util.load_card_images(image_folder, real_card_size)
+card_names = [filename.split('.')[0] for filename in os.listdir('images')]
+cards = [Card(name, card_images[name], card_size) for name in card_names]
+cardstack = CardStack(cards, screen_size, card_size)
 
 while 1:
-    for event in pygame.event.get():
+    events = pygame.event.get()
+    for event in events:
         if event.type == pygame.QUIT: sys.exit()
 
     screen.fill(black)
 
-    pressed_keys = pygame.key.get_pressed()
-    cardstack.update(pressed_keys)
+    cardstack.update(events)
     cardstack.draw(screen)
     pygame.display.flip()
