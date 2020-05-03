@@ -8,6 +8,7 @@ class CardStack:
 
         self.cards = cards
         self.surface = pygame.Surface((self.screen_width, self.card_height))
+        self.card_rects = []
 
         # determine the maximum number of cards that can appear on the screen at once
         self.max_visible = self.screen_width // self.card_width
@@ -17,12 +18,15 @@ class CardStack:
 
         self.selected = None
 
+        self.mouse_shifted = False
+        self.shift_counter = 0
+
     def update(self, events):
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     if self.selected is None:
-                        self.selected = self.visible[0]
+                        self.selected = self.visible[-1]
                     elif self.selected < self.visible[-1]:
                         self.selected += 1
                     elif self.visible[-1] < len(self.cards) - 1:
@@ -38,14 +42,66 @@ class CardStack:
                         self.visible.pop(-1)
                         self.visible.insert(0, self.visible[0] - 1)
                         self.selected -= 1
+                if event.key == pygame.K_ESCAPE:
+                    self.selected = None
+
+        mouse_pos = pygame.mouse.get_pos()
+        left_boundary = self.card_width // 4
+        right_boundary = self.screen_width - left_boundary
+        if not self.mouse_shifted:
+            if mouse_pos[0] < left_boundary and self.visible[0] > 0:
+                self.visible.pop(-1)
+                self.visible.insert(0, self.visible[0] - 1)
+                if self.selected is not None:
+                    self.selected -= 1
+                self.mouse_shifted = True
+                self.shift_counter = 60
+            elif mouse_pos[0] > right_boundary and self.visible[-1] < len(self.cards) - 1:
+                self.visible.pop(0)
+                self.visible.append(self.visible[-1] + 1)
+                if self.selected is not None:
+                    self.selected += 1
+                self.mouse_shifted = True
+                self.shift_counter = 60
+        else:
+            if left_boundary < mouse_pos[0] < right_boundary:
+                self.mouse_shifted = False
+            elif self.shift_counter > 0:
+                self.shift_counter -= 1
+            else:
+                self.mouse_shifted = False
+
+        for i, card_rect in self.card_rects:
+            real_rect = card_rect.move(0, self.screen_height - self.card_height)
+            if real_rect.collidepoint(mouse_pos):
+                self.selected = i
+
 
     def draw(self, screen):
         self.surface.fill((0, 0, 0))
+        self.card_rects = []
+
+        font = pygame.font.SysFont('arial', 30)
+        selected_text = ''
+
+        if self.selected is not None:
+            selected_card = self.cards[self.selected]
+            selected_text = selected_card.name
+            zoom_image = selected_card.zoom
+            dest = (self.screen_width / 2 - self.card_width, 0)
+            screen.blit(zoom_image, dest)
+
+        text_surface_1 = font.render(f'Cards in Stack: {len(self.cards)}', False, (255, 255, 255))
+        text_surface_2 = font.render(f'Selected: ({self.selected}) {selected_text}', False, (255, 255, 255))
+        screen.blit(text_surface_1, (5, 0))
+        screen.blit(text_surface_2, (5, text_surface_1.get_height()))
+
         x, y = 0, self.screen_height - self.card_height
         for n, i in enumerate(self.visible):
             selected = self.selected == i
             dest = (x + n * self.card_width, 0)
-            self.cards[i].draw(surface=self.surface, dest=dest, selected=selected)
+            card_rect = self.cards[i].draw(surface=self.surface, dest=dest, selected=selected)
+            self.card_rects.append((i, card_rect))
         screen.blit(self.surface, (x, y))
 
 

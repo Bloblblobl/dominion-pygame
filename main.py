@@ -6,8 +6,9 @@ from card import Card
 from cardstack import CardStack
 
 pygame.init()
+pygame.font.init()
 
-screen_size = width, height = 1000, 600
+screen_size = width, height = 1080, 700
 card_size = 154, 239
 real_card_size = 150, 235
 speed = [0, 0]

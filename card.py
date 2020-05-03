@@ -5,9 +5,10 @@ from util import load_image
 
 
 class Card:
-    def __init__(self, name, image, card_size, border_size=2, border_color=(255, 255, 0, 200)):
+    def __init__(self, name, image, card_size, border_size=2, border_color=(255, 0, 0, 200)):
         self.name = name
-        self.image = image
+        self.image = image['small_image']
+        self.zoom = image['zoom_image']
         # for now this counterintuitively includes the border size
         self.width, self.height = card_size
         self.border_size = border_size
@@ -17,11 +18,12 @@ class Card:
         pass
 
     def draw(self, surface, dest, selected):
+        dest_rect = pygame.Rect(*dest, self.width, self.height)
         if selected:
-            dest_rect = pygame.Rect(*dest, self.width, self.height)
             pygame.draw.rect(surface, self.border_color, dest_rect)
         dest = (dest[0] + self.border_size, dest[1] + self.border_size)
         surface.blit(self.image, dest)
+        return dest_rect
 
 
 # class Card(pygame.sprite.Sprite):
