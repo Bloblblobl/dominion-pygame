@@ -3,13 +3,12 @@ import math
 
 from util import load_image
 
-
 class Card:
     def __init__(self, name, image, card_size, border_size=2, border_color=(255, 0, 0, 200)):
         self.name = name
         self.image = image['small_image']
         self.zoom = image['zoom_image']
-        # for now this counterintuitively includes the border size
+        # for now this counter-intuitively includes the border size
         self.width, self.height = card_size
         self.border_size = border_size
         self.border_color = border_color

@@ -76,7 +76,6 @@ class CardStack:
             if real_rect.collidepoint(mouse_pos):
                 self.selected = i
 
-
     def draw(self, screen):
         self.surface.fill((0, 0, 0))
         self.card_rects = []
