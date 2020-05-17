@@ -23,9 +23,8 @@ card_names = [filename.split('.')[0] for filename in os.listdir('images')]
 cards = [Card(name, card_images[name], card_size) for name in card_names]
 cardstack = CardStack(cards, screen_size, card_size)
 
-
-cardview = CardView(cards, (500, 300), card_size)
-font = pygame.font.Font('troutbeck/Troutbeck.otf', 30)
+cardview = CardView(cards, (1000, 300), card_size)
+font = pygame.font.SysFont('arial', 30)
 mouse_prev = (0, 0)
 
 while 1:

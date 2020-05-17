@@ -4,25 +4,28 @@ import math
 from util import load_image
 
 class Card:
-    def __init__(self, name, image, card_size, border_size=2, border_color=(255, 0, 0, 200)):
+    def __init__(self, name, image, card_size, border_thickness=2, border_color=(255, 0, 0, 200)):
         self.name = name
         self.image = image['small_image']
         self.zoom = image['zoom_image']
-        # for now this counter-intuitively includes the border size
         self.width, self.height = card_size
-        self.border_size = border_size
+        self.border_thickness = border_thickness
         self.border_color = border_color
 
     def update(self, *args, **kwargs):
         pass
 
     def draw(self, surface, dest, selected):
-        dest_rect = pygame.Rect(*dest, self.width, self.height)
+        border_width = self.width + 2 * self.border_thickness
+        border_height = self.height + 2 * self.border_thickness
+        border_rect = pygame.Rect(*dest, border_width, border_height)
+        card_dest = (dest[0] + self.border_thickness, dest[1] + self.border_thickness)
+        card_rect = pygame.Rect(*card_dest, self.width, self.height)
         if selected:
-            pygame.draw.rect(surface, self.border_color, dest_rect)
-        dest = (dest[0] + self.border_size, dest[1] + self.border_size)
-        surface.blit(self.image, dest)
-        return dest_rect
+            pygame.draw.rect(surface, self.border_color, border_rect)
+
+        surface.blit(self.image, card_rect)
+        return border_rect
 
 
 # class Card(pygame.sprite.Sprite):
