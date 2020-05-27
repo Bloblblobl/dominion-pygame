@@ -10,10 +10,14 @@ class CardView(pygame.sprite.Group):
     bar_height = 30
     cross_buffer = 8
     scrollbar_height = 15
-    def __init__(self, cards, num_cards_visible, card_size, pos=(10, 10), spacing=15):
+
+    def __init__(self, cards, num_cards_visible, card_size, pos=(10, 10), spacing=15, draggable=False):
         self.cards = cards
         self.spacing = spacing
         self.card_width, self.card_height = card_size
+        self.draggable = draggable
+        if not self.draggable:
+            self.bar_height = 0
         self._calculate_card_view_size(num_cards_visible)
         self.x, self.y = pos
         self.dragging = False
@@ -32,7 +36,7 @@ class CardView(pygame.sprite.Group):
     def update(self, events, mouse_delta):
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == pygame.BUTTON_LEFT:
+                if event.button == pygame.BUTTON_LEFT and self.draggable:
                     bar_rect = pygame.Rect(self.x, self.y, self.width, self.bar_height)
                     if bar_rect.collidepoint(*pygame.mouse.get_pos()):
                         self.dragging = True
@@ -76,8 +80,10 @@ class CardView(pygame.sprite.Group):
         #       b. update the position for the next card
         card_width = self.cards[0].width
         card_x = self.x + self.spacing
-        card_y = self.y + self.bar_height + self.spacing
-        for i in range(self.start_index, self.start_index + self.num_cards_visible):
+        card_y = self.y + self.spacing + self.bar_height
+
+        end_index = min(len(self.cards), self.start_index + self.num_cards_visible)
+        for i in range(self.start_index, end_index):
             self.cards[i].draw(surface, (card_x, card_y), False)
             card_x += card_width + self.spacing
 
@@ -107,11 +113,12 @@ class CardView(pygame.sprite.Group):
         # draw the background of the view
         pygame.draw.rect(surface, self.view_bg, view_rect)
 
-        # draw the drag bar of the view
-        pygame.draw.rect(surface, self.dragbar_bg, bar_rect)
+        if self.draggable:
+            # draw the drag bar of the view
+            pygame.draw.rect(surface, self.dragbar_bg, bar_rect)
 
-        # draw the cross
-        self._draw_cross(surface, self.bar_height, self.cross_line_width, self.cross_buffer, self.cross_color)
+            # draw the cross
+            self._draw_cross(surface, self.bar_height, self.cross_line_width, self.cross_buffer, self.cross_color)
 
         # draw the cards
         if self.cards:

@@ -10,8 +10,9 @@ pygame.init()
 pygame.font.init()
 
 screen_size = width, height = 1080, 700
-card_size = 154, 239
-real_card_size = 150, 235
+real_card_size = 100, 160
+border_size = 4
+card_size = [i + border_size for i in real_card_size]
 speed = [0, 0]
 black = 0, 0, 0
 
@@ -21,9 +22,10 @@ image_folder = 'images'
 card_images = util.load_card_images(image_folder, real_card_size)
 card_names = [filename.split('.')[0] for filename in os.listdir('images')]
 cards = [Card(name, card_images[name], card_size) for name in card_names]
-cardstack = CardStack(cards, screen_size, card_size)
 
-cardview = CardView(cards, 5, card_size)
+cardview = CardView(cards, 5, card_size, draggable=False, spacing=10)
+cardview.x, cardview.y = 0, height - cardview.height
+cardstack = CardStack(cards, card_size, False, (cardview.x + cardview.width + 10, cardview.y))
 font = pygame.font.SysFont('arial', 30)
 mouse_prev = (0, 0)
 
@@ -40,9 +42,10 @@ while 1:
     screen.fill(black)
     cardview.update(events, mouse_delta)
     cardview.draw(screen)
+    cardstack.draw(screen)
 
     mouse_delta_text = font.render(f'Mouse ∆: {mouse_delta}', False, (255, 255, 255))
-    screen.blit(mouse_delta_text, (5, screen_size[1] - mouse_delta_text.get_height() - 5))
+    screen.blit(mouse_delta_text, (5, 5))
 
     pygame.display.flip()
 
