@@ -40,9 +40,14 @@ while 1:
     # cardstack.update(events)
     # cardstack.draw(screen)
     screen.fill(black)
-    cardview.update(events, mouse_delta)
+    cardview.update(events, mouse_curr, mouse_delta)
+
+    selected_card = cardview.get_selected_card()
+
     cardview.draw(screen)
     cardstack.draw(screen)
+    if selected_card is not None:
+        screen.blit(selected_card.zoom, (0, 0))
 
     mouse_delta_text = font.render(f'Mouse ∆: {mouse_delta}', False, (255, 255, 255))
     screen.blit(mouse_delta_text, (5, 5))

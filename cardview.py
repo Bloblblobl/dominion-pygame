@@ -23,6 +23,8 @@ class CardView(pygame.sprite.Group):
         self.dragging = False
         self.num_cards_visible = num_cards_visible
         self.start_index = 0
+        self.card_rects = []
+        self.selected_index = None
 
         # set the initial set of cards in the card_view to be rendered
         self.visible = list(range(min(len(self.cards), num_cards_visible)))
@@ -33,7 +35,14 @@ class CardView(pygame.sprite.Group):
         self.width = self.spacing + num_cards * (self.card_width + self.spacing)
         self.height = (self.spacing * 3) + self.bar_height + self.card_height + self.scrollbar_height
 
-    def update(self, events, mouse_delta):
+    def _calculate_selected_card(self, mouse_pos):
+        for i, card_rect in enumerate(self.card_rects):
+            if card_rect.collidepoint(*mouse_pos):
+                self.selected_index = i
+                return
+        self.selected_index = None
+
+    def update(self, events, mouse_pos, mouse_delta):
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == pygame.BUTTON_LEFT and self.draggable:
@@ -48,6 +57,9 @@ class CardView(pygame.sprite.Group):
                         self.start_index += 1
             elif event.type == pygame.MOUSEBUTTONUP:
                 self.dragging = False
+                self.card_rects = []
+
+        self._calculate_selected_card(mouse_pos)
 
         if self.dragging:
             self.x += mouse_delta[0]
@@ -70,6 +82,9 @@ class CardView(pygame.sprite.Group):
                          (cross_left_x, cross_bottom_y),
                          line_width)
 
+    def get_selected_card(self):
+        return None if self.selected_index is None else self.cards[self.selected_index + self.start_index]
+
     def _draw_cards(self, surface):
         # if there are cards (otherwise do nothing)
         #   1. calculate how many cards can fit in the view => n
@@ -78,14 +93,17 @@ class CardView(pygame.sprite.Group):
         #   4. for each card
         #       a. draw the card
         #       b. update the position for the next card
-        card_width = self.cards[0].width
         card_x = self.x + self.spacing
         card_y = self.y + self.spacing + self.bar_height
+        generate_rects = self.card_rects == []
 
         end_index = min(len(self.cards), self.start_index + self.num_cards_visible)
         for i in range(self.start_index, end_index):
-            self.cards[i].draw(surface, (card_x, card_y), False)
-            card_x += card_width + self.spacing
+            draw_border = i - self.start_index == self.selected_index
+            self.cards[i].draw(surface, (card_x, card_y), draw_border)
+            if generate_rects:
+                self.card_rects.append(pygame.Rect(card_x, card_y, self.card_width, self.card_height))
+            card_x += self.card_width + self.spacing
 
     def _draw_scrollbar(self, surface):
         bar_x = self.x + self.spacing
