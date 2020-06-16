@@ -2,18 +2,22 @@ import pygame
 
 
 class CardStack:
-    def __init__(self, cards, card_size, top_face_up=False, pos=(0, 0), x_spacing=1.5, y_spacing=2):
+    def __init__(self, cards, card_size, top_face_up=False, pos=(0, 0), x_spacing=3.75, y_spacing=5):
         self.card_width, self.card_height = card_size
         self.top_face_up = top_face_up
         self.cards = cards
         self.x, self.y = pos
         self.x_spacing = x_spacing
         self.y_spacing = y_spacing
-        self.max_stack = 20
+        self.max_stack = 8
 
     @property
     def width(self):
         return self.card_width + self.x_spacing * self.stack_size - 1
+
+    @property
+    def height(self):
+        return self.card_height + self.y_spacing * self.stack_size - 1
 
     @property
     def stack_size(self):

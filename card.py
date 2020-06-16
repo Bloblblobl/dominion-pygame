@@ -14,13 +14,19 @@ class Card:
         self.border_thickness = border_thickness
         self.border_color = border_color
 
+    @property
+    def total_width(self):
+        return self.width + 2 * self.border_thickness
+
+    @property
+    def total_height(self):
+        return self.height + 2 * self.border_thickness
+
     def update(self, *args, **kwargs):
         pass
 
     def draw(self, surface, dest, selected, face_up=True):
-        border_width = self.width + 2 * self.border_thickness
-        border_height = self.height + 2 * self.border_thickness
-        border_rect = pygame.Rect(*dest, border_width, border_height)
+        border_rect = pygame.Rect(*dest, self.total_width, self.total_height)
         card_image = self.image if face_up else self.back_image
         card_dest = (dest[0] + self.border_thickness, dest[1] + self.border_thickness)
         card_rect = pygame.Rect(*card_dest, self.width, self.height)
