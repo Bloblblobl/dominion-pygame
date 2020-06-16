@@ -42,6 +42,10 @@ class CardView(pygame.sprite.Group):
                 return
         self.selected_index = None
 
+    @property
+    def selected_card(self):
+        return None if self.selected_index is None else self.cards[self.selected_index + self.start_index]
+
     def update(self, events, mouse_pos, mouse_delta):
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -81,9 +85,6 @@ class CardView(pygame.sprite.Group):
                          (cross_right_x, cross_top_y),
                          (cross_left_x, cross_bottom_y),
                          line_width)
-
-    def get_selected_card(self):
-        return None if self.selected_index is None else self.cards[self.selected_index + self.start_index]
 
     def _draw_cards(self, surface):
         # if there are cards (otherwise do nothing)
@@ -129,7 +130,8 @@ class CardView(pygame.sprite.Group):
         bar_rect = pygame.Rect(self.x, self.y, self.width, self.bar_height)
 
         # draw the background of the view
-        pygame.draw.rect(surface, self.view_bg, view_rect)
+        if self.view_bg is not None:
+            pygame.draw.rect(surface, self.view_bg, view_rect)
 
         if self.draggable:
             # draw the drag bar of the view
