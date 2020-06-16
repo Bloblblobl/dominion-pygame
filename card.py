@@ -3,11 +3,13 @@ import math
 
 from util import load_image
 
+
 class Card:
-    def __init__(self, name, image, card_size, border_thickness=2, border_color=(255, 0, 0, 200)):
+    def __init__(self, name, image, back_image, card_size, border_thickness=2, border_color=(255, 0, 0, 200)):
         self.name = name
         self.image = image['small_image']
         self.zoom = image['zoom_image']
+        self.back_image = back_image['small_image']
         self.width, self.height = card_size
         self.border_thickness = border_thickness
         self.border_color = border_color
@@ -15,16 +17,17 @@ class Card:
     def update(self, *args, **kwargs):
         pass
 
-    def draw(self, surface, dest, selected):
+    def draw(self, surface, dest, selected, face_up=True):
         border_width = self.width + 2 * self.border_thickness
         border_height = self.height + 2 * self.border_thickness
         border_rect = pygame.Rect(*dest, border_width, border_height)
+        card_image = self.image if face_up else self.back_image
         card_dest = (dest[0] + self.border_thickness, dest[1] + self.border_thickness)
         card_rect = pygame.Rect(*card_dest, self.width, self.height)
         if selected:
             pygame.draw.rect(surface, self.border_color, border_rect)
 
-        surface.blit(self.image, card_rect)
+        surface.blit(card_image, card_rect)
         return border_rect
 
 

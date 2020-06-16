@@ -4,11 +4,11 @@ import pygame
 
 def load_image(image_path):
     try:
-        image = pygame.image.load(image_path)
+        image = pygame.image.load(image_path).convert_alpha()
     except pygame.error as e:
         print(f'Unable to load image: {image_path}')
         raise SystemExit(e)
-    return image.convert()
+    return image
 
 
 def load_card_images(path, card_size):

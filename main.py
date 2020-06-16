@@ -19,13 +19,15 @@ black = 0, 0, 0
 screen = pygame.display.set_mode(screen_size)
 
 image_folder = 'images'
+card_back_name = 'back'
 card_images = util.load_card_images(image_folder, real_card_size)
-card_names = [filename.split('.')[0] for filename in os.listdir('images')]
-cards = [Card(name, card_images[name], card_size) for name in card_names]
+card_names = [filename.split('.')[0] for filename in os.listdir('images') if not filename.startswith(card_back_name)]
+cards = [Card(name, card_images[name], card_images[card_back_name], card_size) for name in card_names]
 
 cardview = CardView(cards, 5, card_size, draggable=False, spacing=10)
 cardview.x, cardview.y = 0, height - cardview.height
-cardstack = CardStack(cards, card_size, False, (cardview.x + cardview.width + 10, cardview.y))
+draw_pile = CardStack(cards, card_size, False, (cardview.x + cardview.width + 10, cardview.y))
+discard_pile = CardStack(cards, card_size, True, (cardview.x + cardview.width + 20 + draw_pile.width, cardview.y))
 font = pygame.font.SysFont('arial', 30)
 mouse_prev = (0, 0)
 
@@ -45,7 +47,8 @@ while 1:
     selected_card = cardview.get_selected_card()
 
     cardview.draw(screen)
-    cardstack.draw(screen)
+    draw_pile.draw(screen)
+    discard_pile.draw(screen)
     if selected_card is not None:
         screen.blit(selected_card.zoom, (0, 0))
 
