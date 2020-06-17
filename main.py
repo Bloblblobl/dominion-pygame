@@ -33,6 +33,19 @@ discard_pile = CardStack([], card_size, True, (hand.x + hand.width + 20 + draw_p
 font = pygame.font.SysFont('arial', 30)
 mouse_prev = (0, 0)
 
+play_area = CardView([], 5, card_size, draggable=False, spacing=10)
+play_area.x, play_area.y = 0, hand.y - hand.height
+play_area.view_bg = None
+
+
+def hand_on_click(hand):
+    play_area.cards.insert(0, hand.selected_card)
+    del hand.cards[hand.selected_index + hand.start_index]
+    if hand.start_index > 0:
+        hand.start_index -= 1
+    if len(hand.cards) < hand.num_cards_visible:
+        del hand.card_rects[-1]
+
 
 def play_area_on_click(play_area):
     discard_pile.cards.insert(0, play_area.selected_card)
@@ -43,9 +56,8 @@ def play_area_on_click(play_area):
         del play_area.card_rects[-1]
 
 
-play_area = CardView(copy.copy(cards), 5, card_size, draggable=False, spacing=10, on_click=play_area_on_click)
-play_area.x, play_area.y = 0, hand.y - hand.height
-play_area.view_bg = None
+hand.on_click = hand_on_click
+play_area.on_click = play_area_on_click
 
 while 1:
     mouse_curr = pygame.mouse.get_pos()
