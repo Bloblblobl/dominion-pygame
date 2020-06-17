@@ -2,6 +2,7 @@ import os
 import sys
 import util
 import pygame
+import copy
 from card import Card
 from cardstack import CardStack
 from cardview import CardView
@@ -24,16 +25,27 @@ card_names = [filename.split('.')[0] for filename in os.listdir('images') if not
 cards = [Card(name, card_images[name], card_images[card_back_name], card_size) for name in card_names]
 total_card_size = (cards[0].total_width, cards[0].total_height)
 
-hand = CardView(cards, 5, card_size, draggable=False, spacing=10)
+hand = CardView(copy.copy(cards), 5, card_size, draggable=False, spacing=10)
 hand.x, hand.y = 0, height - hand.height
-play_area = CardView(cards, 5, card_size, draggable=False, spacing=10)
-play_area.x, play_area.y = 0, hand.y - hand.height
-play_area.view_bg = None
 
-draw_pile = CardStack(cards, card_size, False, (hand.x + hand.width + 10, hand.y))
-discard_pile = CardStack(cards, card_size, True, (hand.x + hand.width + 20 + draw_pile.width, hand.y))
+draw_pile = CardStack(copy.copy(cards), card_size, False, (hand.x + hand.width + 10, hand.y))
+discard_pile = CardStack([], card_size, True, (hand.x + hand.width + 20 + draw_pile.width, hand.y))
 font = pygame.font.SysFont('arial', 30)
 mouse_prev = (0, 0)
+
+
+def play_area_on_click(play_area):
+    discard_pile.cards.insert(0, play_area.selected_card)
+    del play_area.cards[play_area.selected_index + play_area.start_index]
+    if play_area.start_index > 0:
+        play_area.start_index -= 1
+    if len(play_area.cards) < play_area.num_cards_visible:
+        del play_area.card_rects[-1]
+
+
+play_area = CardView(copy.copy(cards), 5, card_size, draggable=False, spacing=10, on_click=play_area_on_click)
+play_area.x, play_area.y = 0, hand.y - hand.height
+play_area.view_bg = None
 
 while 1:
     mouse_curr = pygame.mouse.get_pos()
@@ -43,14 +55,12 @@ while 1:
     for event in events:
         if event.type == pygame.QUIT: sys.exit()
 
-    # cardstack.update(events)
-    # cardstack.draw(screen)
     screen.fill(background_color)
     hand.update(events, mouse_curr, mouse_delta)
-    play_area.update(events, mouse_curr, mouse_delta)
 
     selected_card = hand.selected_card or play_area.selected_card
 
+    play_area.update(events, mouse_curr, mouse_delta)
     hand.draw(screen)
     play_area.draw(screen)
     draw_pile.draw(screen)

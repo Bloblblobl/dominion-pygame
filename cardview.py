@@ -11,7 +11,7 @@ class CardView(pygame.sprite.Group):
     cross_buffer = 8
     scrollbar_height = 15
 
-    def __init__(self, cards, num_cards_visible, card_size, pos=(10, 10), spacing=15, draggable=False):
+    def __init__(self, cards, num_cards_visible, card_size, pos=(10, 10), spacing=15, draggable=False, on_click=None):
         self.cards = cards
         self.spacing = spacing
         self.card_width, self.card_height = card_size
@@ -25,6 +25,7 @@ class CardView(pygame.sprite.Group):
         self.start_index = 0
         self.card_rects = []
         self.selected_index = None
+        self.on_click = on_click
 
         # set the initial set of cards in the card_view to be rendered
         self.visible = list(range(min(len(self.cards), num_cards_visible)))
@@ -51,12 +52,16 @@ class CardView(pygame.sprite.Group):
         return None if self.selected_index is None else self.cards[self.selected_index + self.start_index]
 
     def update(self, events, mouse_pos, mouse_delta):
+        # TODO: Fix ugly nested ifs
         for event in events:
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == pygame.BUTTON_LEFT and self.draggable:
-                    bar_rect = pygame.Rect(self.x, self.y, self.width, self.bar_height)
-                    if bar_rect.collidepoint(*pygame.mouse.get_pos()):
-                        self.dragging = True
+                if event.button == pygame.BUTTON_LEFT:
+                    if self.draggable:
+                        bar_rect = pygame.Rect(self.x, self.y, self.width, self.bar_height)
+                        if bar_rect.collidepoint(*pygame.mouse.get_pos()):
+                            self.dragging = True
+                    if self.selected_card is not None and self.on_click is not None:
+                        self.on_click(self)
                 if not self.cardview_rect.collidepoint(*mouse_pos):
                     continue
                 if event.button == pygame.BUTTON_WHEELUP:
