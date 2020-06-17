@@ -31,6 +31,10 @@ class CardView(pygame.sprite.Group):
 
         super(CardView, self).__init__()
 
+    @property
+    def cardview_rect(self):
+        return pygame.Rect(self.x, self.y, self.width, self.height)
+
     def _calculate_card_view_size(self, num_cards):
         self.width = self.spacing + num_cards * (self.card_width + self.spacing)
         self.height = (self.spacing * 3) + self.bar_height + self.card_height + self.scrollbar_height
@@ -53,6 +57,8 @@ class CardView(pygame.sprite.Group):
                     bar_rect = pygame.Rect(self.x, self.y, self.width, self.bar_height)
                     if bar_rect.collidepoint(*pygame.mouse.get_pos()):
                         self.dragging = True
+                if not self.cardview_rect.collidepoint(*mouse_pos):
+                    continue
                 if event.button == pygame.BUTTON_WHEELUP:
                     if self.start_index > 0:
                         self.start_index -= 1
