@@ -1,5 +1,7 @@
 import pygame
 
+from constants import card_size
+
 
 class CardView(pygame.sprite.Group):
     view_bg = (242, 242, 242)
@@ -11,21 +13,28 @@ class CardView(pygame.sprite.Group):
     cross_buffer = 8
     scrollbar_height = 15
 
-    def __init__(self, cards, num_cards_visible, card_size, pos=(10, 10), spacing=15, draggable=False, on_click=None):
+    def __init__(self,
+                 cards,
+                 num_cards_visible,
+                 pos=(10, 10),
+                 spacing=15,
+                 draggable=False,
+                 on_card_selected=lambda card_view, selected_card: None):
         self.cards = cards
         self.spacing = spacing
         self.card_width, self.card_height = card_size
         self.draggable = draggable
         if not self.draggable:
             self.bar_height = 0
-        self._calculate_card_view_size(num_cards_visible)
+        self.width = self._calculate_width(num_cards_visible)
+        self.height = (self.spacing * 3) + self.bar_height + self.card_height + self.scrollbar_height
         self.x, self.y = pos
         self.dragging = False
         self.num_cards_visible = num_cards_visible
         self.start_index = 0
         self.card_rects = []
         self.selected_index = None
-        self.on_click = on_click
+        self.on_card_selected = on_card_selected
 
         # set the initial set of cards in the card_view to be rendered
         self.visible = list(range(min(len(self.cards), num_cards_visible)))
@@ -36,9 +45,8 @@ class CardView(pygame.sprite.Group):
     def cardview_rect(self):
         return pygame.Rect(self.x, self.y, self.width, self.height)
 
-    def _calculate_card_view_size(self, num_cards):
-        self.width = self.spacing + num_cards * (self.card_width + self.spacing)
-        self.height = (self.spacing * 3) + self.bar_height + self.card_height + self.scrollbar_height
+    def _calculate_width(self, num_cards):
+        return self.spacing + num_cards * (self.card_width + self.spacing)
 
     def _calculate_selected_card(self, mouse_pos):
         for i, card_rect in enumerate(self.card_rects):
@@ -60,8 +68,8 @@ class CardView(pygame.sprite.Group):
                         bar_rect = pygame.Rect(self.x, self.y, self.width, self.bar_height)
                         if bar_rect.collidepoint(*pygame.mouse.get_pos()):
                             self.dragging = True
-                    if self.selected_card is not None and self.on_click is not None:
-                        self.on_click(self)
+                    if self.selected_card is not None:
+                        self.on_card_selected(self, self.selected_card)
                 if not self.cardview_rect.collidepoint(*mouse_pos):
                     continue
                 if event.button == pygame.BUTTON_WHEELUP:
