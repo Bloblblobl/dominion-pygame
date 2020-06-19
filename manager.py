@@ -1,3 +1,4 @@
+from components.deck import Deck
 from components.discard_pile import DiscardPile
 from components.play_area import PlayArea
 from client.client import (
@@ -6,18 +7,21 @@ from client.client import (
 
 from components.hand import Hand
 
+
 class Manager(ClientEventHandler):
     def __init__(self,
                  #client: Client,
+                 hand,
                  play_area,
                  discard_pile):
         #self.client = client
+        self.hand = hand
         self.play_area = play_area
         self.discard_pile = discard_pile
 
     def on_card_selected(self, card_view, card):
         """
-        TEMPORRY!!!!!!
+        TEMPORARY!!!!!!
 
         Need to play action card and NOT mess with hand and play area
 
@@ -39,6 +43,13 @@ class Manager(ClientEventHandler):
                 play_area.start_index -= 1
             if len(play_area.cards) < play_area.num_cards_visible:
                 del play_area.card_rects[-1]
+
+    def on_click(self, card_stack):
+        if isinstance(card_stack, Deck):
+            deck = card_stack
+            if deck.cards:
+                self.hand.cards.append(deck.cards[-1])
+                del deck.cards[-1]
 
     # ClientEventHandler methods
     def on_play(self):

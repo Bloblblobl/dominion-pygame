@@ -66,7 +66,7 @@ class CardView(pygame.sprite.Group):
                 if event.button == pygame.BUTTON_LEFT:
                     if self.draggable:
                         bar_rect = pygame.Rect(self.x, self.y, self.width, self.bar_height)
-                        if bar_rect.collidepoint(*pygame.mouse.get_pos()):
+                        if bar_rect.collidepoint(*mouse_pos):
                             self.dragging = True
                     if self.selected_card is not None:
                         self.on_card_selected(self, self.selected_card)

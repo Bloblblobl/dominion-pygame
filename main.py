@@ -4,13 +4,14 @@ import util
 import pygame
 import copy
 
+from components.deck import Deck
+from components.discard_pile import DiscardPile
 from components.hand import Hand
 from components.play_area import PlayArea
 from constants import card_size, background_color, screen_size
 from manager import Manager
 from ui_elements.card import Card
 from ui_elements.cardstack import CardStack
-from ui_elements.cardview import CardView
 
 
 pygame.init()
@@ -26,22 +27,17 @@ cards = [Card(name, card_images[name], card_images[card_back_name], card_size) f
 total_card_size = (cards[0].total_width, cards[0].total_height)
 
 
-
-
-
-
-
-
 def main():
     """"""
     mouse_prev = (0, 0)
-    manager = Manager(None, None)
+    manager = Manager(None, None, None)
 
-    hand = Hand(copy.copy(cards), manager.on_card_selected)
-    draw_pile = CardStack(copy.copy(cards), card_size, False, (hand.x + hand.width + 10, hand.y))
-    discard_pile = CardStack([], card_size, True, (hand.x + hand.width + 20 + draw_pile.width, hand.y))
-    play_area = PlayArea(copy.copy(cards), manager.on_card_selected)
+    hand = Hand([], manager.on_card_selected)
+    deck = Deck(copy.copy(cards), card_size, False, (hand.x + hand.width + 10, hand.y), on_click=manager.on_click)
+    discard_pile = DiscardPile([], card_size, True, (hand.x + hand.width + 20 + deck.width, hand.y))
+    play_area = PlayArea([], manager.on_card_selected)
 
+    manager.hand = hand
     manager.play_area = play_area
     manager.discard_pile = discard_pile
 
@@ -55,15 +51,17 @@ def main():
             if event.type == pygame.QUIT: sys.exit()
 
         screen.fill(background_color)
-        hand.update(events, mouse_curr, mouse_delta)
-
         selected_card = hand.selected_card or play_area.selected_card
 
+        hand.update(events, mouse_curr, mouse_delta)
         play_area.update(events, mouse_curr, mouse_delta)
+        deck.update(events, mouse_curr)
+
         hand.draw(screen)
         play_area.draw(screen)
-        draw_pile.draw(screen)
+        deck.draw(screen)
         discard_pile.draw(screen)
+
         if selected_card is not None:
             screen.blit(selected_card.zoom, (screen_size[0] - card_size[0] * 2, 0))
 
