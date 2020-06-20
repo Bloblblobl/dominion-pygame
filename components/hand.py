@@ -1,6 +1,6 @@
 from constants import card_spacing, screen_height
 
-from ui_elements.cardview import CardView
+from ui_elements.card_view import CardView
 
 visible_cards = 5
 

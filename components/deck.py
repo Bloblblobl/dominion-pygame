@@ -1,4 +1,4 @@
-from ui_elements.cardstack import CardStack
+from ui_elements.card_stack import CardStack
 
 
 class Deck(CardStack):
