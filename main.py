@@ -9,6 +9,7 @@ from components.discard_pile import DiscardPile
 from components.hand import Hand
 from components.play_area import PlayArea
 from components.shop import Shop
+from components.side_panel import SidePanel
 from constants import card_size, background_color, screen_size
 from manager import Manager
 from ui_elements.card import Card
@@ -38,6 +39,7 @@ def main():
     discard_pile = DiscardPile([], top_face_up=True, pos=(hand.x + hand.width + 20 + deck.width, hand.y))
     play_area = PlayArea([], manager.on_card_selected)
     shop = Shop(copy.copy(cards[:16]))
+    side_panel = SidePanel((shop.width + shop.spacing, 0))
 
     manager.hand = hand
     manager.play_area = play_area
@@ -57,15 +59,14 @@ def main():
         hand.update(events, mouse_curr, mouse_delta)
         play_area.update(events, mouse_curr, mouse_delta)
         deck.update(events, mouse_curr)
+        side_panel.update(selected_card)
 
         hand.draw(screen)
         play_area.draw(screen)
         deck.draw(screen)
         discard_pile.draw(screen)
         shop.draw(screen)
-
-        if selected_card is not None:
-            screen.blit(selected_card.zoom, (screen_size[0] - card_size[0] * 2, 0))
+        side_panel.draw(screen)
 
         mouse_delta_text = font.render(f'Mouse ∆: {mouse_delta}', False, (255, 255, 255))
         screen.blit(mouse_delta_text,
