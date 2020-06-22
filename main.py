@@ -10,7 +10,7 @@ from components.hand import Hand
 from components.play_area import PlayArea
 from components.shop import Shop
 from components.side_panel import SidePanel
-from constants import card_size, background_color, screen_size
+from constants import screen_size, card_size, background_color, font_name
 from manager import Manager
 from ui_elements.card import Card
 
@@ -19,7 +19,7 @@ pygame.init()
 pygame.font.init()
 screen = pygame.display.set_mode(screen_size)
 screen_width, screen_height = screen_size
-font = pygame.font.SysFont('arial', 20)
+font = pygame.font.SysFont(font_name, 20)
 
 image_folder = 'images'
 card_back_name = 'back'
