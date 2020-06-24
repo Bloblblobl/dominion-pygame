@@ -14,7 +14,6 @@ from constants import screen_size, card_size, background_color, font_name
 from manager import Manager
 from ui_elements.card import Card
 
-
 pygame.init()
 pygame.font.init()
 screen = pygame.display.set_mode(screen_size)
@@ -27,7 +26,7 @@ card_images = util.load_card_images(image_folder, card_size)
 card_names = [filename.split('.')[0] for filename in os.listdir('images') if not filename.startswith(card_back_name)]
 cards = [Card(name, card_images[name], card_images[card_back_name], card_size) for name in card_names]
 total_card_size = (cards[0].total_width, cards[0].total_height)
-
+print(pygame.font.get_fonts())
 
 def main():
     """"""
@@ -75,6 +74,7 @@ def main():
         pygame.display.flip()
 
         mouse_prev = mouse_curr
+
 
 if __name__ == '__main__':
     main()

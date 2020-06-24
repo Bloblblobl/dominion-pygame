@@ -1,6 +1,8 @@
 import os
 import pygame
 
+from constants import zoom_factor
+
 
 def load_image(image_path):
     try:
@@ -17,7 +19,7 @@ def load_card_images(path, card_size):
         image_name = filename.split('.')[0]
         image_path = os.path.join(path, filename)
         small_image = pygame.transform.scale(load_image(image_path), card_size)
-        zoom_image = pygame.transform.scale(load_image(image_path), list((d * 2 for d in card_size)))
+        zoom_image = pygame.transform.scale(load_image(image_path), list((d * zoom_factor for d in card_size)))
         card_images[image_name] = dict(small_image=small_image, zoom_image=zoom_image)
 
     return card_images

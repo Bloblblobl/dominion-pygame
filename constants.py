@@ -4,6 +4,7 @@ border_size = 4
 
 background_color = 157, 206, 210
 
+zoom_factor = 2
 card_spacing = 10 # spacing between cards in CardView / Shop
 
-font_name = 'arial'
+font_name = 'fonts/Ubuntu-Medium.ttf'
