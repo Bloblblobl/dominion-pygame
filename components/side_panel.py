@@ -1,6 +1,6 @@
 import pygame
 
-from components.event_log import EventLog
+from components.message_log import MessageLog
 from constants import screen_width, screen_height, card_spacing, font_name
 from ui_elements.button import Button
 
@@ -28,6 +28,7 @@ test_log_text = [
     'Wait a second!',
     'I think he\'s actually winning!',
     'JK he lost again haha',
+    'This is a super super super duper super duper pooper scooper cooper hooper stupor long line, and guess what? It\'s even longer than that!'
 ]
 
 
@@ -58,7 +59,7 @@ class SidePanel:
         )
         self.end_turn_button = Button(end_turn_pos, button_width, button_height, text='END TURN')
         self.play_treasures_button = Button(play_treasures_pos, button_width, button_height, text='PLAY ALL TREASURES')
-        self.event_log = EventLog(test_log_text)
+        self.event_log = MessageLog(test_log_text, width=self.width - card_spacing * 2)
 
     def _render_game_info_text(self):
         rendered_text = []
@@ -83,13 +84,13 @@ class SidePanel:
         text_x = self.x + spacing
         text_y = self.y + spacing
         pygame.draw.rect(surface, self.color, self.rect)
-        zoom_y = self._draw_game_info_text(surface, text_x, text_y) + spacing
+        self.event_log.x = self.x + self.width // 2 - self.event_log.width // 2
+        self.event_log.y = self._draw_game_info_text(surface, text_x, text_y) + spacing
         if self.card is not None:
             zoom_x = self.x + self.width // 2 - self.card.zoom.get_width() // 2
+            zoom_y = self.event_log.y + (self.event_log.height // 2 - self.card.zoom.get_height() // 2)
             surface.blit(self.card.zoom, (zoom_x, zoom_y))
         else:
-            self.event_log.x = self.x + self.width // 2 - self.event_log.width // 2
-            self.event_log.y = zoom_y
             self.event_log.draw(surface)
         self.end_turn_button.draw(surface)
         self.play_treasures_button.draw(surface)
