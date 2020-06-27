@@ -11,7 +11,7 @@ log_color = (50, 50, 50)
 
 scrollbar_width = 20
 scrollbar_color = (230, 230, 230)
-scroller_color = (200, 200, 200)
+scroller_color = (150, 150, 150)
 
 header_message = 'Events:'
 
@@ -23,9 +23,19 @@ class MessageLog:
         self.width = width
         self.height = height
         self.text_width = self.width - scrollbar_width
+
         self.font = pygame.font.Font(font_name, font_size)
         _, self.font_height = self.font.size('how tall is this font?')
+
         self._render_text()
+
+    @property
+    def num_lines(self):
+        return self.height // self.font_height
+
+    @property
+    def rect(self):
+        return pygame.Rect(self.x, self.y, self.width, self.height)
 
     def _split_message(self, message):
         # splits the message into multiple lines if the message is too long
@@ -60,15 +70,23 @@ class MessageLog:
 
         self.rendered_text = rendered_text
 
+        self.message_index = max(0, len(self.rendered_text) - self.num_lines)
+        self.max_index = self.message_index
+
     def _draw_scrollbar(self, surface):
+        header_height = self.rendered_header.get_height()
+
         scrollbar_x = self.x + self.text_width
-        scrollbar_y = self.y + self.rendered_header.get_height()
+        scrollbar_y = self.y + header_height
         scrollbar_rect = (scrollbar_x, scrollbar_y, scrollbar_width, self.height)
         pygame.draw.rect(surface, scrollbar_color, scrollbar_rect)
 
+        if len(self.rendered_text) <= self.num_lines:
+            return
+
         scroller_x = scrollbar_x
-        scroller_y = scrollbar_y + 30
-        scroller_height = 50
+        scroller_y = scrollbar_y + (self.height / len(self.rendered_text) * self.message_index)
+        scroller_height = self.height * self.num_lines / len(self.rendered_text)
         scroller_rect = (scroller_x, scroller_y, scrollbar_width, scroller_height)
         pygame.draw.rect(surface, scroller_color, scroller_rect)
 
@@ -81,10 +99,21 @@ class MessageLog:
         background_rect = (text_x, text_y, self.width, self.height)
         pygame.draw.rect(surface, log_color, background_rect)
 
-        for text in self.rendered_text:
+        lines_to_draw = min(len(self.rendered_text[self.message_index:]), self.num_lines)
+        for i in range(lines_to_draw):
+            text = self.rendered_text[self.message_index + i]
             surface.blit(text, (text_x, text_y))
             text_y += text.get_height()
         self._draw_scrollbar(surface)
 
-    def update(self):
-        pass
+    def update(self, events, mouse_pos):
+        if not self.rect.collidepoint(*mouse_pos):
+            return
+        for event in events:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == pygame.BUTTON_WHEELUP:
+                    if self.message_index > 0:
+                        self.message_index -= 1
+                elif event.button == pygame.BUTTON_WHEELDOWN:
+                    if self.message_index < self.max_index:
+                        self.message_index += 1

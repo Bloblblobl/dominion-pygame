@@ -5,7 +5,7 @@ from constants import card_size
 
 class CardView(pygame.sprite.Group):
     view_bg = (242, 242, 242)
-    dragbar_bg = (200, 200, 200)
+    dragbar_bg = (150, 150, 150)
     scrollbar_bg = (230, 230, 230)
     cross_color = (255, 0, 0)
     cross_line_width = 3

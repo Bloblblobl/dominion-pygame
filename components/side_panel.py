@@ -28,7 +28,17 @@ test_log_text = [
     'Wait a second!',
     'I think he\'s actually winning!',
     'JK he lost again haha',
-    'This is a super super super duper super duper pooper scooper cooper hooper stupor long line, and guess what? It\'s even longer than that!'
+    'This is a super super super duper super duper pooper scooper cooper hooper stupor long line, and guess what? It\'s even longer than that!',
+    'Test0',
+    'Test1',
+    'Test2',
+    'Test3',
+    'Test4',
+    'Test5',
+    'Test6',
+    'Test7',
+    'Test8',
+    'Test9',
 ]
 
 
@@ -95,5 +105,6 @@ class SidePanel:
         self.end_turn_button.draw(surface)
         self.play_treasures_button.draw(surface)
 
-    def update(self, card):
+    def update(self, events, mouse_pos, card):
         self.card = card
+        self.event_log.update(events, mouse_pos)

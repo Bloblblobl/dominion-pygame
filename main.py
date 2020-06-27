@@ -26,7 +26,7 @@ card_images = util.load_card_images(image_folder, card_size)
 card_names = [filename.split('.')[0] for filename in os.listdir('images') if not filename.startswith(card_back_name)]
 cards = [Card(name, card_images[name], card_images[card_back_name], card_size) for name in card_names]
 total_card_size = (cards[0].total_width, cards[0].total_height)
-print(pygame.font.get_fonts())
+
 
 def main():
     """"""
@@ -58,7 +58,7 @@ def main():
         hand.update(events, mouse_curr, mouse_delta)
         play_area.update(events, mouse_curr, mouse_delta)
         deck.update(events, mouse_curr)
-        side_panel.update(selected_card)
+        side_panel.update(events, mouse_curr, selected_card)
 
         hand.draw(screen)
         play_area.draw(screen)
