@@ -37,23 +37,33 @@ class MessageLog:
     def rect(self):
         return pygame.Rect(self.x, self.y, self.width, self.height)
 
+    def _is_word_lengthy(self, word):
+        max_length = self.text_width
+        return self.font.size(word)[0] > max_length
+
     def _split_message(self, message):
         # splits the message into multiple lines if the message is too long
-        remaining_message = message
         split_message = []
-        while remaining_message:
-            i = len(remaining_message)
-            while i > -1:
-                new_message = remaining_message[:i]
+        remaining_words = message.split()
+        while remaining_words:
+            message = ''
+            new_index = 0
+            for word in remaining_words:
+                new_message = message
+                if new_message == '':
+                    if self._is_word_lengthy(word):
+                        new_index += 1
+                        continue
+                    new_message = word
+                else:
+                    new_message += ' ' + word
                 new_width, _ = self.font.size(new_message)
-                if new_width <= self.text_width:
-                    split_message.append(new_message)
-                    remaining_message = remaining_message[i:]
-                    if remaining_message and remaining_message[0] != '-':
-                        remaining_message = '-' + remaining_message
+                if new_width > self.text_width:
                     break
-                i -= 1
-
+                new_index += 1
+                message = new_message
+            split_message.append(message)
+            remaining_words = remaining_words[new_index:]
         return split_message
 
     def _render_text(self):
