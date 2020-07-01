@@ -2,17 +2,22 @@ from constants import card_spacing
 from ui_elements.single_card_stack import SingleCardStack
 import math
 
-stack_count = 10
 stacks_per_row = 8
 
 
 class Shop:
-    def __init__(self, cards, pos=(0, 0)):
+    def __init__(self, card_counts, pos=(0, 0)):
         self.x, self.y = pos
         self.spacing = card_spacing
         self.stacks = []
-        for i, card in enumerate(cards):
-            stack = SingleCardStack(card, stack_count)
+        self.width = 0
+        self.height = 0
+        self.initialize_stacks(card_counts)
+
+    def initialize_stacks(self, card_counts):
+        self.stacks = []
+        for i, card_count in enumerate(card_counts):
+            stack = SingleCardStack(*card_count)
             stack.x = self.x + (stack.max_width + self.spacing) * (i % stacks_per_row)
             stack.y = self.y + (stack.max_height + self.spacing) * (i // stacks_per_row)
             self.stacks.append(stack)

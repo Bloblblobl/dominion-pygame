@@ -1,7 +1,9 @@
 import os
 import pygame
 
-from constants import zoom_factor
+from constants import zoom_factor, card_back_name, card_size
+
+from ui_elements.card import Card
 
 
 def load_image(image_path):
@@ -23,3 +25,9 @@ def load_card_images(path, card_size):
         card_images[image_name] = dict(small_image=small_image, zoom_image=zoom_image)
 
     return card_images
+
+
+def create_card(card_name, card_images):
+    card_name = card_name.lower()
+    return Card(card_name, card_images[card_name], card_images[card_back_name], card_size)
+

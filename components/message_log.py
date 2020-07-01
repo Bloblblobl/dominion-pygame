@@ -28,6 +28,7 @@ class MessageLog:
         _, self.font_height = self.font.size('how tall is this font?')
 
         self._render_text()
+        self.message_index = self.max_index
 
     @property
     def num_lines(self):
@@ -36,6 +37,9 @@ class MessageLog:
     @property
     def rect(self):
         return pygame.Rect(self.x, self.y, self.width, self.height)
+
+    def _sanitize_text(self, msg):
+        return msg.replace('💰', '$')
 
     def _is_word_lengthy(self, word):
         max_length = self.text_width
@@ -72,16 +76,18 @@ class MessageLog:
         rendered_text = []
         for message in self.messages:
             text_width, _ = self.font.size(message)
-            if text_width > self.text_width:
-                split_message = self._split_message(message)
-                rendered_text.extend([self.font.render(m, False, font_color) for m in split_message])
-            else:
-                rendered_text.append(self.font.render(message, False, font_color))
+            try:
+                if text_width > self.text_width:
+                    split_message = self._split_message(self._sanitize_text(message))
+                    rendered_text.extend([self.font.render(m, False, font_color) for m in split_message])
+                else:
+                    rendered_text.append(self.font.render(self._sanitize_text(message), False, font_color))
+            except Exception as e:
+                print(e)
 
         self.rendered_text = rendered_text
 
-        self.message_index = max(0, len(self.rendered_text) - self.num_lines)
-        self.max_index = self.message_index
+        self.max_index = max(0, len(self.rendered_text) - self.num_lines)
 
     def _draw_scrollbar(self, surface):
         header_height = self.rendered_header.get_height()
@@ -117,6 +123,7 @@ class MessageLog:
         self._draw_scrollbar(surface)
 
     def update(self, events, mouse_pos):
+        self._render_text()
         if not self.rect.collidepoint(*mouse_pos):
             return
         for event in events:

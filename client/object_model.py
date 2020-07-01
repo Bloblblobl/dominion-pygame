@@ -14,11 +14,6 @@ class GameClient(metaclass=ABCMeta):
     def done(self):
         pass
 
-    @property
-    @abstractmethod
-    def state(self):
-        pass
-
 
 class Player(metaclass=ABCMeta):
     @abstractmethod
@@ -41,7 +36,11 @@ class Player(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def on_event(self, event):
+    def on_game_event(self, event):
+        pass
+
+    @abstractmethod
+    def on_state_change(self, state):
         pass
 
 

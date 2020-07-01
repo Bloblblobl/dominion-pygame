@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ded4189cda59dfc74de92a14f5f72f6b5c24d67a4f75dbfa36d0622b0937a771"
+            "sha256": "3b0004353762f787de75ee055a228cb9ea1cc1dabb3472595279c44a85e73ac1"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,13 @@
         ]
     },
     "default": {
+        "podsixnet": {
+            "hashes": [
+                "sha256:5c235a73eddbabe8169ea7b51b115e55ce17d126574bebcbcee37d3d1b414e48"
+            ],
+            "index": "pypi",
+            "version": "==0.11.0"
+        },
         "pygame": {
             "hashes": [
                 "sha256:026e835dc69ab50db3f62e01884dceeee25283c04f5dbe992f059e24c11e29b3",

@@ -4,36 +4,98 @@ from .object_model import (
     ClientEventHandler)
 
 
-class Client(GameClient, Player):
-    def __init__(self, client_event_handler: ClientEventHandler):
-        self._state = None
-        self.client_event_handler = client_event_handler
-        self.game_events = []
+from PodSixNet.Connection import connection, ConnectionListener
 
-    # GameClient interface implementation
-    def play_action_card(self, card):
+
+class Client(ConnectionListener,
+             GameClient,
+             Player):
+    def __init__(self, name, player: Player, host='127.0.0.1', port=5071):
+        self.name = name
+        self._player = player
+        self.Connect((host, port))
+        self.players = [name]
+
+    def pump(self):
+        self.Pump()
+        connection.Pump()
+
+    def start_game(self):
         pass
 
-    def buy(self, card_type):
-        pass
-
-    def done(self):
-        pass
-
-    @property
-    def state(self):
-        return self._state
-
-    # Player interface implementation
+    # Player interface
     def play(self):
-        self.client_event_handler.on_play()
+        self._player.play()
+        self.done()
 
     def respond(self, action, *args):
-        self.client_event_handler.on_respond()
+        self._player.respond(action, *args)
 
-    def on_event(self, event):
-        self.game_events.append(event)
+    def on_game_event(self, event):
+        self._player.respond(event)
 
-    # Triggered by server
     def on_state_change(self, state):
-        self._state = state
+        self._player.on_state_change(state)
+
+    # GameClient interface
+    def play_action_card(self, card):
+        self.Send(dict(action='play_action_card', card=card))
+
+    def buy(self, card_type):
+        self.Send(dict(action='buy', card_type=card_type))
+
+    def done(self):
+        self.Send(dict(action='done'))
+
+    # Server events
+    def Network(self, data):
+        print(data)
+
+    def Network_on_player_join(self, data):
+        self.players.append(data['player'])
+
+    def Network_on_game_start(self, data):
+        print('Game started!')
+
+    def Network_on_state(self, data):
+        self.on_state_change(data['state'])
+
+    # Server commands
+    def Network_play(self, data):
+        self.play()
+
+    def Network_respond(self, data):
+        self.respond(data['action_card'], data['args'])
+
+    # built in stuff
+    def Network_connected(self, data):
+        print("You are now connected to the server")
+        self.Send(dict(action='join', name=self.name))
+
+    def Network_error(self, data):
+        print('error:', data['error'][1])
+        connection.Close()
+
+    def Network_disconnected(self, data):
+        print('Server disconnected')
+        exit()
+
+
+class DummyPlayer(Player):
+    def play(self):
+        pass
+
+    def respond(self, action, *args):
+        pass
+
+    def on_game_event(self, event):
+        pass
+
+    def on_state_change(self, state):
+        pass
+
+
+if __name__ == '__main__':
+    cli = Client('dummy', DummyPlayer())
+    while True:
+        cli.pump()
