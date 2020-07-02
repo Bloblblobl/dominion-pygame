@@ -85,6 +85,16 @@ def main():
             new_hand_cards = [util.create_card(card['name'], card_images) for card in new_hand]
             hand.cards = new_hand_cards
 
+            new_deck = player.state['draw_deck']
+            new_deck_cards = [
+                util.create_card(card_name, card_images) for card_name, count in new_deck.items() for _ in range(count)
+            ]
+            deck.cards = new_deck_cards
+
+            new_discard = player.state['discard_pile']
+            new_discard_cards = [util.create_card(card['name'], card_images) for card in new_discard]
+            discard_pile.cards = new_discard_cards
+
             new_shop = player.state['supply']
             new_card_counts = [(util.create_card(name, card_images), count) for name, count in new_shop.items()]
             shop.initialize_stacks(new_card_counts)
