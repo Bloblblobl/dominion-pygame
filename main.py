@@ -32,6 +32,8 @@ card_names = [filename.split('.')[0] for filename in os.listdir('images') if not
 cards = [Card(name, card_images[name], card_images[card_back_name], card_size) for name in card_names]
 total_card_size = (cards[0].total_width, cards[0].total_height)
 
+mouse_handlers = []
+
 
 def main():
     """"""
@@ -45,7 +47,9 @@ def main():
     discard_pile = DiscardPile([], top_face_up=True, pos=(hand.x + hand.width + 20 + deck.width, hand.y))
     play_area = PlayArea([], manager.on_card_selected)
     shop = Shop([(card, 10) for card in copy.copy(cards[:16])])
-    side_panel = SidePanel((shop.width + shop.spacing, 0))
+    side_panel = SidePanel((shop.width + shop.spacing, 0), color=(0, 0, 0), game_client=client)
+    mouse_handlers.append(side_panel.end_turn_button)
+    mouse_handlers.append(side_panel.play_treasures_button)
 
     manager.hand = hand
     manager.play_area = play_area
@@ -57,7 +61,12 @@ def main():
 
         events = pygame.event.get()
         for event in events:
-            if event.type == pygame.QUIT: sys.exit()
+            if event.type == pygame.QUIT:
+                sys.exit()
+
+            if event.type in (pygame.MOUSEMOTION, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP):
+                for handler in mouse_handlers:
+                    handler.handle_mouse_event(event.type, event.pos)
 
         screen.fill(background_color)
         selected_card = hand.selected_card or play_area.selected_card

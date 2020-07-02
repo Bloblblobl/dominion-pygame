@@ -3,6 +3,7 @@ import pygame
 from components.message_log import MessageLog
 from constants import screen_width, screen_height, card_spacing, font_name
 from ui_elements.button import Button
+from client import object_model
 
 font_size = 15
 font_color = (255, 255, 255)
@@ -43,7 +44,7 @@ test_log_text = [
 
 
 class SidePanel:
-    def __init__(self, pos=(0, 0), color=(0, 0, 0), players=None):
+    def __init__(self, pos, color, game_client: object_model.GameClient, players=None):
         self.x, self.y = pos
         self.width = screen_width - self.x
         self.height = screen_height - self.y
@@ -52,6 +53,7 @@ class SidePanel:
         self.font = pygame.font.Font(font_name, font_size)
         self.rect = pygame.Rect(*pos, self.width, self.height)
 
+        self.game_client = game_client
         self.players = ['John', 'Johnny', 'Jonathan', 'Otter'] if players is None else players
         self.active_index = 1
         self.active_actions = 5
@@ -67,9 +69,17 @@ class SidePanel:
             self.x + self.width // 2 - button_width // 2,
             screen_height - button_height * 3
         )
-        self.end_turn_button = Button(end_turn_pos, button_width, button_height, text='END TURN')
-        self.play_treasures_button = Button(play_treasures_pos, button_width, button_height, text='PLAY ALL TREASURES')
+        self.end_turn_button = Button(end_turn_pos, button_width, button_height, text='END TURN',
+                                      on_click=self._on_end_turn_click)
+        self.play_treasures_button = Button(play_treasures_pos, button_width, button_height, text='PLAY ALL TREASURES',
+                                            on_click=self._on_play_teasures_click)
         self.message_log = MessageLog(test_log_text, width=self.width - card_spacing * 2)
+
+    def _on_end_turn_click(self, source):
+        self.game_client.done()
+
+    def _on_play_teasures_click(self, source):
+        pass
 
     def _render_game_info_text(self):
         rendered_text = []

@@ -7,7 +7,7 @@ font_color = (0, 0, 0)
 
 
 class Button:
-    def __init__(self, pos, width, height, color=(100,100,100), text=''):
+    def __init__(self, pos, width, height, color=(100, 100, 100), text='', on_click=lambda source: None):
         self.x, self.y = pos
         self.width = width
         self.height = height
@@ -15,6 +15,8 @@ class Button:
         self.text = text
         self.font = pygame.font.Font(font_name, font_size)
         self.rendered_text = self.font.render(self.text, False, font_color)
+        self.state = 'normal'
+        self.on_click = on_click
 
     @property
     def rect(self):
@@ -29,3 +31,30 @@ class Button:
     def update(self):
         # self.rendered_text = self.font.render(self.text, antialias=False, color=font_color)
         pass
+
+    def handle_mouse_event(self, event_type, pos):
+        if event_type == pygame.MOUSEMOTION:
+            self.handle_mouse_move(pos)
+        elif event_type == pygame.MOUSEBUTTONDOWN:
+            self.handle_mouse_down(pos)
+        elif event_type == pygame.MOUSEBUTTONUP:
+            self.handle_mouse_up(pos)
+
+    def handle_mouse_move(self, pos):
+        if self.rect.collidepoint(*pos):
+            if self.state != 'pressed':
+                self.state = 'hover'
+        else:
+            self.state = 'normal'
+
+    def handle_mouse_down(self, pos):
+        if self.rect.collidepoint(*pos):
+            print('pressed')
+            self.state = 'pressed'
+
+    def handle_mouse_up(self, pos):
+        if self.state == 'pressed':
+            print('mouse up')
+            self.on_click(self)
+            self.state = 'hover'
+

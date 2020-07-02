@@ -26,7 +26,7 @@ class Client(ConnectionListener,
     # Player interface
     def play(self):
         self._player.play()
-        self.done()
+        # self.done()
 
     def respond(self, action, *args):
         self._player.respond(action, *args)
