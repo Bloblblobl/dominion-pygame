@@ -30,7 +30,12 @@ class Button:
 
     def update(self):
         # self.rendered_text = self.font.render(self.text, antialias=False, color=font_color)
-        pass
+        if self.state == 'hover':
+            self.color = (150, 150, 150)
+        elif self.state == 'pressed':
+            self.color = (200, 200, 200)
+        else:
+            self.color = (100, 100, 100)
 
     def handle_mouse_event(self, event_type, pos):
         if event_type == pygame.MOUSEMOTION:

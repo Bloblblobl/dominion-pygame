@@ -42,7 +42,7 @@ class Client(ConnectionListener,
         self.Send(dict(action='play_action_card', card=card))
 
     def buy(self, card_type):
-        self.Send(dict(action='buy', card_type=card_type))
+        self.Send(dict(action='buy', card=card_type))
 
     def done(self):
         self.Send(dict(action='done'))

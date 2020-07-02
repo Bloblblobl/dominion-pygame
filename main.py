@@ -46,10 +46,11 @@ def main():
     deck = Deck(copy.copy(cards), top_face_up=False, pos=(hand.x + hand.width + 10, hand.y), on_click=manager.on_click)
     discard_pile = DiscardPile([], top_face_up=True, pos=(hand.x + hand.width + 20 + deck.width, hand.y))
     play_area = PlayArea([], manager.on_card_selected)
-    shop = Shop([(card, 10) for card in copy.copy(cards[:16])])
+    shop = Shop([(card, 10) for card in copy.copy(cards[:16])], client)
     side_panel = SidePanel((shop.width + shop.spacing, 0), color=(0, 0, 0), game_client=client)
     mouse_handlers.append(side_panel.end_turn_button)
     mouse_handlers.append(side_panel.play_treasures_button)
+    mouse_handlers.append(shop)
 
     manager.hand = hand
     manager.play_area = play_area
@@ -69,11 +70,12 @@ def main():
                     handler.handle_mouse_event(event.type, event.pos)
 
         screen.fill(background_color)
-        selected_card = hand.selected_card or play_area.selected_card
+        selected_card = hand.selected_card or play_area.selected_card or shop.selected_card
 
         hand.update(events, mouse_curr, mouse_delta)
         play_area.update(events, mouse_curr, mouse_delta)
         deck.update(events, mouse_curr)
+        shop.update()
         side_panel.update(events, mouse_curr, selected_card)
 
         client.pump()
@@ -87,7 +89,11 @@ def main():
             new_card_counts = [(util.create_card(name, card_images), count) for name, count in new_shop.items()]
             shop.initialize_stacks(new_card_counts)
 
+            side_panel.active_actions = player.state['actions']
+            side_panel.active_buys = player.state['buys']
+            side_panel.active_money = player.state['used_money']
             side_panel.message_log.messages.append(str(player.state))
+
             prev_state = player.state
 
         hand.draw(screen)

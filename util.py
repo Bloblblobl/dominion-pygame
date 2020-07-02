@@ -28,6 +28,6 @@ def load_card_images(path, card_size):
 
 
 def create_card(card_name, card_images):
-    card_name = card_name.lower()
-    return Card(card_name, card_images[card_name], card_images[card_back_name], card_size)
+    image_name = card_name.lower()
+    return Card(card_name, card_images[image_name], card_images[card_back_name], card_size)
 

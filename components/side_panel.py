@@ -17,31 +17,6 @@ action_text = 'Actions Remaining:'
 buys_text = 'Buys Remaining:'
 money_text = 'Money:'
 
-test_log_text = [
-    '[player] bought [card]',
-    '[player] played [card]',
-    '[player] discarded [#] cards',
-    'Guy lost the game!',
-    'What\'s this?',
-    'Guy seems to keep losing',
-    'over and over and over again!',
-    'Wow, what a loser',
-    'Wait a second!',
-    'I think he\'s actually winning!',
-    'JK he lost again haha',
-    'This is a super super super duper super duper pooper scooper cooper hooper stupor long line, and guess what? It\'s even longer than that!',
-    'Test0',
-    'Test1',
-    'Test2',
-    'Test3',
-    'Test4',
-    'Test5',
-    'Test6',
-    'Test7',
-    'Test8',
-    'Test9',
-]
-
 
 class SidePanel:
     def __init__(self, pos, color, game_client: object_model.GameClient, players=None):
@@ -73,7 +48,7 @@ class SidePanel:
                                       on_click=self._on_end_turn_click)
         self.play_treasures_button = Button(play_treasures_pos, button_width, button_height, text='PLAY ALL TREASURES',
                                             on_click=self._on_play_teasures_click)
-        self.message_log = MessageLog(test_log_text, width=self.width - card_spacing * 2)
+        self.message_log = MessageLog([], width=self.width - card_spacing * 2)
 
     def _on_end_turn_click(self, source):
         self.game_client.done()
@@ -119,3 +94,5 @@ class SidePanel:
         self.card = card
         self.message_log.update(events, mouse_pos)
         self._render_game_info_text()
+        self.play_treasures_button.update()
+        self.end_turn_button.update()
