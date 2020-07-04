@@ -3,7 +3,6 @@ from .object_model import (
     Player,
     ClientEventHandler)
 
-
 from PodSixNet.Connection import connection, ConnectionListener
 
 
@@ -53,9 +52,14 @@ class Client(ConnectionListener,
 
     def Network_on_player_join(self, data):
         self.players.append(data['player'])
+        message = f'Player joined: {data["name"]}'
+        self._player.on_game_event(message)
 
     def Network_on_game_start(self, data):
-        print('Game started!')
+        card_names = data['card_names']
+        player_names = data['player_names']
+        message = f'Game started! cards={card_names}, players={player_names}'
+        self._player.on_game_event(message)
 
     def Network_on_state(self, data):
         self.on_state_change(data['state'])
