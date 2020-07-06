@@ -2,6 +2,7 @@ from client import object_model
 from constants import card_spacing
 from ui_elements.single_card_stack import SingleCardStack
 import math
+import pygame
 
 stacks_per_row = 8
 
@@ -16,6 +17,11 @@ class Shop:
         self.game_client = game_client
         self.selected_card = None
         self.initialize_stacks(card_counts)
+        self.background_color = None
+
+    @property
+    def rect(self):
+        return pygame.Rect(self.x, self.y, self.width, self.height)
 
     def _on_stack_click(self, stack):
         self.game_client.buy(stack.card.name)
@@ -33,6 +39,8 @@ class Shop:
         self.height = (self.stacks[0].max_height + self.spacing) * num_rows - self.spacing
 
     def draw(self, surface):
+        if self.background_color is not None:
+            pygame.draw.rect(surface, self.background_color, self.rect)
         for stack in self.stacks:
             stack.draw(surface)
 

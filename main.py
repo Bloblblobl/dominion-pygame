@@ -20,7 +20,7 @@ from ui_player import UIPlayer
 pygame.init()
 pygame.font.init()
 player = UIPlayer()
-client = Client('test', player)
+client = Client('test', player) # , '10.0.0.72')
 prev_state = None
 
 screen = pygame.display.set_mode(screen_size)
@@ -100,9 +100,14 @@ def main():
         client.pump()
         side_panel.players = client.players
         if player.state != prev_state:
+            new_actions = player.state['actions']
+            new_buys = player.state['buys']
+            new_money = player.state['used_money']
+
             new_hand = player.state['hand']
             new_hand_cards = [util.create_card(card['name'], card_images) for card in new_hand]
             hand.cards = new_hand_cards
+            hand.view_bg = (255, 0, 0) if new_actions == 0 else None
 
             new_play_area = player.state['play_area']
             print(new_play_area)
@@ -122,10 +127,11 @@ def main():
             new_shop = player.state['supply']
             new_card_counts = [(util.create_card(name, card_images), count) for name, count in new_shop.items()]
             shop.initialize_stacks(new_card_counts)
+            shop.background_color = (255, 0, 0) if new_buys == 0 else None
 
-            side_panel.active_actions = player.state['actions']
-            side_panel.active_buys = player.state['buys']
-            side_panel.active_money = player.state['used_money']
+            side_panel.active_actions = new_actions
+            side_panel.active_buys = new_buys
+            side_panel.active_money = new_money
 
             if not side_panel.message_log.messages:
                 side_panel.message_log.messages.extend(client.card_names)

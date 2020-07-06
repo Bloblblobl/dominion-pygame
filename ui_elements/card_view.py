@@ -57,7 +57,8 @@ class CardView(pygame.sprite.Group):
 
     @property
     def selected_card(self):
-        return None if self.selected_index is None else self.cards[self.selected_index + self.start_index]
+        if self.selected_index is not None and self.selected_index + self.start_index < len(self.cards):
+            return self.cards[self.selected_index + self.start_index]
 
     def update(self, events, mouse_pos, mouse_delta):
         # TODO: Fix ugly nested ifs
