@@ -10,11 +10,11 @@ from components.hand import Hand
 
 class Manager(ClientEventHandler):
     def __init__(self,
-                 #client: Client,
+                 client: Client,
                  hand,
                  play_area,
                  discard_pile):
-        #self.client = client
+        self.client = client
         self.hand = hand
         self.play_area = play_area
         self.discard_pile = discard_pile
@@ -28,13 +28,7 @@ class Manager(ClientEventHandler):
         """
 
         if isinstance(card_view, Hand):
-            h = card_view
-            self.play_area.cards.insert(0, card)
-            del h.cards[h.selected_index + h.start_index]
-            if h.start_index > 0:
-                h.start_index -= 1
-            if len(h.cards) < h.num_cards_visible:
-                del h.card_rects[-1]
+            self.client.play_action_card(card.name)
         elif isinstance(card_view, PlayArea):
             play_area = card_view
             self.discard_pile.cards.insert(0, play_area.selected_card)

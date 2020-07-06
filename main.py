@@ -104,6 +104,11 @@ def main():
             new_hand_cards = [util.create_card(card['name'], card_images) for card in new_hand]
             hand.cards = new_hand_cards
 
+            new_play_area = player.state['play_area']
+            print(new_play_area)
+            new_play_area_cards = [util.create_card(card['name'], card_images) for card in new_play_area]
+            play_area.cards = new_play_area_cards
+
             new_deck = player.state['draw_deck']
             new_deck_cards = [
                 util.create_card(card_name, card_images) for card_name, count in new_deck.items() for _ in range(count)
