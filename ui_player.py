@@ -4,6 +4,7 @@ from client import object_model
 class UIPlayer(object_model.Player):
     def __init__(self):
         self.state = None
+        self.message_queue = []
 
     def play(self):
         pass
@@ -12,7 +13,7 @@ class UIPlayer(object_model.Player):
         pass
 
     def on_game_event(self, event):
-        pass
+        self.message_queue.append(event)
 
     def on_state_change(self, state):
         self.state = state

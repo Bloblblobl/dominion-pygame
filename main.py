@@ -39,6 +39,7 @@ mouse_handlers = []
 def start_game_handler(source):
     source.show = False
     client.start_game()
+    del mouse_handlers[-1]
 
 
 def main():
@@ -46,7 +47,7 @@ def main():
     global prev_state
 
     mouse_prev = (0, 0)
-    manager = Manager(None, None, None)
+    manager = Manager(client, None, None, None)
 
     hand = Hand([], manager.on_card_selected)
     deck = Deck(copy.copy(cards), top_face_up=False, pos=(hand.x + hand.width + 10, hand.y), on_click=manager.on_click)
@@ -125,6 +126,10 @@ def main():
                 side_panel.message_log.messages.extend(client.card_names)
 
             prev_state = player.state
+
+        if player.message_queue:
+            side_panel.message_log.messages.extend(player.message_queue)
+            player.message_queue = []
 
         hand.draw(screen)
         play_area.draw(screen)
