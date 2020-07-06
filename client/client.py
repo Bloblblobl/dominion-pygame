@@ -29,7 +29,8 @@ class Client(ConnectionListener,
         # self.done()
 
     def respond(self, action, *args):
-        self._player.respond(action, *args)
+        response = self._player.respond(action, *args)
+        self.Send(dict(action='respond', response=response))
 
     def on_game_event(self, event):
         self._player.respond(event)
