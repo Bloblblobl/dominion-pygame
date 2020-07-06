@@ -14,13 +14,14 @@ class Client(ConnectionListener,
         self._player = player
         self.Connect((host, port))
         self.players = [name]
+        self.card_names = []
 
     def pump(self):
         self.Pump()
         connection.Pump()
 
     def start_game(self):
-        pass
+        self.Send(dict(action='start'))
 
     # Player interface
     def play(self):
@@ -51,7 +52,7 @@ class Client(ConnectionListener,
         print(data)
 
     def Network_on_player_join(self, data):
-        self.players.append(data['player'])
+        self.players.append(data['name'])
         message = f'Player joined: {data["name"]}'
         self._player.on_game_event(message)
 
@@ -59,6 +60,8 @@ class Client(ConnectionListener,
         card_names = data['card_names']
         player_names = data['player_names']
         message = f'Game started! cards={card_names}, players={player_names}'
+        self.card_names = card_names
+        self.players = player_names
         self._player.on_game_event(message)
 
     def Network_on_state(self, data):

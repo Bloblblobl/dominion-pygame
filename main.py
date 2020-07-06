@@ -13,6 +13,7 @@ from components.shop import Shop
 from components.side_panel import SidePanel
 from constants import screen_size, card_size, background_color, font_name, card_back_name
 from manager import Manager
+from ui_elements.button import Button
 from ui_elements.card import Card
 from ui_player import UIPlayer
 
@@ -35,6 +36,11 @@ total_card_size = (cards[0].total_width, cards[0].total_height)
 mouse_handlers = []
 
 
+def start_game_handler(source):
+    source.show = False
+    client.start_game()
+
+
 def main():
     """"""
     global prev_state
@@ -48,9 +54,19 @@ def main():
     play_area = PlayArea([], manager.on_card_selected)
     shop = Shop([(card, 10) for card in copy.copy(cards[:16])], client)
     side_panel = SidePanel((shop.width + shop.spacing, 0), color=(0, 0, 0), game_client=client)
+    side_button = side_panel.play_treasures_button
+    start_button_pos = (side_button.x, side_button.y)
+    start_game_button = Button(start_button_pos,
+                               side_button.width,
+                               side_button.height,
+                               text='Start Game',
+                               on_click=start_game_handler)
+    start_game_button.show = True
+
     mouse_handlers.append(side_panel.end_turn_button)
     mouse_handlers.append(side_panel.play_treasures_button)
     mouse_handlers.append(shop)
+    mouse_handlers.append(start_game_button)
 
     manager.hand = hand
     manager.play_area = play_area
@@ -77,6 +93,8 @@ def main():
         deck.update(events, mouse_curr)
         shop.update()
         side_panel.update(events, mouse_curr, selected_card)
+        if start_game_button.show:
+            start_game_button.update()
 
         client.pump()
         side_panel.players = client.players
@@ -102,7 +120,9 @@ def main():
             side_panel.active_actions = player.state['actions']
             side_panel.active_buys = player.state['buys']
             side_panel.active_money = player.state['used_money']
-            side_panel.message_log.messages.append(str(player.state))
+
+            if not side_panel.message_log.messages:
+                side_panel.message_log.messages.extend(client.card_names)
 
             prev_state = player.state
 
@@ -112,6 +132,8 @@ def main():
         discard_pile.draw(screen)
         shop.draw(screen)
         side_panel.draw(screen)
+        if start_game_button.show:
+            start_game_button.draw(screen)
 
         mouse_delta_text = font.render(f'Mouse ∆: {mouse_delta}', False, (255, 255, 255))
         screen.blit(mouse_delta_text,
