@@ -38,11 +38,11 @@ class Shop:
         self.width = (self.stacks[0].max_width + self.spacing) * stacks_per_row - self.spacing
         self.height = (self.stacks[0].max_height + self.spacing) * num_rows - self.spacing
 
-    def draw(self, surface):
+    def draw(self, surface, disabled=False):
         if self.background_color is not None:
             pygame.draw.rect(surface, self.background_color, self.rect)
         for stack in self.stacks:
-            stack.draw(surface)
+            stack.draw(surface, disabled)
 
     def update(self):
         for stack in self.stacks:

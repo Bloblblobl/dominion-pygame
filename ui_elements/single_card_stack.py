@@ -39,7 +39,7 @@ class SingleCardStack:
     def update_rect(self):
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
 
-    def draw(self, surface):
+    def draw(self, surface, disabled=False):
         card_x = self.x
         card_y = self.y
 
@@ -47,7 +47,7 @@ class SingleCardStack:
             if self.state == 'hover' and i == self.stack_size - 1:
                 border_rect = (card_x, card_y, self.card.width + 4, self.card.height + 4)
                 pygame.draw.rect(surface, (255, 0, 0), border_rect)
-            self.card.draw(surface, (card_x, card_y), selected=False, face_up=True)
+            self.card.draw(surface, (card_x, card_y), selected=False, face_up=True, disabled=disabled)
             card_x += self.x_spacing
             card_y += self.y_spacing
 

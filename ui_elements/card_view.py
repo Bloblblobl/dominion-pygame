@@ -106,7 +106,7 @@ class CardView(pygame.sprite.Group):
                          (cross_left_x, cross_bottom_y),
                          line_width)
 
-    def _draw_cards(self, surface):
+    def _draw_cards(self, surface, disabled):
         # if there are cards (otherwise do nothing)
         #   1. calculate how many cards can fit in the view => n
         #   2. calculate the position to draw the first card
@@ -121,7 +121,7 @@ class CardView(pygame.sprite.Group):
         end_index = min(len(self.cards), self.start_index + self.num_cards_visible)
         for i in range(self.start_index, end_index):
             draw_border = i - self.start_index == self.selected_index
-            self.cards[i].draw(surface, (card_x, card_y), draw_border)
+            self.cards[i].draw(surface, (card_x, card_y), draw_border, disabled=disabled)
             if generate_rects:
                 self.card_rects.append(pygame.Rect(card_x, card_y, self.card_width, self.card_height))
             card_x += self.card_width + self.spacing
@@ -145,7 +145,7 @@ class CardView(pygame.sprite.Group):
         scroller_rect = pygame.Rect(scroller_x, scroller_y, scroller_width, scroller_height)
         pygame.draw.rect(surface, scroller_color, scroller_rect)
 
-    def draw(self, surface):
+    def draw(self, surface, disabled=False):
         view_rect = pygame.Rect(self.x, self.y, self.width, self.height)
         bar_rect = pygame.Rect(self.x, self.y, self.width, self.bar_height)
 
@@ -162,7 +162,7 @@ class CardView(pygame.sprite.Group):
 
         # draw the cards
         if self.cards:
-            self._draw_cards(surface)
+            self._draw_cards(surface, disabled=disabled)
 
         # draw the scrollbar
         self._draw_scrollbar(surface)

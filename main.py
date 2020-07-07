@@ -11,7 +11,7 @@ from components.hand import Hand
 from components.play_area import PlayArea
 from components.shop import Shop
 from components.side_panel import SidePanel
-from constants import screen_size, card_size, background_color, font_name, card_back_name
+from constants import screen_size, card_size, background_color, font_name, card_back_name, WHITE
 from manager import Manager
 from ui_elements.button import Button
 from ui_elements.card import Card
@@ -30,6 +30,7 @@ font = pygame.font.SysFont(font_name, 20)
 image_folder = 'images'
 card_images = util.load_card_images(image_folder, card_size)
 card_names = [filename.split('.')[0] for filename in os.listdir('images') if not filename.startswith(card_back_name)]
+card_names = [n for n in card_names if not n.endswith('_gray')]
 cards = [Card(name, card_images[name], card_images[card_back_name], card_size) for name in card_names]
 total_card_size = (cards[0].total_width, cards[0].total_height)
 
@@ -107,7 +108,7 @@ def main():
             new_hand = player.state['hand']
             new_hand_cards = [util.create_card(card['name'], card_images) for card in new_hand]
             hand.cards = new_hand_cards
-            hand.view_bg = (255, 0, 0) if new_actions == 0 else None
+            hand.view_bg = None
 
             new_play_area = player.state['play_area']
             print(new_play_area)
@@ -127,7 +128,7 @@ def main():
             new_shop = player.state['supply']
             new_card_counts = [(util.create_card(name, card_images), count) for name, count in new_shop.items()]
             shop.initialize_stacks(new_card_counts)
-            shop.background_color = (255, 0, 0) if new_buys == 0 else None
+            shop.background_color = None
 
             side_panel.active_actions = new_actions
             side_panel.active_buys = new_buys
@@ -142,16 +143,20 @@ def main():
             side_panel.message_log.messages.extend(player.message_queue)
             player.message_queue = []
 
-        hand.draw(screen)
+        #no_action_cards = not any(util.is_action_card(c.name) for c in hand.cards)
+        #disabled = player.state is not None and (player.state['actions'] == 0 or no_action_cards)
+        disabled = player.state is not None and player.state['actions'] == 0
+        hand.draw(screen, disabled=disabled)
         play_area.draw(screen)
         deck.draw(screen)
         discard_pile.draw(screen)
-        shop.draw(screen)
+        disabled = player.state is not None and player.state['buys'] == 0
+        shop.draw(screen, disabled=disabled)
         side_panel.draw(screen)
         if start_game_button.show:
             start_game_button.draw(screen)
 
-        mouse_delta_text = font.render(f'Mouse ∆: {mouse_delta}', False, (255, 255, 255))
+        mouse_delta_text = font.render(f'Mouse ∆: {mouse_delta}', False, WHITE)
         screen.blit(mouse_delta_text,
                     (screen_width - mouse_delta_text.get_width(), screen_height - mouse_delta_text.get_height()))
 

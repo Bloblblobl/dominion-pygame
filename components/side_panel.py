@@ -1,13 +1,13 @@
 import pygame
 
 from components.message_log import MessageLog
-from constants import screen_width, screen_height, card_spacing, font_name
+from constants import screen_width, screen_height, card_spacing, font_name, WHITE, RED
 from ui_elements.button import Button
 from client import object_model
 
 font_size = 15
-font_color = (255, 255, 255)
-active_player_color = (255, 0, 0)
+font_color = WHITE
+active_player_color = RED
 spacing_factor = 4
 button_width = 180
 button_height = 40
