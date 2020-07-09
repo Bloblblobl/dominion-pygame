@@ -33,7 +33,7 @@ class Client(ConnectionListener,
         self.Send(dict(action='respond', response=response))
 
     def on_game_event(self, event):
-        self._player.respond(event)
+        self._player.on_game_event(event)
 
     def on_state_change(self, state):
         self._player.on_state_change(state)
@@ -68,6 +68,9 @@ class Client(ConnectionListener,
     def Network_on_state(self, data):
         self.on_state_change(data['state'])
 
+    def Network_on_game_event(self, data):
+        self.on_game_event(data['event'])
+
     # Server commands
     def Network_play(self, data):
         self.play()
@@ -87,23 +90,3 @@ class Client(ConnectionListener,
     def Network_disconnected(self, data):
         print('Server disconnected')
         exit()
-
-
-class DummyPlayer(Player):
-    def play(self):
-        pass
-
-    def respond(self, action, *args):
-        pass
-
-    def on_game_event(self, event):
-        pass
-
-    def on_state_change(self, state):
-        pass
-
-
-if __name__ == '__main__':
-    cli = Client('dummy', DummyPlayer())
-    while True:
-        cli.pump()
