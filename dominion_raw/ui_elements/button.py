@@ -1,6 +1,6 @@
 import pygame
 
-from pygame_raw.constants import font_name
+from dominion_raw.constants import font_name
 
 font_size = 16
 font_color = (0, 0, 0)

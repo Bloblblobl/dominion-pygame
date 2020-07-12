@@ -1,21 +1,21 @@
 import os
 import sys
-from pygame_raw import util
+from dominion_raw import util
 import pygame
 import copy
 from pathology.path import Path
 
 from client.client import Client
-from pygame_raw.components.deck import Deck
-from pygame_raw.components.discard_pile import DiscardPile
-from pygame_raw.components.hand import Hand
-from pygame_raw.components.play_area import PlayArea
-from pygame_raw.components.shop import Shop
-from pygame_raw.components.side_panel import SidePanel
-from pygame_raw.constants import screen_size, card_size, background_color, font_name, card_back_name, WHITE
-from pygame_raw.manager import Manager
-from pygame_raw.ui_elements.button import Button
-from pygame_raw.ui_elements.card import Card
+from dominion_raw.components.deck import Deck
+from dominion_raw.components.discard_pile import DiscardPile
+from dominion_raw.components.hand import Hand
+from dominion_raw.components.play_area import PlayArea
+from dominion_raw.components.shop import Shop
+from dominion_raw.components.side_panel import SidePanel
+from dominion_raw.constants import screen_size, card_size, background_color, font_name, card_back_name, WHITE
+from dominion_raw.manager import Manager
+from dominion_raw.ui_elements.button import Button
+from dominion_raw.ui_elements.card import Card
 from ui_player import UIPlayer
 
 pygame.init()

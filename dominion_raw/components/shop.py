@@ -1,6 +1,6 @@
 from client import object_model
-from pygame_raw.constants import card_spacing
-from pygame_raw.ui_elements.single_card_stack import SingleCardStack
+from dominion_raw.constants import card_spacing
+from dominion_raw.ui_elements.single_card_stack import SingleCardStack
 import math
 import pygame
 

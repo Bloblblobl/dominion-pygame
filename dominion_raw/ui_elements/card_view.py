@@ -1,6 +1,6 @@
 import pygame
 
-from pygame_raw.constants import card_size
+from dominion_raw.constants import card_size
 
 
 class CardView(pygame.sprite.Group):
