@@ -30,9 +30,8 @@ font = pygame.font.SysFont(font_name, 20)
 
 image_folder = str((Path.script_dir() / '../images').resolve())
 card_images = util.load_card_images(image_folder, card_size)
-
 card_names = [filename.split('.')[0] for filename in os.listdir(image_folder) if not filename.startswith(card_back_name)]
-card_names = [n for n in card_names if not n.endswith('_gray')]
+card_names = [n for n in card_names if not n.endswith('_gray') and not n.endswith('_pic')]
 cards = [Card(name, card_images[name], card_images[card_back_name], card_size) for name in card_names]
 total_card_size = (cards[0].total_width, cards[0].total_height)
 
