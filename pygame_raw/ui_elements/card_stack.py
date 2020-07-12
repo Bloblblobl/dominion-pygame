@@ -1,6 +1,6 @@
 import pygame
 
-from constants import card_size
+from pygame_raw.constants import card_size
 
 
 class CardStack:

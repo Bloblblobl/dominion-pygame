@@ -2,9 +2,9 @@ import pygame
 import pygame_gui
 
 from pygame_gui import UIManager
-from pygame_gui.elements import UIButton, UITextBox, UIPanel, UILabel
+from pygame_gui.elements import UITextBox, UIPanel, UILabel
 
-from constants import screen_size, screen_width, screen_height
+from pygame_raw.constants import screen_size, screen_width, screen_height
 
 pygame.init()
 

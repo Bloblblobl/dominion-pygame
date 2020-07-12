@@ -1,8 +1,8 @@
 import pygame
 
-from components.message_log import MessageLog
-from constants import screen_width, screen_height, card_spacing, font_name, WHITE, RED
-from ui_elements.button import Button
+from pygame_raw.components.message_log import MessageLog
+from pygame_raw.constants import screen_width, screen_height, card_spacing, font_name, WHITE, RED
+from pygame_raw.ui_elements.button import Button
 from client import object_model
 
 font_size = 15

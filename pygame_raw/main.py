@@ -1,20 +1,21 @@
 import os
 import sys
-import util
+from pygame_raw import util
 import pygame
 import copy
+from pathology.path import Path
 
 from client.client import Client
-from components.deck import Deck
-from components.discard_pile import DiscardPile
-from components.hand import Hand
-from components.play_area import PlayArea
-from components.shop import Shop
-from components.side_panel import SidePanel
-from constants import screen_size, card_size, background_color, font_name, card_back_name, WHITE
-from manager import Manager
-from ui_elements.button import Button
-from ui_elements.card import Card
+from pygame_raw.components.deck import Deck
+from pygame_raw.components.discard_pile import DiscardPile
+from pygame_raw.components.hand import Hand
+from pygame_raw.components.play_area import PlayArea
+from pygame_raw.components.shop import Shop
+from pygame_raw.components.side_panel import SidePanel
+from pygame_raw.constants import screen_size, card_size, background_color, font_name, card_back_name, WHITE
+from pygame_raw.manager import Manager
+from pygame_raw.ui_elements.button import Button
+from pygame_raw.ui_elements.card import Card
 from ui_player import UIPlayer
 
 pygame.init()
@@ -27,10 +28,11 @@ screen = pygame.display.set_mode(screen_size)
 screen_width, screen_height = screen_size
 font = pygame.font.SysFont(font_name, 20)
 
-image_folder = 'images'
+image_folder = str((Path.script_dir() / '../images').resolve())
 card_images = util.load_card_images(image_folder, card_size)
-card_names = [filename.split('.')[0] for filename in os.listdir('images') if not filename.startswith(card_back_name)]
-card_names = [n for n in card_names if not n.endswith('_gray') and not n.endswith('_pic')]
+
+card_names = [filename.split('.')[0] for filename in os.listdir(image_folder) if not filename.startswith(card_back_name)]
+card_names = [n for n in card_names if not n.endswith('_gray')]
 cards = [Card(name, card_images[name], card_images[card_back_name], card_size) for name in card_names]
 total_card_size = (cards[0].total_width, cards[0].total_height)
 

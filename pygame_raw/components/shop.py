@@ -1,6 +1,6 @@
 from client import object_model
-from constants import card_spacing
-from ui_elements.single_card_stack import SingleCardStack
+from pygame_raw.constants import card_spacing
+from pygame_raw.ui_elements.single_card_stack import SingleCardStack
 import math
 import pygame
 

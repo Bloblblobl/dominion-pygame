@@ -6,13 +6,20 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-pygame = "==2.0.0.dev6"
+pygame = ">=2.0.0.dev6"
 podsixnet = "*"
 pillow = "*"
 pygame-gui = "*"
+<<<<<<< HEAD
 
 [requires]
 python_version = "3.8.2"
+=======
+pathology = "*"
+
+[requires]
+python_version = "3.7.3"
+>>>>>>> packagized the current dominion pygame client
 
 [pipenv]
 allow_prereleases = true

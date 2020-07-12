@@ -3,9 +3,9 @@ from glob import glob
 
 import pygame
 
-from constants import zoom_factor, card_back_name, card_size
+from .constants import zoom_factor, card_back_name, card_size
 
-from ui_elements.card import Card
+from .ui_elements.card import Card
 
 
 def load_image(image_path):

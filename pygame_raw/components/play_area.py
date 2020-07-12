@@ -1,6 +1,6 @@
-from constants import card_spacing, screen_height
+from pygame_raw.constants import card_spacing, screen_height
 
-from ui_elements.card_view import CardView
+from pygame_raw.ui_elements.card_view import CardView
 
 visible_cards = 5
 

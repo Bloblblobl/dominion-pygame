@@ -1,11 +1,10 @@
-from components.deck import Deck
-from components.discard_pile import DiscardPile
-from components.play_area import PlayArea
+from .components.deck import Deck
+from .components.play_area import PlayArea
 from client.client import (
     Client,
     ClientEventHandler)
 
-from components.hand import Hand
+from .components.hand import Hand
 
 
 class Manager(ClientEventHandler):
