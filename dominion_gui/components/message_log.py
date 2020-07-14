@@ -6,6 +6,7 @@ from dominion_gui.constants import screen_width, screen_height
 log_text = ['<b>[Event]</b> <font color=#FF5CC9>WARNING!</font> Player 1 drew a card!',
             '<b>[Event]</b> Player 2 drew a card!<br>'] * 20
 
+
 class MessageLog:
     def __init__(self, manager):
         self.log_text = log_text
