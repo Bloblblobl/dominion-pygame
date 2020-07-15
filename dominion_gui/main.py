@@ -7,7 +7,7 @@ from dominion_gui.components.side_panel import SidePanel
 from dominion_gui.components.message_log import MessageLog
 from dominion_gui.components.top_level_window import TopLevelWindow
 from dominion_gui.constants import screen_size, background_color, preloaded_fonts
-from pygame_dynamic_rect.dynamic_rect import Rect
+from pygame_dynamic_rect.dynamic_rect import Rect, Layout
 
 
 class DominionApp:
@@ -28,12 +28,8 @@ class DominionApp:
         # message_log = MessageLog(self.manager)
         # self.side_panel = SidePanel(message_log)
         self.window = TopLevelWindow(screen_size)
-        red_rect = Rect(self.window.rect,
-                             pygame.Rect((-1, -1), (-1, 100)),
-                             pygame.Rect((60, 60), (30, -1)))
-        green_rect = Rect(self.window.rect,
-                             pygame.Rect((-1, -1), (100, -1)),
-                             pygame.Rect((20, 20), (-1, 30)))
+        red_rect = Rect(self.window.rect, Layout(.6, .6, .3, 100))
+        green_rect = Rect(self.window.rect,Layout(.2, .2, 100, .3))
         self.window.rect.children += [red_rect, green_rect]
 
         self.panel = UIPanel(self.window.rect, 1, self.manager)

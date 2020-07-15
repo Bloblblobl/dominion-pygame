@@ -1,31 +1,33 @@
+from dataclasses import dataclass
+from typing import Union
+
 import pygame
 
 
-def default_rect():
-    return pygame.Rect(-1, -1, -1, -1)
+@dataclass
+class Layout:
+    x: Union[int, float]
+    y: Union[int, float]
+    w: Union[int, float]
+    h: Union[int, float]
 
 
 class Rect(pygame.Rect):
-    def __init__(self,
-                 container,
-                 absolute_rect=default_rect(),
-                 percent_rect=default_rect()):
+    def __init__(self, container: 'Rect', layout: Layout):
         self.container = container
-        self.absolute_rect = absolute_rect
-        self.percent_rect = percent_rect
+        self.layout = layout
         self.children = []
         self.calc_rect()
         super().__init__(self.left, self.top, self.width, self.height)
 
     def calc_rect(self):
         c = self.container
-        ar = self.absolute_rect
-        pr = self.percent_rect
+        lo = self.layout
         prev = pygame.Rect(self.topleft, self.size)
-        self.left = ar.left if ar.left != -1 else pr.left * c.width / 100
-        self.top = ar.top if ar.top != -1 else pr.top * c.height / 100
-        self.width = ar.width if ar.width != -1 else pr.width * c.width / 100
-        self.height = ar.height if ar.height != -1 else pr.height * c.height / 100
+        self.left = lo.x if isinstance(lo.x, int) else lo.x * c.width
+        self.top = lo.y if isinstance(lo.y, int) else lo.y * c.height
+        self.width = lo.w if isinstance(lo.w, int) else lo.w * c.width
+        self.height = lo.h if isinstance(lo.h, int) else lo.h * c.height
         if self == prev:
             return
         for child in self.children:
