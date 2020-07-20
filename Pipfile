@@ -11,6 +11,7 @@ podsixnet = "*"
 pillow = "*"
 pygame-gui = "*"
 pathology = "*"
+dominion-object-model = "*"
 
 [requires]
 python_version = "3.8.1"

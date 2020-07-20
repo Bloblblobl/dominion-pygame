@@ -1,4 +1,4 @@
-from client import object_model
+from dominion.object_model import object_model
 from dominion_raw.constants import card_spacing
 from dominion_raw.ui_elements.single_card_stack import SingleCardStack
 import math

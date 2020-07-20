@@ -1,4 +1,4 @@
-from client import object_model
+from dominion.object_model import object_model
 
 
 class UIPlayer(object_model.Player):

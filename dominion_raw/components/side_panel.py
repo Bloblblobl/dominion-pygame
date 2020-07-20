@@ -3,7 +3,7 @@ import pygame
 from dominion_raw.components.message_log import MessageLog
 from dominion_raw.constants import screen_width, screen_height, card_spacing, font_name, WHITE, RED
 from dominion_raw.ui_elements.button import Button
-from client import object_model
+from dominion.object_model import object_model
 
 font_size = 15
 font_color = WHITE

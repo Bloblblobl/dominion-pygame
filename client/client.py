@@ -1,9 +1,20 @@
-from .object_model import (
+from abc import abstractmethod, ABCMeta
+
+from dominion.object_model.object_model import (
     GameClient,
-    Player,
-    ClientEventHandler)
+    Player)
 
 from PodSixNet.Connection import connection, ConnectionListener
+
+
+class ClientEventHandler(metaclass=ABCMeta):
+    @abstractmethod
+    def on_play(self):
+        pass
+
+    @abstractmethod
+    def on_respond(self):
+        pass
 
 
 class Client(ConnectionListener,
