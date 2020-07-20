@@ -14,18 +14,16 @@ class AnchorInfo:
     bottom: Union[int, float]
 
 
-class UIElement(pygame.Rect):
+class UIElement:
     def __init__(self,
-                 anchor_info: AnchorInfo,
-                 container: Union[pygame.Rect, None]):
+                 bounds: [pygame.Rect, None] = None,
+                 anchor_info: Union[AnchorInfo, None] = None,
+                 container: Union[pygame.Rect, None] = None):
+        self._bounds = bounds if bounds else pygame.Rect(0, 0, 0, 0)
         self.anchor_info = anchor_info
         self.container = container
         self.children = []
         self.layout()
-        super().__init__(self.topleft, self.size)
-
-    # def __eq__(self, other: pygame.Rect):
-    #     return self.topleft == other.topleft and self.size == other.size
 
     @property
     def manager(self):
@@ -33,46 +31,57 @@ class UIElement(pygame.Rect):
 
     @property
     def topleft(self):
-        return super().topleft
+        return self._bounds.topleft
 
     @topleft.setter
     def topleft(self, tl):
-        if tl == self.topleft:
+        if tl == self._bounds.topleft:
             return
-        pygame.Rect.topleft = tl
+        self._bounds.topleft = tl
         self.layout(only_if_changed=False)
 
     @property
     def size(self):
-        return super().size
+        return self._bounds.size
 
     @size.setter
     def size(self, s):
-        if s == self.size:
+        if s == self._bounds.size:
             return
-        super().size = s
+        self._bounds.size = s
         self.layout(only_if_changed=False)
 
     @property
     def width(self):
-        return super().width
+        return self._bounds.width
 
     @width.setter
     def width(self, w):
-        if w == self.width:
+        if w == self._bounds.width:
             return
-        super().width = w
+        self._bounds.width = w
         self.layout(only_if_changed=False)
 
     @property
     def height(self):
-        return super().height
+        return self._bounds.height
 
     @height.setter
     def height(self, h):
-        if h == self.height:
+        if h == self._bounds.height:
             return
-        super().height = h
+        self._bounds.height = h
+        self.layout(only_if_changed=False)
+
+    @property
+    def bounds(self):
+        return self._bounds
+
+    @bounds.setter
+    def bounds(self, b):
+        if b == self._bounds:
+            return
+        self._bounds = b
         self.layout(only_if_changed=False)
 
     def layout(self, only_if_changed=True):
@@ -83,14 +92,13 @@ class UIElement(pygame.Rect):
             right = ai.right if isinstance(ai.right, int) else ai.right * c.width
             top = ai.top if isinstance(ai.top, int) else ai.top * c.height
             bottom = ai.bottom if isinstance(ai.bottom, int) else ai.bottom * c.height
-            width = c.width - (left + right)
-            height = c.height - (top + bottom)
+            width = self.width if right == -1 else c.width - (left + right)
+            height = self.height if bottom == -1 else c.height - (top + bottom)
             new_bounds = pygame.Rect(left, top, width, height)
-            if only_if_changed and new_bounds == self:
+            if only_if_changed and new_bounds == self.bounds:
                 return
-            s = super()
-            val = new_bounds.topleft
-            s.topleft = val
-            s.size = new_bounds.size
+            print(self.__class__.__name__, new_bounds)
+            self._bounds = new_bounds
+
         for child in self.children:
             child.layout()

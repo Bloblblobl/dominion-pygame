@@ -8,7 +8,7 @@ from dominion_gui.components.side_panel import SidePanel
 from dominion_gui.components.message_log import MessageLog
 from dominion_gui.components.top_level_window import TopLevelWindow
 from dominion_gui.components.ui_manager import get_manager
-from dominion_gui.constants import screen_size, background_color, preloaded_fonts, RED, GREEN
+from dominion_gui.constants import screen_size, background_color, preloaded_fonts, RED, GREEN, BLUE
 from pygame_dynamic_rect.dynamic_rect import Rect, Layout
 
 
@@ -21,22 +21,26 @@ class DominionApp:
         self.clock = pygame.time.Clock()
         self.is_running = True
 
-        # inititalizing manager
+        # initializing manager
         manager = get_manager(screen_size)
         manager.preload_fonts(preloaded_fonts)
 
         self.build_ui(screen_size)
 
     def build_ui(self, screen_size):
-        manager = get_manager()
+        #manager = get_manager()
         self.background.fill(pygame.Color(background_color))
         # message_log = MessageLog(self.manager)
         # self.side_panel = SidePanel(message_log)
         self.window = TopLevelWindow(screen_size)
         red_ai = AnchorInfo(0.1, 0.1, 0.1, 0.8)
-        self.red_panel = UIPanel(red_ai, self.window, RED)
-        green_ai = AnchorInfo(0.1, 0.1, 200, 200)
-        self.green_panel = UIPanel(green_ai, self.window, GREEN)
+        self.window.children.append(UIPanel(None, red_ai, self.window, RED))
+        green_ai = AnchorInfo(0.3, 0.2, 200, 200)
+        self.window.children.append(UIPanel(None, green_ai, self.window, GREEN))
+        blue_ai = AnchorInfo(100, -1, 100, -1)
+        bounds = pygame.Rect((100, 100), (300, 50))
+        self.window.children.append(UIPanel(bounds, blue_ai, self.window, BLUE))
+
 
     def run(self):
         manager = get_manager()
