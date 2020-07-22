@@ -45,6 +45,28 @@ class UIElement:
         self.layout(only_if_changed=False)
 
     @property
+    def left(self):
+        return self._bounds.left
+
+    @left.setter
+    def left(self, l):
+        if l == self._bounds.left:
+            return
+        self._bounds.left = l
+        self.layout(only_if_changed=False)
+
+    @property
+    def top(self):
+        return self._bounds.top
+
+    @top.setter
+    def top(self, t):
+        if t == self._bounds.top:
+            return
+        self._bounds.top = t
+        self.layout(only_if_changed=False)
+
+    @property
     def width(self):
         return self._bounds.width
 
@@ -79,11 +101,12 @@ class UIElement:
 
     @property
     def absolute_rect(self):
-        if self.container is None:
+        c = self.container
+        if c is None:
             return self._bounds
-        left, top, width, height = self.layout_info.get_absolute_rect(self.container.size)
-        left += self.container.left
-        top += self.container.top
+        left, top, width, height = self.layout_info.get_absolute_rect(c.size)
+        left += c.absolute_rect.left if isinstance(c, UIElement) else c.left
+        top += c.absolute_rect.top if isinstance(c, UIElement) else c.top
         return pygame.Rect(left, top, width, height)
 
     def layout(self, only_if_changed=True):

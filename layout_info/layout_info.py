@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from typing import Union
-
+from typing import Union, Tuple
 
 LayoutItem = Union[int, float, None]
 
@@ -21,30 +20,36 @@ class LayoutInfo:
 
         return x_dimension.count(None) == 1 and y_dimension.count(None) == 1
 
-    def get_absolute_rect(self, size):
-        ww, hh = size
-        l, r, t, b, = self.left, self.right, self.top, self.bottom
-        w, h = self.width, self.height
+    def _absolutize(self, item: LayoutItem, parent: int):
+        if not isinstance(item, float):
+            return item
 
-        l = int(l * ww) if isinstance(l, float) else l
-        r = int(r * ww) if isinstance(r, float) else r
-        t = int(t * hh) if isinstance(t, float) else t
-        b = int(b * hh) if isinstance(b, float) else b
-        w = int(w * ww) if isinstance(w, float) else w
-        h = int(h * hh) if isinstance(h, float) else h
+        if item > 1.0:
+            return (item - int(item)) * parent + int(item)
 
-        if w is not None:
-            left = l if l is not None else ww - w - r
-            width = w
+        return item * parent
+
+    def get_absolute_rect(self, size: Tuple[int, int]):
+        w, h = size
+        _left = self._absolutize(self.left, w)
+        _right = self._absolutize(self.right, w)
+        _top = self._absolutize(self.top, h)
+        _bottom = self._absolutize(self.bottom, h)
+        _width = self._absolutize(self.width, w)
+        _height = self._absolutize(self.height, h)
+
+        if _width is None:
+            left = _left
+            width = w - _left - _right
         else:
-            left = l
-            width = ww - l - r
+            left = w - _width - _right if _left is None else _left
+            width = _width
 
-        if h is not None:
-            top = t if t is not None else hh - h - b
-            height = h
+        if _height is None:
+            top = _top
+            height = h - _top - _bottom
         else:
-            top = t
-            height = hh - t - b
+            top = h - _height - _bottom if _top is None else _top
+            height = _height
 
         return left, top, width, height

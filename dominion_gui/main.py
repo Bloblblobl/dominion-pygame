@@ -37,15 +37,14 @@ class DominionApp:
         red_li = LayoutInfo(right=20, top=20, bottom=20, width=0.3)
         self.window.children.append(UIPanel(red_li, self.window, RED))
 
-
-        green_li = LayoutInfo(left=20, top=0.7, bottom=20, width=0.6)
+        green_li = LayoutInfo(left=20, right=30.3, top=0.6, bottom=20)
         green_panel = UIPanel(green_li, self.window, GREEN)
         self.window.children.append(green_panel)
 
-        blue_li = LayoutInfo(left=100, top=100, width=300, height=50)
-        green_panel.children.append(UIPanel(blue_li, green_panel.bounds, BLUE))
+        blue_li = LayoutInfo(left=20, right=20, top=20, bottom=20)
+        green_panel.children.append(UIPanel(blue_li, green_panel, BLUE))
 
-        yellow_li = LayoutInfo(right=0.2, bottom=0.4, width=300, height=50)
+        yellow_li = LayoutInfo(left=20, right=30.3, top=20, bottom=10.4)
         self.window.children.append(UIPanel(yellow_li, self.window, YELLOW))
 
 
