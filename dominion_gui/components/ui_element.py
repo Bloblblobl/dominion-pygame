@@ -1,65 +1,18 @@
-from dataclasses import dataclass
-
 from typing import Union
 import pygame
 
+from dominion_gui.components.layout_info import LayoutInfo
 from dominion_gui.components.ui_manager import get_manager
 
 
-@dataclass
-class LayoutInfo:
-    left: Union[int, float, None]
-    right: Union[int, float, None]
-    top: Union[int, float, None]
-    bottom: Union[int, float, None]
-    width: Union[int, float, None]
-    height: Union[int, float, None]
-
-    @property
-    def is_valid(self):
-        x_dimension = [self.left, self.right, self.width]
-        y_dimension = [self.top, self.bottom, self.height]
-
-        return x_dimension.count(None) == 1 and y_dimension.count(None) == 1
-
-    def get_absolute_rect(self, container: pygame.Rect):
-        cw = container.width
-        ch = container.height
-        l, r, t, b, = self.left, self.right, self.top, self.bottom
-        w, h = self.width, self.height
-
-        l = int(l * cw) if isinstance(l, float) else l
-        r = int(r * cw) if isinstance(r, float) else r
-        t = int(t * ch) if isinstance(t, float) else t
-        b = int(b * ch) if isinstance(b, float) else b
-        w = int(w * cw) if isinstance(w, float) else w
-        h = int(h * ch) if isinstance(h, float) else h
-
-        if w is not None:
-            left = l if l is not None else cw - w - r
-            width = w
-        else:
-            left = l
-            width = cw - l - r
-
-        if h is not None:
-            top = t if t is not None else ch - h - b
-            height = h
-        else:
-            top = t
-            height = ch - t - b
-
-        return pygame.Rect(left, top, width, height)
-
 class UIElement:
     def __init__(self,
-                 bounds: [pygame.Rect, None] = None,
                  layout_info: Union[LayoutInfo, None] = None,
                  container: Union[pygame.Rect, None] = None):
         if not layout_info.is_valid:
             raise Exception('Invalid layout')
 
-        self._bounds = bounds if bounds else pygame.Rect(0, 0, 0, 0)
+        self._bounds = pygame.Rect(0, 0, 0, 0)
         self.layout_info = layout_info
         self.container = container
         self.children = []
@@ -124,9 +77,13 @@ class UIElement:
         self._bounds = b
         self.layout(only_if_changed=False)
 
+    @property
+    def absolute_rect(self):
+        return pygame.Rect(*(self.layout_info.get_absolute_rect(self.container.size)))
+
     def layout(self, only_if_changed=True):
         if self.container is not None:
-            new_bounds = self.layout_info.get_absolute_rect(self.container)
+            new_bounds = self.absolute_rect
             if only_if_changed and new_bounds == self.bounds:
                 return
             print(self.__class__.__name__, new_bounds)

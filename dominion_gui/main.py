@@ -1,15 +1,14 @@
 import pygame
 import pygame_gui
 
-from dominion_gui.components.ui_element import LayoutInfo
+from dominion_gui.components.layout_info import LayoutInfo
 from dominion_gui.components.ui_panel import UIPanel
 
 from dominion_gui.components.side_panel import SidePanel
 from dominion_gui.components.message_log import MessageLog
 from dominion_gui.components.top_level_window import TopLevelWindow
 from dominion_gui.components.ui_manager import get_manager
-from dominion_gui.constants import screen_size, background_color, preloaded_fonts, RED, GREEN, BLUE
-from pygame_dynamic_rect.dynamic_rect import Rect, Layout
+from dominion_gui.constants import screen_size, background_color, preloaded_fonts, RED, GREEN, BLUE, YELLOW, DARK_GRAY
 
 
 class DominionApp:
@@ -33,12 +32,19 @@ class DominionApp:
         # message_log = MessageLog(self.manager)
         # self.side_panel = SidePanel(message_log)
         self.window = TopLevelWindow(screen_size)
-        red_ai = LayoutInfo(0.1, 0.1, 0.1, 0.8, None, None)
-        self.window.children.append(UIPanel(red_ai, self.window, RED))
-        green_ai = LayoutInfo(0.3, 0.2, 200, 200, None, None)
-        self.window.children.append(UIPanel(green_ai, self.window, GREEN))
-        blue_ai = LayoutInfo(100, None, 100, None, 300, 50)
-        self.window.children.append(UIPanel(blue_ai, self.window, BLUE))
+
+        gray_li = LayoutInfo(left=10, right=10, top=10, bottom=10)
+        self.window.children.append(UIPanel(gray_li, self.window, DARK_GRAY))
+
+        red_li = LayoutInfo(left=0.1, right=0.1, top=0.1, bottom=0.8)
+        self.window.children.append(UIPanel(red_li, self.window, RED))
+        green_li = LayoutInfo(left=0.3, right=0.2, top=200, bottom=0.5)
+        self.window.children.append(UIPanel(green_li, self.window, GREEN))
+        blue_li = LayoutInfo(left=100, top=100, width=300, height=50)
+        self.window.children.append(UIPanel(blue_li, self.window, BLUE))
+
+        yellow_li = LayoutInfo(right=0.2, bottom=0.4, width=300, height=50)
+        self.window.children.append(UIPanel(yellow_li, self.window, YELLOW))
 
 
     def run(self):
