@@ -7,20 +7,60 @@ from dominion_gui.components.ui_manager import get_manager
 
 
 @dataclass
-class AnchorInfo:
-    left: Union[int, float]
-    right: Union[int, float]
-    top: Union[int, float]
-    bottom: Union[int, float]
+class LayoutInfo:
+    left: Union[int, float, None]
+    right: Union[int, float, None]
+    top: Union[int, float, None]
+    bottom: Union[int, float, None]
+    width: Union[int, float, None]
+    height: Union[int, float, None]
 
+    @property
+    def is_valid(self):
+        x_dimension = [self.left, self.right, self.width]
+        y_dimension = [self.top, self.bottom, self.height]
+
+        return x_dimension.count(None) == 1 and y_dimension.count(None) == 1
+
+    def get_absolute_rect(self, container: pygame.Rect):
+        cw = container.width
+        ch = container.height
+        l, r, t, b, = self.left, self.right, self.top, self.bottom
+        w, h = self.width, self.height
+
+        l = int(l * cw) if isinstance(l, float) else l
+        r = int(r * cw) if isinstance(r, float) else r
+        t = int(t * ch) if isinstance(t, float) else t
+        b = int(b * ch) if isinstance(b, float) else b
+        w = int(w * cw) if isinstance(w, float) else w
+        h = int(h * ch) if isinstance(h, float) else h
+
+        if w is not None:
+            left = l if l is not None else cw - w - r
+            width = w
+        else:
+            left = l
+            width = cw - l - r
+
+        if h is not None:
+            top = t if t is not None else ch - h - b
+            height = h
+        else:
+            top = t
+            height = ch - t - b
+
+        return pygame.Rect(left, top, width, height)
 
 class UIElement:
     def __init__(self,
                  bounds: [pygame.Rect, None] = None,
-                 anchor_info: Union[AnchorInfo, None] = None,
+                 layout_info: Union[LayoutInfo, None] = None,
                  container: Union[pygame.Rect, None] = None):
+        if not layout_info.is_valid:
+            raise Exception('Invalid layout')
+
         self._bounds = bounds if bounds else pygame.Rect(0, 0, 0, 0)
-        self.anchor_info = anchor_info
+        self.layout_info = layout_info
         self.container = container
         self.children = []
         self.layout()
@@ -86,15 +126,7 @@ class UIElement:
 
     def layout(self, only_if_changed=True):
         if self.container is not None:
-            c = self.container
-            ai = self.anchor_info
-            left = ai.left if isinstance(ai.left, int) else ai.left * c.width
-            right = ai.right if isinstance(ai.right, int) else ai.right * c.width
-            top = ai.top if isinstance(ai.top, int) else ai.top * c.height
-            bottom = ai.bottom if isinstance(ai.bottom, int) else ai.bottom * c.height
-            width = self.width if right == -1 else c.width - (left + right)
-            height = self.height if bottom == -1 else c.height - (top + bottom)
-            new_bounds = pygame.Rect(left, top, width, height)
+            new_bounds = self.layout_info.get_absolute_rect(self.container)
             if only_if_changed and new_bounds == self.bounds:
                 return
             print(self.__class__.__name__, new_bounds)

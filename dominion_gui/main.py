@@ -1,7 +1,7 @@
 import pygame
 import pygame_gui
 
-from dominion_gui.components.ui_element import AnchorInfo
+from dominion_gui.components.ui_element import LayoutInfo
 from dominion_gui.components.ui_panel import UIPanel
 
 from dominion_gui.components.side_panel import SidePanel
@@ -33,13 +33,12 @@ class DominionApp:
         # message_log = MessageLog(self.manager)
         # self.side_panel = SidePanel(message_log)
         self.window = TopLevelWindow(screen_size)
-        red_ai = AnchorInfo(0.1, 0.1, 0.1, 0.8)
-        self.window.children.append(UIPanel(None, red_ai, self.window, RED))
-        green_ai = AnchorInfo(0.3, 0.2, 200, 200)
-        self.window.children.append(UIPanel(None, green_ai, self.window, GREEN))
-        blue_ai = AnchorInfo(100, -1, 100, -1)
-        bounds = pygame.Rect((100, 100), (300, 50))
-        self.window.children.append(UIPanel(bounds, blue_ai, self.window, BLUE))
+        red_ai = LayoutInfo(0.1, 0.1, 0.1, 0.8, None, None)
+        self.window.children.append(UIPanel(red_ai, self.window, RED))
+        green_ai = LayoutInfo(0.3, 0.2, 200, 200, None, None)
+        self.window.children.append(UIPanel(green_ai, self.window, GREEN))
+        blue_ai = LayoutInfo(100, None, 100, None, 300, 50)
+        self.window.children.append(UIPanel(blue_ai, self.window, BLUE))
 
 
     def run(self):
