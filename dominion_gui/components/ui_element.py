@@ -79,7 +79,12 @@ class UIElement:
 
     @property
     def absolute_rect(self):
-        return pygame.Rect(*(self.layout_info.get_absolute_rect(self.container.size)))
+        if self.container is None:
+            return self._bounds
+        left, top, width, height = self.layout_info.get_absolute_rect(self.container.size)
+        left += self.container.left
+        top += self.container.top
+        return pygame.Rect(left, top, width, height)
 
     def layout(self, only_if_changed=True):
         if self.container is not None:
