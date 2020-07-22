@@ -1,11 +1,9 @@
 import pygame
 import pygame_gui
 
-from dominion_gui.components.layout_info import LayoutInfo
+from layout_info.layout_info import LayoutInfo
 from dominion_gui.components.ui_panel import UIPanel
 
-from dominion_gui.components.side_panel import SidePanel
-from dominion_gui.components.message_log import MessageLog
 from dominion_gui.components.top_level_window import TopLevelWindow
 from dominion_gui.components.ui_manager import get_manager
 from dominion_gui.constants import screen_size, background_color, preloaded_fonts, RED, GREEN, BLUE, YELLOW, DARK_GRAY

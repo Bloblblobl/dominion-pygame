@@ -1,7 +1,7 @@
 from typing import Union
 import pygame
 
-from dominion_gui.components.layout_info import LayoutInfo
+from layout_info.layout_info import LayoutInfo
 from dominion_gui.components.ui_manager import get_manager
 
 
