@@ -2,14 +2,17 @@ from dataclasses import dataclass
 from typing import Union
 
 
+LayoutItem = Union[int, float, None]
+
+
 @dataclass
 class LayoutInfo:
-    left: Union[int, float, None] = None
-    right: Union[int, float, None] = None
-    top: Union[int, float, None] = None
-    bottom: Union[int, float, None] = None
-    width: Union[int, float, None] = None
-    height: Union[int, float, None] = None
+    left: LayoutItem = None
+    right: LayoutItem = None
+    top: LayoutItem = None
+    bottom: LayoutItem = None
+    width: LayoutItem = None
+    height: LayoutItem = None
 
     @property
     def is_valid(self):
