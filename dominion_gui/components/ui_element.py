@@ -8,15 +8,22 @@ from dominion_gui.components.ui_manager import get_manager
 class UIElement:
     def __init__(self,
                  layout_info: Union[LayoutInfo, None] = None,
-                 container: Union[pygame.Rect, None] = None):
+                 container: Union[pygame.Rect, 'UIElement', None] = None,
+                 padding: Union[LayoutInfo, None] = None):
         if not layout_info.is_valid:
             raise Exception('Invalid layout')
-
         self._bounds = pygame.Rect(0, 0, 0, 0)
         self.layout_info = layout_info
         self.container = container
+        self.padding = padding
         self.children = []
         self.layout()
+        self._validate_padding()
+
+    def _validate_padding(self):
+        p = self.padding
+        if p is not None and (not p.is_valid or p.width is not None or p.height is not None):
+            raise Exception('Invalid padding')
 
     @property
     def manager(self):
@@ -100,18 +107,24 @@ class UIElement:
         self.layout(only_if_changed=False)
 
     @property
-    def absolute_rect(self):
+    def padded_rect(self):
         c = self.container
         if c is None:
             return self._bounds
         left, top, width, height = self.layout_info.get_absolute_rect(c.size)
-        left += c.absolute_rect.left if isinstance(c, UIElement) else c.left
-        top += c.absolute_rect.top if isinstance(c, UIElement) else c.top
+        left += c.padded_rect.left if isinstance(c, UIElement) else c.left
+        top += c.padded_rect.top if isinstance(c, UIElement) else c.top
+
+        if self.padding is not None:
+            pleft, ptop, width, height = self.padding.get_absolute_rect((width, height))
+            left += pleft
+            top += ptop
+
         return pygame.Rect(left, top, width, height)
 
     def layout(self, only_if_changed=True):
         if self.container is not None:
-            new_bounds = self.absolute_rect
+            new_bounds = self.padded_rect
             if only_if_changed and new_bounds == self.bounds:
                 return
             print(self.__class__.__name__, new_bounds)

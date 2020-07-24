@@ -31,11 +31,13 @@ class DominionApp:
         # self.side_panel = SidePanel(message_log)
         self.window = TopLevelWindow(screen_size)
 
+        padding = LayoutInfo(left=10, right=10, top=10, bottom=10)
+
         gray_li = LayoutInfo(left=10, right=10, top=10, bottom=10)
         self.window.children.append(UIPanel(gray_li, self.window, DARK_GRAY))
 
         red_li = LayoutInfo(right=20, top=20, bottom=20, width=0.3)
-        self.window.children.append(UIPanel(red_li, self.window, RED))
+        self.window.children.append(UIPanel(red_li, self.window, RED, padding))
 
         green_li = LayoutInfo(left=20, right=30.3, top=0.6, bottom=20)
         green_panel = UIPanel(green_li, self.window, GREEN)

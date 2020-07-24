@@ -4,8 +4,8 @@ from dominion_gui.components.ui_element import UIElement
 
 
 class UIPanel(UIElement):
-    def __init__(self, layout_info, container, bg_color):
-        super().__init__(layout_info, container)
+    def __init__(self, layout_info, container, bg_color, padding=None):
+        super().__init__(layout_info, container, padding)
         self._panel = pg_panel.UIPanel(self.bounds, 0, self.manager)
         self.background_color = bg_color
 
