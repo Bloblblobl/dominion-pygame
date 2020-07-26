@@ -1,8 +1,10 @@
 import pygame
 import pygame_gui
 
+from dominion_gui.components.button import Button
+from dominion_gui.components.textbox import TextBox
 from layout_info.layout_info import LayoutInfo
-from dominion_gui.components.ui_panel import UIPanel
+from dominion_gui.components.panel import Panel
 
 from dominion_gui.components.top_level_window import TopLevelWindow
 from dominion_gui.components.ui_manager import get_manager
@@ -34,21 +36,36 @@ class DominionApp:
         padding = LayoutInfo(left=10, right=10, top=10, bottom=10)
 
         gray_li = LayoutInfo(left=10, right=10, top=10, bottom=10)
-        self.window.children.append(UIPanel(gray_li, self.window, DARK_GRAY))
+        gray_panel = Panel(gray_li, self.window, DARK_GRAY)
 
-        red_li = LayoutInfo(right=20, top=20, bottom=20, width=0.3)
-        self.window.children.append(UIPanel(red_li, self.window, RED, padding))
+        red_li = LayoutInfo(right=20, top=20, bottom=20, width=0.25)
+        red_panel = Panel(red_li, self.window, RED)
 
-        green_li = LayoutInfo(left=20, right=30.3, top=0.6, bottom=20)
-        green_panel = UIPanel(green_li, self.window, GREEN)
-        self.window.children.append(green_panel)
+        text_li = LayoutInfo(left=0, right=0, top=0, height=0.8)
+        text_pad = LayoutInfo(left=10, right=10, top=10, bottom=10)
+        text = '[Player 1] played a card<br>' \
+               '[Player 2] discarded a card<br>' \
+               '' * 100
+        textbox = TextBox(text, text_li, red_panel, padding=text_pad)
 
-        blue_li = LayoutInfo(left=20, right=20, top=20, bottom=20)
-        green_panel.children.append(UIPanel(blue_li, green_panel, BLUE))
+        button1_li = LayoutInfo(left=0, right=0, top=0.8, height=0.1)
+        button1_pad = LayoutInfo(left=10, right=10, top=0, bottom=10)
+        button1_text = 'Start Game'
+        button1 = Button(button1_text, button1_li, red_panel, padding=button1_pad)
 
-        yellow_li = LayoutInfo(left=20, right=30.3, top=20, bottom=10.4)
-        self.window.children.append(UIPanel(yellow_li, self.window, YELLOW))
+        button2_li = LayoutInfo(left=0, right=0, top=0.9, height=0.1)
+        button2_pad = LayoutInfo(left=10, right=10, top=0, bottom=10)
+        button2_text = 'End Turn'
+        button2 = Button(button2_text, button2_li, red_panel, padding=button2_pad)
 
+        green_li = LayoutInfo(left=20, right=30.25, top=0.7, bottom=20)
+        green_panel = Panel(green_li, self.window, GREEN)
+
+        blue_li = LayoutInfo(left=10, right=10, top=10, bottom=10)
+        blue_panel = Panel(blue_li, green_panel, BLUE)
+
+        yellow_li = LayoutInfo(left=20, right=30.25, top=20, bottom=10.3)
+        yellow_panel = Panel(yellow_li, self.window, YELLOW)
 
     def run(self):
         manager = get_manager()

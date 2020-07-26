@@ -10,13 +10,20 @@ class UIElement:
                  layout_info: Union[LayoutInfo, None] = None,
                  container: Union[pygame.Rect, 'UIElement', None] = None,
                  padding: Union[LayoutInfo, None] = None):
-        if not layout_info.is_valid:
-            raise Exception('Invalid layout')
         self._bounds = pygame.Rect(0, 0, 0, 0)
+        self.element = None
         self.layout_info = layout_info
         self.container = container
         self.padding = padding
         self.children = []
+
+        if self.layout_info is None:
+            self.layout_info = LayoutInfo(0, 0, 0, 0)
+        if not self.layout_info.is_valid:
+            raise Exception('Invalid layout')
+        if self.container is not None:
+            self.container.children.append(self)
+
         self.layout()
         self._validate_padding()
 
@@ -24,6 +31,18 @@ class UIElement:
         p = self.padding
         if p is not None and (not p.is_valid or p.width is not None or p.height is not None):
             raise Exception('Invalid padding')
+
+    @property
+    def background_color(self):
+        return self.element.background_colour
+
+    @background_color.setter
+    def background_color(self, color):
+        if color is None:
+            return
+
+        self.element.background_colour = color
+        self.element.rebuild()
 
     @property
     def manager(self):

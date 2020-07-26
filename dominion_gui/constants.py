@@ -11,3 +11,5 @@ BLUE = pygame.Color(0, 0, 255)
 YELLOW = pygame.Color(255, 255, 0)
 GRAY = pygame.Color(200, 200, 200)
 DARK_GRAY = pygame.Color(100, 100, 100)
+
+theme_path = 'theme.json'
