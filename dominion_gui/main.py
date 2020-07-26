@@ -8,14 +8,17 @@ from dominion_gui.components.panel import Panel
 
 from dominion_gui.components.top_level_window import TopLevelWindow
 from dominion_gui.components.ui_manager import get_manager
-from dominion_gui.constants import screen_size, background_color, preloaded_fonts, RED, GREEN, BLUE, YELLOW, DARK_GRAY
+from dominion_gui.constants import screen_size, background_color, preloaded_fonts, RED, GREEN, BLUE, YELLOW, DARK_GRAY, \
+    min_screen_width, min_screen_height
+
+DISPLAY_FLAGS = pygame.RESIZABLE
 
 
 class DominionApp:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption('Dominion')
-        self.surface = pygame.display.set_mode(screen_size, flags=pygame.RESIZABLE)
+        self.surface = pygame.display.set_mode(screen_size, flags=DISPLAY_FLAGS)
         self.background = pygame.Surface(screen_size)
         self.clock = pygame.time.Clock()
         self.is_running = True
@@ -67,6 +70,17 @@ class DominionApp:
         yellow_li = LayoutInfo(left=20, right=30.25, top=20, bottom=10.3)
         yellow_panel = Panel(yellow_li, self.window, YELLOW)
 
+    def handle_screen_resize(self, raw_size):
+        manager = get_manager()
+        width, height = raw_size
+        width = min_screen_width if width < min_screen_width else width
+        height = min_screen_height if height < min_screen_height else height
+        size = (width, height)
+        self.surface = pygame.display.set_mode(size, flags=DISPLAY_FLAGS)
+        self.window.on_window_size_changed(size)
+        manager.set_window_resolution(size)
+        manager.root_container.set_dimensions(size)
+
     def run(self):
         manager = get_manager()
         while self.is_running:
@@ -77,10 +91,7 @@ class DominionApp:
                     self.is_running = False
 
                 if event.type == pygame.VIDEORESIZE:
-                    size = event.dict['size']
-                    self.window.on_window_size_changed(size)
-                    manager.set_window_resolution(size)
-                    manager.root_container.set_dimensions(size)
+                    self.handle_screen_resize(event.dict['size'])
 
                 if event.type == pygame.USEREVENT:
                     if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
