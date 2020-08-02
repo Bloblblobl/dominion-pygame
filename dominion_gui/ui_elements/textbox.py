@@ -1,6 +1,6 @@
 from pygame_gui.elements import UITextBox
 
-from dominion_gui.components.ui_element import UIElement
+from dominion_gui.ui_elements.ui_element import UIElement
 
 
 class TextBox(UIElement):

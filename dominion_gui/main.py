@@ -1,13 +1,13 @@
 import pygame
 import pygame_gui
 
-from dominion_gui.components.button import Button
-from dominion_gui.components.textbox import TextBox
+from dominion_gui.ui_elements.button import Button
+from dominion_gui.ui_elements.textbox import TextBox
 from layout_info.layout_info import LayoutInfo
-from dominion_gui.components.panel import Panel
+from dominion_gui.ui_elements.panel import Panel
 
-from dominion_gui.components.top_level_window import TopLevelWindow
-from dominion_gui.components.ui_manager import get_manager
+from dominion_gui.ui_elements.top_level_window import TopLevelWindow
+from dominion_gui.ui_elements.ui_manager import get_manager
 from dominion_gui.constants import screen_size, background_color, preloaded_fonts, RED, GREEN, BLUE, YELLOW, DARK_GRAY, \
     min_screen_width, min_screen_height
 

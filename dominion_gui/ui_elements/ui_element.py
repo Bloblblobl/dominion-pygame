@@ -2,7 +2,7 @@ from typing import Union
 import pygame
 
 from layout_info.layout_info import LayoutInfo
-from dominion_gui.components.ui_manager import get_manager
+from dominion_gui.ui_elements.ui_manager import get_manager
 
 
 class UIElement:
