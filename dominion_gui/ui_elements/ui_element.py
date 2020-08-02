@@ -33,18 +33,6 @@ class UIElement:
             raise Exception('Invalid padding')
 
     @property
-    def background_color(self):
-        return self.element.background_colour
-
-    @background_color.setter
-    def background_color(self, color):
-        if color is None:
-            return
-
-        self.element.background_colour = color
-        self.element.rebuild()
-
-    @property
     def manager(self):
         return get_manager()
 
@@ -141,6 +129,11 @@ class UIElement:
 
         return pygame.Rect(left, top, width, height)
 
+    def rebuild(self):
+        self.element.set_position(self.topleft)
+        self.element.set_dimensions(self.size)
+        self.element.rebuild()
+
     def layout(self, only_if_changed=True):
         if self.container is not None:
             new_bounds = self.padded_rect
@@ -151,3 +144,6 @@ class UIElement:
 
         for child in self.children:
             child.layout()
+
+        if self.element is not None:
+            self.rebuild()
