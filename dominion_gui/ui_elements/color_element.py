@@ -14,12 +14,19 @@ class ColorElement(UIElement):
 
     @property
     def background_color(self):
-        return self.element.background_colour
+        e = self.element
+        if hasattr(e, 'background_colour'):
+            return e.background_colour
+        return e.bg_colour
 
     @background_color.setter
     def background_color(self, color):
         if color is None:
             return
 
-        self.element.background_colour = color
-        self.element.rebuild()
+        e = self.element
+        if hasattr(e, 'background_colour'):
+            e.background_colour = color
+        else:
+            e.bg_colour = color
+        e.rebuild()

@@ -22,6 +22,8 @@ class EventManager:
 
     def handle_event(self, event):
         if event.type == pygame.USEREVENT:
+            if not hasattr(event.ui_element, 'owner'):
+                return
             owner = event.ui_element.owner
             ui_event_type = event.user_type
             for subscriber in self.subscribers[(id(owner), ui_event_type)]:

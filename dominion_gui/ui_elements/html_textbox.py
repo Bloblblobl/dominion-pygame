@@ -4,11 +4,24 @@ from dominion_gui.ui_elements.color_element import ColorElement
 
 
 class HTMLTextBox(ColorElement):
-    def __init__(self, html, layout_info, container, bg_color=None, padding=None):
+    def __init__(self,
+                 html,
+                 layout_info,
+                 container,
+                 bg_color=None,
+                 padding=None,
+                 corner_radius=None,
+                 wrap_to_height=False):
         super().__init__(layout_info, container, padding)
         self._html = html
         self._background_color = bg_color
+        self._wrap_to_height = wrap_to_height
         self._build_textbox()
+
+        if corner_radius is not None:
+            self.element.shape = 'rounded_rectangle'
+            self.element.shape_corner_radius = corner_radius
+            self.rebuild()
 
     @property
     def html(self):
@@ -27,7 +40,8 @@ class HTMLTextBox(ColorElement):
             self.element.kill()
         self.element = UITextBox(relative_rect=self.bounds,
                                  manager=self.manager,
-                                 html_text=self.html)
+                                 html_text=self.html,
+                                 wrap_to_height=self._wrap_to_height)
         self.background_color = self._background_color
 
     def rebuild(self):
