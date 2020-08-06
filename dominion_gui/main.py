@@ -1,8 +1,12 @@
 import pygame
 import pygame_gui
 
+from dominion_gui.base_event_handler import BaseEventHandler
+from dominion_gui.components.message_log import MessageLog
+from dominion_gui.event_manager import event_manager
 from dominion_gui.ui_elements.button import Button
-from dominion_gui.ui_elements.textbox import TextBox
+from dominion_gui.ui_elements.image import Image
+from dominion_gui.ui_elements.html_textbox import HTMLTextBox
 from layout_info.layout_info import LayoutInfo
 from dominion_gui.ui_elements.panel import Panel
 
@@ -30,31 +34,29 @@ class DominionApp:
         self.build_ui(screen_size)
 
     def build_ui(self, screen_size):
-        #manager = get_manager()
         self.background.fill(pygame.Color(background_color))
         # message_log = MessageLog(self.manager)
         # self.side_panel = SidePanel(message_log)
         self.window = TopLevelWindow(screen_size)
 
-        padding = LayoutInfo(left=10, right=10, top=10, bottom=10)
+        li_all_10 = LayoutInfo(left=10, right=10, top=10, bottom=10)
 
-        gray_li = LayoutInfo(left=10, right=10, top=10, bottom=10)
-        gray_panel = Panel(gray_li, self.window, DARK_GRAY)
+        gray_panel = Panel(li_all_10, self.window, DARK_GRAY)
 
         red_li = LayoutInfo(right=20, top=20, bottom=20, width=0.25)
         red_panel = Panel(red_li, self.window, RED)
 
         text_li = LayoutInfo(left=0, right=0, top=0, height=0.8)
-        text_pad = LayoutInfo(left=10, right=10, top=10, bottom=10)
-        text = '[Player 1] played a card<br>' \
-               '[Player 2] discarded a card<br>' \
-               '' * 100
-        textbox = TextBox(text, text_li, red_panel, padding=text_pad)
+        self.message_log = MessageLog(text_li, red_panel, padding=li_all_10)
 
         button1_li = LayoutInfo(left=0, right=0, top=0.8, height=0.1)
         button1_pad = LayoutInfo(left=10, right=10, top=0, bottom=10)
         button1_text = 'Start Game'
         button1 = Button(button1_text, button1_li, red_panel, padding=button1_pad)
+        button_eh = BaseEventHandler()
+        button_eh.on_ui_button_pressed = lambda ui_element: print('Hooray! It works!', ui_element)
+        event_manager.subscribe(button1, pygame_gui.UI_BUTTON_PRESSED, button_eh)
+        event_manager.subscribe(button1, pygame_gui.UI_BUTTON_PRESSED, button_eh)
 
         button2_li = LayoutInfo(left=0, right=0, top=0.9, height=0.1)
         button2_pad = LayoutInfo(left=10, right=10, top=0, bottom=10)
@@ -64,8 +66,9 @@ class DominionApp:
         green_li = LayoutInfo(left=20, right=30.25, top=0.7, bottom=20)
         green_panel = Panel(green_li, self.window, GREEN)
 
-        blue_li = LayoutInfo(left=10, right=10, top=10, bottom=10)
-        blue_panel = Panel(blue_li, green_panel, BLUE)
+        blue_panel = Panel(li_all_10, green_panel, BLUE)
+
+        card = Image(li_all_10, blue_panel, 'artisan.png')
 
         yellow_li = LayoutInfo(left=20, right=30.25, top=20, bottom=10.3)
         yellow_panel = Panel(yellow_li, self.window, YELLOW)
@@ -94,10 +97,7 @@ class DominionApp:
                     self.handle_screen_resize(event.dict['size'])
 
                 if event.type == pygame.USEREVENT:
-                    if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
-                        # if event.ui_element == hello_button:
-                        #     print('Hello World!')
-                        pass
+                    event_manager.handle_event(event)
 
                 manager.process_events(event)
 

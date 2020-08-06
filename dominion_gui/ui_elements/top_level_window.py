@@ -7,7 +7,6 @@ class TopLevelWindow(pygame.Rect):
         self.children = []
 
     def on_window_size_changed(self, new_size):
-        print('TopLevelWindow(), size:', new_size)
         self.size = new_size
         for child in self.children:
             child.layout()

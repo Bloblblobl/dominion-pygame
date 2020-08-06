@@ -11,7 +11,7 @@ class UIElement:
                  container: Union[pygame.Rect, 'UIElement', None] = None,
                  padding: Union[LayoutInfo, None] = None):
         self._bounds = pygame.Rect(0, 0, 0, 0)
-        self.element = None
+        self._element = None
         self.layout_info = layout_info
         self.container = container
         self.padding = padding
@@ -31,6 +31,15 @@ class UIElement:
         p = self.padding
         if p is not None and (not p.is_valid or p.width is not None or p.height is not None):
             raise Exception('Invalid padding')
+
+    @property
+    def element(self):
+        return self._element
+
+    @element.setter
+    def element(self, value):
+        self._element = value
+        self._element.owner = self
 
     @property
     def manager(self):
@@ -139,7 +148,6 @@ class UIElement:
             new_bounds = self.padded_rect
             if only_if_changed and new_bounds == self.bounds:
                 return
-            print(self.__class__.__name__, new_bounds)
             self._bounds = new_bounds
 
         for child in self.children:
