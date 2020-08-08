@@ -5,15 +5,12 @@ import pygame
 from dominion_gui.components.default import layout0
 from dominion_gui.constants import DARK_GRAY
 from dominion_gui.ui_elements.html_textbox import HTMLTextBox
-from dominion_gui.ui_elements.label import Label
-from dominion_gui.ui_elements.panel import Panel
 from dominion_gui.ui_elements.image import Image
 from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
 
 
-counter_layout = LayoutInfo(right=5, bottom=5, width=32, height=34)
-label_padding = LayoutInfo(left=4, right=4, top=4, bottom=4)
+counter_layout = LayoutInfo(right=2, bottom=2, width=32, height=34)
 
 
 class Card(UIElement):
