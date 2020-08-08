@@ -3,7 +3,7 @@ from typing import Union
 import pygame
 
 from dominion_gui.components.default import layout0
-from dominion_gui.constants import RED
+from dominion_gui.constants import DARK_GRAY
 from dominion_gui.ui_elements.html_textbox import HTMLTextBox
 from dominion_gui.ui_elements.label import Label
 from dominion_gui.ui_elements.panel import Panel
@@ -12,7 +12,7 @@ from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
 
 
-counter_layout = LayoutInfo(right=5, bottom=5, width=30, height=30)
+counter_layout = LayoutInfo(right=5, bottom=5, width=32, height=34)
 label_padding = LayoutInfo(left=4, right=4, top=4, bottom=4)
 
 
@@ -31,12 +31,12 @@ class Card(UIElement):
         if count is None:
             return
 
-        html = f'<font face=fira_code size=2>{count}</font>'
+        html = f'<font face=fira_code size=3>{count}</font>'
 
         counter = HTMLTextBox(html,
                               counter_layout,
                               self.image,
-                              bg_color=RED,
-                              corner_radius=3,
+                              bg_color=DARK_GRAY,
+                              corner_radius=5,
                               wrap_to_height=True)
         return counter

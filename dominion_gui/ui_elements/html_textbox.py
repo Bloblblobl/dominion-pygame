@@ -15,12 +15,14 @@ class HTMLTextBox(ColorElement):
         super().__init__(layout_info, container, padding)
         self._html = html
         self._background_color = bg_color
+        self._shape = None
+        self._shape_corner_radius = None
         self._wrap_to_height = wrap_to_height
         self._build_textbox()
 
         if corner_radius is not None:
-            self.element.shape = 'rounded_rectangle'
-            self.element.shape_corner_radius = corner_radius
+            self._shape = 'rounded_rectangle'
+            self._shape_corner_radius = corner_radius
             self.rebuild()
 
     @property
@@ -44,5 +46,11 @@ class HTMLTextBox(ColorElement):
                                  wrap_to_height=self._wrap_to_height)
         self.background_color = self._background_color
 
+        if self._shape is not None:
+            self.element.shape = self._shape
+        if self._shape_corner_radius is not None:
+            self.element.shape_corner_radius = self._shape_corner_radius
+
     def rebuild(self):
         self._build_textbox()
+        self.element.rebuild()
