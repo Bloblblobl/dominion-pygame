@@ -140,7 +140,7 @@ class UIElement:
 
         return pygame.Rect(left, top, width, height)
 
-    def _on_enable(self):
+    def _on_enable(self, enabled: bool):
         pass
 
     @property
@@ -148,9 +148,9 @@ class UIElement:
         return self._enabled
 
     @enabled.setter
-    def enabled(self, enabled):
+    def enabled(self, enabled: bool):
         self._enabled = enabled
-        self._on_enable()
+        self._on_enable(enabled)
 
     def rebuild(self):
         self.element.set_position(self.topleft)

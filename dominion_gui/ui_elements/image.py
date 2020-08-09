@@ -12,3 +12,6 @@ class Image(UIElement):
                                image_surface=image_surface,
                                manager=self.manager)
 
+    @property
+    def dimensions(self):
+        return self.element.original_image.get_size()

@@ -3,6 +3,8 @@ import pygame_gui
 
 from dominion_gui.base_event_handler import BaseEventHandler
 from dominion_gui.components.card import Card
+from dominion_gui.components.default import layout0
+from dominion_gui.components.hand import Hand
 from dominion_gui.components.message_log import MessageLog
 from dominion_gui.event_manager import event_manager
 from dominion_gui.ui_elements.button import Button
@@ -69,8 +71,11 @@ class DominionApp:
 
         blue_panel = Panel(li_all_10, green_panel, BLUE)
 
-        card_li = LayoutInfo(left=10, top=10, bottom=10, width=0.2)
-        card = Card('artisan', card_li, blue_panel, count=35)
+        # card_li = LayoutInfo(left=10, top=10, bottom=10, width=0.2)
+        # card = Card('artisan', card_li, blue_panel, count=35)
+
+        hand = Hand(layout0, blue_panel)
+        hand.cards = ['artisan', 'bandit', 'bureaucrat', 'copper', 'festival']
 
         yellow_li = LayoutInfo(left=20, right=30.25, top=20, bottom=10.3)
         yellow_panel = Panel(yellow_li, self.window, YELLOW)
