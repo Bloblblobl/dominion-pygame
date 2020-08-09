@@ -55,7 +55,11 @@ class DominionApp:
         button1_li = LayoutInfo(left=0, right=0, top=0.8, height=0.1)
         button1_pad = LayoutInfo(left=10, right=10, top=0, bottom=10)
         button1_text = 'Start Game'
-        button1 = Button(button1_text, button1_li, red_panel, padding=button1_pad)
+        button1 = Button(text=button1_text,
+                         layout_info=button1_li,
+                         container=red_panel,
+                         padding=button1_pad,
+                         corner_radius_ratio=0.2)
         button_eh = BaseEventHandler()
         button_eh.on_ui_button_pressed = lambda ui_element: print('Hooray! It works!', ui_element)
         event_manager.subscribe(button1, pygame_gui.UI_BUTTON_PRESSED, button_eh)
@@ -64,7 +68,11 @@ class DominionApp:
         button2_li = LayoutInfo(left=0, right=0, top=0.9, height=0.1)
         button2_pad = LayoutInfo(left=10, right=10, top=0, bottom=10)
         button2_text = 'End Turn'
-        button2 = Button(button2_text, button2_li, red_panel, padding=button2_pad)
+        button2 = Button(text=button2_text,
+                         layout_info=button2_li,
+                         container=red_panel,
+                         padding=button2_pad,
+                         corner_radius_ratio=0.2)
 
         green_li = LayoutInfo(left=20, right=30.25, top=0.7, bottom=20)
         green_panel = Panel(green_li, self.window, GREEN)
