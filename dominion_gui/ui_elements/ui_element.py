@@ -9,13 +9,15 @@ class UIElement:
     def __init__(self,
                  layout_info: Union[LayoutInfo, None] = None,
                  container: Union[pygame.Rect, 'UIElement', None] = None,
-                 padding: Union[LayoutInfo, None] = None):
+                 padding: Union[LayoutInfo, None] = None,
+                 enabled: bool = True):
         self._bounds = pygame.Rect(0, 0, 0, 0)
         self._element = None
         self.layout_info = layout_info
         self.container = container
         self.padding = padding
         self.children = []
+        self.enabled = enabled
 
         if self.layout_info is None:
             self.layout_info = LayoutInfo(0, 0, 0, 0)
@@ -137,6 +139,18 @@ class UIElement:
             top += ptop
 
         return pygame.Rect(left, top, width, height)
+
+    def _on_enable(self):
+        pass
+
+    @property
+    def enabled(self) -> bool:
+        return self._enabled
+
+    @enabled.setter
+    def enabled(self, enabled):
+        self._enabled = enabled
+        self._on_enable()
 
     def rebuild(self):
         self.element.set_position(self.topleft)

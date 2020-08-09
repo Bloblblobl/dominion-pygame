@@ -70,7 +70,7 @@ class DominionApp:
         blue_panel = Panel(li_all_10, green_panel, BLUE)
 
         card_li = LayoutInfo(left=10, top=10, bottom=10, width=0.2)
-        card = Card(card_li, blue_panel, count=35)
+        card = Card('artisan', card_li, blue_panel, count=35)
 
         yellow_li = LayoutInfo(left=20, right=30.25, top=20, bottom=10.3)
         yellow_panel = Panel(yellow_li, self.window, YELLOW)
