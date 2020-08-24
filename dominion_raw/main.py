@@ -1,11 +1,16 @@
 import os
+from threading import Thread
+
+from functools import partial
+
 import sys
 from dominion_raw import util
 import pygame
 import copy
 from pathology.path import Path
 
-from client.client import Client
+#from client.client import Client
+from dominion_grpc_client.client import Client as GRPCClient
 from dominion_raw.components.deck import Deck
 from dominion_raw.components.discard_pile import DiscardPile
 from dominion_raw.components.hand import Hand
@@ -18,10 +23,16 @@ from dominion_raw.ui_elements.button import Button
 from dominion_raw.ui_elements.card import Card
 from ui_player import UIPlayer
 
+
 pygame.init()
 pygame.font.init()
-player = UIPlayer()
-client = Client('test', player) # , '10.0.0.72')
+#player = UIPlayer()
+#client = Client('test', player) # , '10.0.0.72')
+client = GRPCClient('test', UIPlayer)
+Thread(target=client.run).start()
+
+player = UIPlayer.instance
+
 prev_state = None
 
 screen = pygame.display.set_mode(screen_size)
@@ -99,8 +110,8 @@ def main():
         if start_game_button.show:
             start_game_button.update()
 
-        client.pump()
-        side_panel.players = client.players
+        # client.pump()
+        side_panel.players = []
         if player.state != prev_state:
             new_actions = player.state['actions']
             new_buys = player.state['buys']
@@ -135,8 +146,8 @@ def main():
             side_panel.active_buys = new_buys
             side_panel.active_money = new_money
 
-            if not side_panel.message_log.messages:
-                side_panel.message_log.messages.extend(client.card_names)
+            # if not side_panel.message_log.messages:
+            #     side_panel.message_log.messages.extend(client.card_names)
 
             prev_state = player.state
 

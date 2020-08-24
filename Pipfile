@@ -12,13 +12,13 @@ pillow = "*"
 pygame-gui = "*"
 pathology = "*"
 dominion-object-model = "*"
-grpcio = "^1.30.0"
-grpcio-tools = "^1.30.0"
-dominion-grpc-proto = "^0.3.0"
-dominion_grpc_client = "^0.2.0"
+grpcio = "1.30.0"
+grpcio-tools = "1.30.0"
+dominion-grpc-proto = "0.3.0"
+dominion_grpc_client = "0.6.0"
 
 [requires]
-python_version = "3.8.1"
+python_version = "3.8"
 
 [pipenv]
 allow_prereleases = true
