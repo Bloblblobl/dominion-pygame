@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABCMeta
 
-from dominion.object_model.object_model import (
+from dominion_object_model.object_model import (
     GameClient,
     Player)
 
