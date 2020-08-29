@@ -8,7 +8,7 @@ from dominion_gui.ui_elements.ui_manager import get_manager
 class UIElement:
     def __init__(self,
                  layout_info: Union[LayoutInfo, None] = None,
-                 container: Union[pygame.Rect, 'UIElement', None] = None,
+                 container: Union['UIElement', None] = None,
                  padding: Union[LayoutInfo, None] = None,
                  enabled: bool = True):
         self._bounds = pygame.Rect(0, 0, 0, 0)
@@ -57,6 +57,10 @@ class UIElement:
             return
         self._bounds.topleft = tl
         self.layout(only_if_changed=False)
+
+    @property
+    def content_size(self):
+        return self.size
 
     @property
     def size(self):
