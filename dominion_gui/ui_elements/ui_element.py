@@ -156,6 +156,14 @@ class UIElement:
         self._enabled = enabled
         self._on_enable(enabled)
 
+    def hide(self):
+        if self.element is not None:
+            self.element.hide()
+
+    def show(self):
+        if self.element is not None:
+            self.element.show()
+
     def rebuild(self):
         self.element.set_position(self.topleft)
         self.element.set_dimensions(self.size)

@@ -10,7 +10,7 @@ from dominion_gui.event_manager import event_manager
 from dominion_gui.ui_elements.button import Button
 from dominion_gui.ui_elements.image import Image
 from dominion_gui.ui_elements.html_textbox import HTMLTextBox
-from dominion_gui.ui_elements.scroll_container import ScrollContainer, ScrollbarPosition
+from dominion_gui.ui_elements.scroll_container import ScrollContainer, ScrollbarPosition, Scrollbar, Orientation
 from layout_info.layout_info import LayoutInfo
 from dominion_gui.ui_elements.panel import Panel
 
@@ -80,14 +80,9 @@ class DominionApp:
 
         blue_panel = Panel(li_all_10, green_panel, BLUE)
 
-        # card_li = LayoutInfo(left=10, top=10, bottom=10, width=0.2)
-        # card = Card('artisan', card_li, blue_panel, count=35)
-
-        hand = Hand(layout0, None)
-        hand.cards = ['artisan', 'bandit', 'bureaucrat', 'copper', 'festival']
-
-        scroll_container = ScrollContainer(layout0, blue_panel, hand, ScrollbarPosition.BOTTOM, 5)
-        hand.container = scroll_container
+        hand_kwargs = dict(layout_info=layout0)
+        scroll_container = ScrollContainer(layout0, blue_panel, Hand, hand_kwargs, ScrollbarPosition.BOTTOM, 25)
+        scroll_container.scrollable.cards = ['artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat', 'artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat']
 
         yellow_li = LayoutInfo(left=20, right=30.25, top=20, bottom=10.3)
         yellow_panel = Panel(yellow_li, self.window, YELLOW)
