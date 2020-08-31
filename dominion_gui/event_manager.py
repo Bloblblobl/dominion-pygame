@@ -7,6 +7,24 @@ from functools import partial
 from dominion_gui.base_event_handler import BaseEventHandler
 from dominion_gui.ui_elements.ui_element import UIElement
 
+event_manager = None
+
+
+def get_event_manager(root_element=None):
+    return _get_event_manager(root_element)
+
+
+def _get_event_manager(root_element):
+    return __get_event_manager(root_element)
+
+
+def __get_event_manager(root_element):
+    global event_manager
+    global _get_event_manager
+    event_manager = EventManager(root_element)
+    _get_event_manager = lambda x: event_manager
+    return event_manager
+
 
 def get_handler(subscriber: BaseEventHandler, event: pygame.event.Event):
     owner = event.ui_element.owner
@@ -17,8 +35,23 @@ def get_handler(subscriber: BaseEventHandler, event: pygame.event.Event):
 
 
 class EventManager:
-    def __init__(self):
+    mouse_events = (pygame.MOUSEMOTION,
+                    pygame.MOUSEBUTTONDOWN,
+                    pygame.MOUSEBUTTONUP)
+    events = (pygame.USEREVENT,) + mouse_events
+
+    def __init__(self, root_element: UIElement):
         self.subscribers = defaultdict(list)
+        self.root_element = root_element
+
+    def find_source_element(self, position, element=None):
+        if element is None:
+            element = self.root_element
+
+        for child in element.children:
+            if child.bounds.collidepoint(position):
+                return self.find_source_element(position, child)
+        return element
 
     def handle_event(self, event):
         if event.type == pygame.USEREVENT:
@@ -26,14 +59,17 @@ class EventManager:
                 return
             owner = event.ui_element.owner
             ui_event_type = event.user_type
-            for subscriber in self.subscribers[(id(owner), ui_event_type)]:
-                get_handler(subscriber, event)()
+        elif event.type in self.mouse_events:
+            owner = self.find_source_element(event.pos)
+            ui_event_type = event.type
+        else:
+            return
+
+        for subscriber in self.subscribers[(id(owner), ui_event_type)]:
+            get_handler(subscriber, event)()
 
     def subscribe(self,
                   owner: UIElement,
                   event_type: pygame.event.Event,
                   subscriber: BaseEventHandler):
         self.subscribers[(id(owner), event_type)].append(subscriber)
-
-
-event_manager = EventManager()

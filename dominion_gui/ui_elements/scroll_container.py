@@ -1,11 +1,12 @@
-import copy
 from enum import Enum
 
 import pygame_gui
-from pygame_gui.elements import UIHorizontalScrollBar, UIVerticalScrollBar
 
 from dominion_gui.base_event_handler import BaseEventHandler
-from dominion_gui.event_manager import event_manager
+from dominion_gui.components.default import layout0
+from dominion_gui.constants import RED
+from dominion_gui.event_manager import get_event_manager
+from dominion_gui.ui_elements.panel import Panel
 from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
 
@@ -31,22 +32,22 @@ class Scrollbar(UIElement):
         super().__init__(layout_info, container)
         self.orientation = orientation
         self.thumb_ratio = thumb_ratio
-        self.element = self._make_scrollbar()
+        self.offset = 0
+        self.element = Panel(layout0, self, RED)
+        self._configure_scrollbar()
 
-    def _make_scrollbar(self):
+    def _configure_scrollbar(self):
         if self.orientation == Orientation.HORIZONTAL:
-            return UIHorizontalScrollBar(relative_rect=self.bounds,
-                                         visible_percentage=self.thumb_ratio,
-                                         manager=self.manager)
+            thumb_width = self.thumb_ratio * self.width
+            thumb_layout = LayoutInfo(left=self.offset, top=0, bottom=0, width=thumb_width)
         else:
-            return UIVerticalScrollBar(relative_rect=self.bounds,
-                                       visible_percentage=self.thumb_ratio,
-                                       manager=self.manager)
+            thumb_height = self.thumb_ratio * self.height
+            thumb_layout = LayoutInfo(left=0, right=0, top=self.offset, height=thumb_height)
+        self.element.layout_info = thumb_layout
 
     def rebuild(self):
-        self.element.kill()
-        self.element = self._make_scrollbar()
-        super().rebuild()
+        self._configure_scrollbar()
+        self.element.rebuild()
 
 
 class ScrollContainer(UIElement, BaseEventHandler):
@@ -67,7 +68,7 @@ class ScrollContainer(UIElement, BaseEventHandler):
         self.scrollbar = None
         self._configure()
 
-        event_manager.subscribe(self.scrollbar, pygame_gui.UI_HORIZONTAL_SLIDER_MOVED, self.scrollable)
+        get_event_manager().subscribe(self.scrollbar, pygame_gui.UI_HORIZONTAL_SLIDER_MOVED, self.scrollable)
 
     def _configure(self):
         if self.scrollbar_position == ScrollbarPosition.LEFT:

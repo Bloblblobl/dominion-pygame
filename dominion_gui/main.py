@@ -6,7 +6,7 @@ from dominion_gui.components.card import Card
 from dominion_gui.components.default import layout0
 from dominion_gui.components.hand import Hand
 from dominion_gui.components.message_log import MessageLog
-from dominion_gui.event_manager import event_manager
+from dominion_gui.event_manager import get_event_manager
 from dominion_gui.ui_elements.button import Button
 from dominion_gui.ui_elements.image import Image
 from dominion_gui.ui_elements.html_textbox import HTMLTextBox
@@ -26,6 +26,7 @@ class DominionApp:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption('Dominion')
+        self.event_manager = None
         self.surface = pygame.display.set_mode(screen_size, flags=DISPLAY_FLAGS)
         self.background = pygame.Surface(screen_size)
         self.clock = pygame.time.Clock()
@@ -42,13 +43,14 @@ class DominionApp:
         # message_log = MessageLog(self.manager)
         # self.side_panel = SidePanel(message_log)
         self.window = TopLevelWindow(screen_size)
+        self.event_manager = get_event_manager(self.window)
 
         li_all_10 = LayoutInfo(left=10, right=10, top=10, bottom=10)
 
         gray_panel = Panel(li_all_10, self.window, DARK_GRAY)
 
         red_li = LayoutInfo(right=20, top=20, bottom=20, width=0.25)
-        red_panel = Panel(red_li, self.window, RED)
+        red_panel = Panel(red_li, gray_panel, RED)
 
         text_li = LayoutInfo(left=0, right=0, top=0, height=0.8)
         self.message_log = MessageLog(text_li, red_panel, padding=li_all_10)
@@ -63,8 +65,8 @@ class DominionApp:
                          corner_radius_ratio=0.2)
         button_eh = BaseEventHandler()
         button_eh.on_ui_button_pressed = lambda ui_element: print('Hooray! It works!', ui_element)
-        event_manager.subscribe(button1, pygame_gui.UI_BUTTON_PRESSED, button_eh)
-        event_manager.subscribe(button1, pygame_gui.UI_BUTTON_PRESSED, button_eh)
+        self.event_manager.subscribe(button1, pygame_gui.UI_BUTTON_PRESSED, button_eh)
+        self.event_manager.subscribe(button1, pygame_gui.UI_BUTTON_PRESSED, button_eh)
 
         button2_li = LayoutInfo(left=0, right=0, top=0.9, height=0.1)
         button2_pad = LayoutInfo(left=10, right=10, top=0, bottom=10)
@@ -76,16 +78,16 @@ class DominionApp:
                          corner_radius_ratio=0.2)
 
         green_li = LayoutInfo(left=20, right=30.25, top=0.7, bottom=20)
-        green_panel = Panel(green_li, self.window, GREEN)
+        green_panel = Panel(green_li, gray_panel, GREEN)
 
         blue_panel = Panel(li_all_10, green_panel, BLUE)
 
         hand_kwargs = dict(layout_info=layout0)
-        scroll_container = ScrollContainer(layout0, blue_panel, Hand, hand_kwargs, ScrollbarPosition.BOTTOM, 25)
+        scroll_container = ScrollContainer(layout0, blue_panel, Hand, hand_kwargs, ScrollbarPosition.RIGHT, 25)
         scroll_container.scrollable.cards = ['artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat', 'artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat']
 
         yellow_li = LayoutInfo(left=20, right=30.25, top=20, bottom=10.3)
-        yellow_panel = Panel(yellow_li, self.window, YELLOW)
+        yellow_panel = Panel(yellow_li, gray_panel, YELLOW)
 
     def handle_screen_resize(self, raw_size):
         manager = get_manager()
@@ -107,11 +109,11 @@ class DominionApp:
                 if event.type == pygame.QUIT:
                     self.is_running = False
 
-                if event.type == pygame.VIDEORESIZE:
+                elif event.type == pygame.VIDEORESIZE:
                     self.handle_screen_resize(event.dict['size'])
 
-                if event.type == pygame.USEREVENT:
-                    event_manager.handle_event(event)
+                elif event.type in self.event_manager.events:
+                    self.event_manager.handle_event(event)
 
                 manager.process_events(event)
 

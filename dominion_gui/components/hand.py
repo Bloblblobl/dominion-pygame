@@ -71,9 +71,6 @@ class Hand(UIElement, BaseEventHandler):
             left_offset += new_width + card_spacing
 
         super().layout(only_if_changed)
-        for card in self.cards:
-            print(card.bounds)
-        pass
 
     def on_ui_horizontal_slider_moved(self, ui_element, slider_value):
         print(slider_value)
