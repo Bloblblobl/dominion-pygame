@@ -1,11 +1,15 @@
 from enum import Enum
 
+import pygame
+from typing import Callable
+
 import pygame_gui
 
 from dominion_gui.base_event_handler import BaseEventHandler
-from dominion_gui.components.default import layout0
-from dominion_gui.constants import RED
+from dominion_gui.components.default import get_default_layout
+from dominion_gui.constants import RED, YELLOW
 from dominion_gui.event_manager import get_event_manager
+from dominion_gui.ui_elements.color_element import ColorElement
 from dominion_gui.ui_elements.panel import Panel
 from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
@@ -23,31 +27,48 @@ class ScrollbarPosition(Enum):
     BOTTOM = 4
 
 
+class ScrollThumb(Panel):
+    def __init__(self,
+                 layout_info: LayoutInfo,
+                 scrollbar: UIElement,
+                 get_content_size_func: Callable,
+                 bg_color: pygame.Color = None,
+                 padding: LayoutInfo = None,
+                 depth: int = 0,
+                 corner_radius: int = None):
+        self.get_content_size = get_content_size_func
+        self.ratio = 0.0
+        super().__init__(layout_info, scrollbar, bg_color, padding, depth, corner_radius)
+
+    def layout(self, only_if_changed=True):
+        content_width, content_height = self.get_content_size()
+        if self.container.orientation == Orientation.HORIZONTAL:
+            self.ratio = 0.0 if content_width == 0 else self.container.width / content_width
+            self.layout_info.width = int(self.ratio * self.container.width)
+        else:
+            self.ratio = 0.0 if content_height == 0 else self.container.height / content_height
+            self.layout_info.height = int(self.ratio * self.container.height)
+        super().layout(only_if_changed)
+
+
 class Scrollbar(UIElement):
     def __init__(self,
                  layout_info: LayoutInfo,
                  container: UIElement,
-                 orientation: Orientation,
-                 thumb_ratio: float):
-        super().__init__(layout_info, container)
+                 orientation: Orientation):
         self.orientation = orientation
-        self.thumb_ratio = thumb_ratio
         self.offset = 0
-        self.element = Panel(layout0, self, RED)
-        self._configure_scrollbar()
+        super().__init__(layout_info, container)
+        self.thumb = ScrollThumb(get_default_layout(),
+                                 self,
+                                 lambda: self.container.scrollable.content_size,
+                                 RED)
 
-    def _configure_scrollbar(self):
-        if self.orientation == Orientation.HORIZONTAL:
-            thumb_width = self.thumb_ratio * self.width
-            thumb_layout = LayoutInfo(left=self.offset, top=0, bottom=0, width=thumb_width)
-        else:
-            thumb_height = self.thumb_ratio * self.height
-            thumb_layout = LayoutInfo(left=0, right=0, top=self.offset, height=thumb_height)
-        self.element.layout_info = thumb_layout
+    def hide(self):
+        self.thumb.hide()
 
-    def rebuild(self):
-        self._configure_scrollbar()
-        self.element.rebuild()
+    def show(self):
+        self.thumb.show()
 
 
 class ScrollContainer(UIElement, BaseEventHandler):
@@ -55,18 +76,16 @@ class ScrollContainer(UIElement, BaseEventHandler):
                  layout_info: LayoutInfo,
                  container: UIElement,
                  scrollable_class,
-                 scrollable_kwargs,
                  scrollbar_position: ScrollbarPosition,
                  scrollbar_thickness: int,
                  padding: LayoutInfo = None):
-        super().__init__(layout_info, container, padding)
+        self.scrollable = None
+        self.scrollable_class = scrollable_class
+        self.scrollbar = None
         self.scrollbar_position = scrollbar_position
         self.scrollbar_thickness = scrollbar_thickness
 
-        self.scrollable = scrollable_class(container=self, **scrollable_kwargs)
-        self.scrollable.container = self
-        self.scrollbar = None
-        self._configure()
+        super().__init__(layout_info, container, padding)
 
         get_event_manager().subscribe(self.scrollbar, pygame_gui.UI_HORIZONTAL_SLIDER_MOVED, self.scrollable)
 
@@ -74,32 +93,34 @@ class ScrollContainer(UIElement, BaseEventHandler):
         if self.scrollbar_position == ScrollbarPosition.LEFT:
             scrollable_layout = LayoutInfo(left=self.scrollbar_thickness, right=0, top=0, bottom=0)
             scrollbar_layout = LayoutInfo(left=0, top=0, bottom=0, width=self.scrollbar_thickness)
-            scrollbar_orientation = Orientation.VERTICAL
+            orientation = Orientation.VERTICAL
         elif self.scrollbar_position == ScrollbarPosition.RIGHT:
             scrollable_layout = LayoutInfo(left=0, right=self.scrollbar_thickness, top=0, bottom=0)
             scrollbar_layout = LayoutInfo(right=0, top=0, bottom=0, width=self.scrollbar_thickness)
-            scrollbar_orientation = Orientation.VERTICAL
+            orientation = Orientation.VERTICAL
         elif self.scrollbar_position == ScrollbarPosition.TOP:
             scrollable_layout = LayoutInfo(left=0, right=0, top=self.scrollbar_thickness, bottom=0)
             scrollbar_layout = LayoutInfo(left=0, right=0, top=0, height=self.scrollbar_thickness)
-            scrollbar_orientation = Orientation.HORIZONTAL
+            orientation = Orientation.HORIZONTAL
         else:
             scrollable_layout = LayoutInfo(left=0, right=0, top=0, bottom=self.scrollbar_thickness)
             scrollbar_layout = LayoutInfo(left=0, right=0, bottom=0, height=self.scrollbar_thickness)
-            scrollbar_orientation = Orientation.HORIZONTAL
+            orientation = Orientation.HORIZONTAL
 
-        self.scrollable.layout_info = scrollable_layout
+        if self.scrollable is None:
+            self.scrollable = self.scrollable_class(layout_info=scrollable_layout, container=self)
+        else:
+            self.scrollable.layout_info = scrollable_layout
 
-        width, height = self.scrollable.size
-        content_width, content_height = self.scrollable.content_size
+        if self.scrollbar is None:
+            self.scrollbar = Scrollbar(scrollbar_layout, self, orientation)
+        else:
+            self.scrollbar.layout_info = scrollbar_layout
 
-        thumb_ratio = width / content_width if scrollbar_orientation == Orientation.HORIZONTAL else height / content_height
-
-        self.scrollbar = Scrollbar(scrollbar_layout, self, scrollbar_orientation, 0.5)
-        self.layout(only_if_changed=False)
+        print('sc', self.scrollable.padded_rect.width, self.scrollable.content_size[0])
+        self.scrollbar.visible = self.scrollbar.thumb.ratio < 1.0
 
     def layout(self, only_if_changed=True):
         super().layout(only_if_changed)
-
-    def rebuild(self):
         self._configure()
+        super().layout(only_if_changed)

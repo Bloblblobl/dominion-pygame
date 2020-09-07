@@ -3,7 +3,7 @@ import pygame_gui
 
 from dominion_gui.base_event_handler import BaseEventHandler
 from dominion_gui.components.card import Card
-from dominion_gui.components.default import layout0
+from dominion_gui.components.default import get_default_layout
 from dominion_gui.components.hand import Hand
 from dominion_gui.components.message_log import MessageLog
 from dominion_gui.event_manager import get_event_manager
@@ -17,9 +17,7 @@ from dominion_gui.ui_elements.panel import Panel
 from dominion_gui.ui_elements.top_level_window import TopLevelWindow
 from dominion_gui.ui_elements.ui_manager import get_manager
 from dominion_gui.constants import screen_size, background_color, preloaded_fonts, RED, GREEN, BLUE, YELLOW, DARK_GRAY, \
-    min_screen_width, min_screen_height
-
-DISPLAY_FLAGS = pygame.RESIZABLE
+    min_screen_width, min_screen_height, DISPLAY_FLAGS
 
 
 class DominionApp:
@@ -82,9 +80,13 @@ class DominionApp:
 
         blue_panel = Panel(li_all_10, green_panel, BLUE)
 
-        hand_kwargs = dict(layout_info=layout0)
-        scroll_container = ScrollContainer(layout0, blue_panel, Hand, hand_kwargs, ScrollbarPosition.RIGHT, 25)
-        scroll_container.scrollable.cards = ['artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat', 'artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat']
+        # self.test_content_calc(blue_panel)
+
+        scroll_container = ScrollContainer(get_default_layout(), blue_panel, Hand, ScrollbarPosition.BOTTOM, 25)
+        # scroll_container.scrollable.cards = ['artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat', 'artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat']
+        scroll_container.scrollable.cards = ['artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat']
+        # scroll_container.scrollable.cards = ['artisan', 'bandit', 'bureaucrat']
+        scroll_container.layout(only_if_changed=False)
 
         yellow_li = LayoutInfo(left=20, right=30.25, top=20, bottom=10.3)
         yellow_panel = Panel(yellow_li, gray_panel, YELLOW)
@@ -123,6 +125,14 @@ class DominionApp:
             manager.draw_ui(self.surface)
 
             pygame.display.update()
+
+    def test_content_calc(self, container):
+        layout_info = get_default_layout()
+        hand = Hand(layout_info, container)
+        hand.cards = ['artisan']
+        content_width = hand.content_size[0]
+        expected = 0
+        assert(expected == content_width)
 
 
 if __name__ == '__main__':

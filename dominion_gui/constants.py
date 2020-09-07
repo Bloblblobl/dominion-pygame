@@ -7,6 +7,8 @@ background_color = '#000000'
 preloaded_fonts = [dict(name='fira_code', html_size=2, style='regular'),
                    dict(name='fira_code', point_size=12, style='regular')]
 
+DISPLAY_FLAGS = pygame.RESIZABLE
+
 RED = pygame.Color(255, 0, 0)
 GREEN = pygame.Color(0, 255, 0)
 BLUE = pygame.Color(0, 0, 255)

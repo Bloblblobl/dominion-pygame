@@ -13,6 +13,7 @@ class UIElement:
                  enabled: bool = True):
         self._bounds = pygame.Rect(0, 0, 0, 0)
         self._element = None
+        self._visible = True
         self.layout_info = layout_info
         self.container = container
         self.padding = padding
@@ -156,6 +157,18 @@ class UIElement:
         self._enabled = enabled
         self._on_enable(enabled)
 
+    @property
+    def visible(self):
+        return self._visible
+
+    @visible.setter
+    def visible(self, visible: bool):
+        self._visible = visible
+        if visible:
+            self.show()
+        else:
+            self.hide()
+
     def hide(self):
         if self.element is not None:
             self.element.hide()
@@ -177,7 +190,7 @@ class UIElement:
             self._bounds = new_bounds
 
         for child in self.children:
-            child.layout()
+            child.layout(only_if_changed)
 
         if self.element is not None:
             self.rebuild()

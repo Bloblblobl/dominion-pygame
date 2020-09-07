@@ -3,7 +3,7 @@ from typing import Union
 import pygame
 
 from pathology.path import Path
-from dominion_gui.components.default import layout0
+from dominion_gui.components.default import get_default_layout
 from dominion_gui.constants import DARK_GRAY
 from dominion_gui.ui_elements.html_textbox import HTMLTextBox
 from dominion_gui.ui_elements.image import Image
@@ -30,7 +30,7 @@ class Card(UIElement):
 
     def _on_enable(self, enabled: bool):
         image_path = self.image_path if enabled else self.gray_image_path
-        self.image = Image(layout0, self, image_path)
+        self.image = Image(get_default_layout(), self, image_path)
 
     def build_counter(self, count):
         if count == -1:

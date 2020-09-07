@@ -5,7 +5,7 @@ from typing import List, Union
 
 from dominion_gui.base_event_handler import BaseEventHandler
 from dominion_gui.components.card import Card
-from dominion_gui.components.default import layout0
+from dominion_gui.components.default import get_default_layout
 from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
 
@@ -18,7 +18,7 @@ class Hand(UIElement, BaseEventHandler):
                  container: Union[pygame.Rect, UIElement, None] = None,
                  padding: Union[LayoutInfo, None] = None):
         self._cards = []
-        self.card_index = 3
+        self.card_index = 0
         super().__init__(layout_info, container, padding)
 
     @property
@@ -29,7 +29,7 @@ class Hand(UIElement, BaseEventHandler):
     def cards(self, card_names: List[str]):
         self._cards = []
         for card_name in card_names:
-            card = Card(layout_info=copy.deepcopy(layout0),
+            card = Card(layout_info=get_default_layout(),
                         container=self,
                         image_name=card_name)
 
@@ -43,13 +43,13 @@ class Hand(UIElement, BaseEventHandler):
             return self.size
 
         content_width = 0
+        _, hand_height = self.padded_rect.size
         for card in self.cards:
             image_width, image_height = card.image.dimensions
-            _, hand_height = self.padded_rect.size
             aspect_ratio = image_width / image_height
-            new_width = int(hand_height * aspect_ratio)
+            new_width = hand_height * aspect_ratio
             content_width += new_width + card_spacing
-        return content_width, self.padded_rect.height
+        return int(content_width - card_spacing), self.padded_rect.height
 
     def layout(self, only_if_changed=True):
         left_offset = 0
@@ -70,7 +70,10 @@ class Hand(UIElement, BaseEventHandler):
             card.layout_info = new_layout
             left_offset += new_width + card_spacing
 
+        print('padded_rect', self.padded_rect.size)
         super().layout(only_if_changed)
+        print('padded_rect', self.padded_rect.size)
+        # print(self.width, self.content_size[0])
 
     def on_ui_horizontal_slider_moved(self, ui_element, slider_value):
         print(slider_value)
