@@ -18,7 +18,8 @@ class Hand(UIElement, BaseEventHandler):
                  container: Union[pygame.Rect, UIElement, None] = None,
                  padding: Union[LayoutInfo, None] = None):
         self._cards = []
-        self.card_index = 0
+        self.first_index = 0
+        self.last_index = 0
         super().__init__(layout_info, container, padding)
 
     @property
@@ -38,24 +39,23 @@ class Hand(UIElement, BaseEventHandler):
         self.layout(only_if_changed=False)
 
     @property
-    def content_size(self):
+    def visible_content(self):
         if not self.cards:
-            return self.size
+            return (0, 0)
+        return (self.first_index / (len(self.cards) - 1),
+                self.last_index / (len(self.cards) - 1))
 
-        content_width = 0
-        _, hand_height = self.padded_rect.size
-        for card in self.cards:
-            image_width, image_height = card.image.dimensions
-            aspect_ratio = image_width / image_height
-            new_width = hand_height * aspect_ratio
-            content_width += new_width + card_spacing
-        return int(content_width - card_spacing), self.padded_rect.height
+    def on_scroll(self, direction, delta=1):
+        if direction == 'left':
+            self.first_index = max(self.first_index - delta, 0)
+        elif direction == 'right':
+            self.first_index = min(self.first_index + delta, len(self.cards) - 1)
 
     def layout(self, only_if_changed=True):
         left_offset = 0
         overflow = False
         for i, card in enumerate(self.cards):
-            if i < self.card_index or overflow:
+            if i < self.first_index or overflow:
                 card.layout_info.width = 0
                 continue
             image_width, image_height = card.image.dimensions
@@ -63,6 +63,7 @@ class Hand(UIElement, BaseEventHandler):
             aspect_ratio = image_width / image_height
             new_width = int(hand_height * aspect_ratio)
             if left_offset + new_width > self.padded_rect.width:
+                self.last_index = i - 1
                 card.layout_info.width = 0
                 overflow = True
                 continue
@@ -70,10 +71,10 @@ class Hand(UIElement, BaseEventHandler):
             card.layout_info = new_layout
             left_offset += new_width + card_spacing
 
-        print('padded_rect', self.padded_rect.size)
+        if not overflow:
+            self.last_index = len(self.cards) - 1
+
         super().layout(only_if_changed)
-        print('padded_rect', self.padded_rect.size)
-        # print(self.width, self.content_size[0])
 
     def on_ui_horizontal_slider_moved(self, ui_element, slider_value):
         print(slider_value)

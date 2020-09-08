@@ -7,9 +7,8 @@ import pygame_gui
 
 from dominion_gui.base_event_handler import BaseEventHandler
 from dominion_gui.components.default import get_default_layout
-from dominion_gui.constants import RED, YELLOW
+from dominion_gui.constants import RED
 from dominion_gui.event_manager import get_event_manager
-from dominion_gui.ui_elements.color_element import ColorElement
 from dominion_gui.ui_elements.panel import Panel
 from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
@@ -32,22 +31,27 @@ class ScrollThumb(Panel):
                  layout_info: LayoutInfo,
                  scrollbar: UIElement,
                  get_content_size_func: Callable,
+                 get_offset_func: Callable,
                  bg_color: pygame.Color = None,
                  padding: LayoutInfo = None,
                  depth: int = 0,
                  corner_radius: int = None):
         self.get_content_size = get_content_size_func
+        self.get_offset = get_offset_func
         self.ratio = 0.0
         super().__init__(layout_info, scrollbar, bg_color, padding, depth, corner_radius)
 
     def layout(self, only_if_changed=True):
         content_width, content_height = self.get_content_size()
+        offset = self.get_offset()
         if self.container.orientation == Orientation.HORIZONTAL:
             self.ratio = 0.0 if content_width == 0 else self.container.width / content_width
             self.layout_info.width = int(self.ratio * self.container.width)
+            self.layout_info.left = offset
         else:
             self.ratio = 0.0 if content_height == 0 else self.container.height / content_height
             self.layout_info.height = int(self.ratio * self.container.height)
+            self.layout_info.top = offset
         super().layout(only_if_changed)
 
 
@@ -62,6 +66,7 @@ class Scrollbar(UIElement):
         self.thumb = ScrollThumb(get_default_layout(),
                                  self,
                                  lambda: self.container.scrollable.content_size,
+                                 lambda: self.container.scrollable.offset,
                                  RED)
 
     def hide(self):
@@ -117,7 +122,6 @@ class ScrollContainer(UIElement, BaseEventHandler):
         else:
             self.scrollbar.layout_info = scrollbar_layout
 
-        print('sc', self.scrollable.padded_rect.width, self.scrollable.content_size[0])
         self.scrollbar.visible = self.scrollbar.thumb.ratio < 1.0
 
     def layout(self, only_if_changed=True):

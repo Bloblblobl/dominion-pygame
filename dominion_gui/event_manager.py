@@ -5,7 +5,6 @@ import pygame_gui
 
 from functools import partial
 from dominion_gui.base_event_handler import BaseEventHandler
-from dominion_gui.ui_elements.ui_element import UIElement
 
 event_manager = None
 
@@ -40,7 +39,7 @@ class EventManager:
                     pygame.MOUSEBUTTONUP)
     events = (pygame.USEREVENT,) + mouse_events
 
-    def __init__(self, root_element: UIElement):
+    def __init__(self, root_element):
         self.subscribers = defaultdict(list)
         self.root_element = root_element
 
@@ -69,7 +68,7 @@ class EventManager:
             get_handler(subscriber, event)()
 
     def subscribe(self,
-                  owner: UIElement,
+                  owner,
                   event_type: pygame.event.Event,
                   subscriber: BaseEventHandler):
         self.subscribers[(id(owner), event_type)].append(subscriber)

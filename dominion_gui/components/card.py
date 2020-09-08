@@ -28,7 +28,7 @@ class Card(UIElement):
         super().__init__(layout_info, container, padding)
         self.counter = self.build_counter(count)
 
-    def _on_enable(self, enabled: bool):
+    def on_enable(self, enabled: bool):
         image_path = self.image_path if enabled else self.gray_image_path
         self.image = Image(get_default_layout(), self, image_path)
 

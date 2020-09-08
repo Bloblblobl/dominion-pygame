@@ -8,6 +8,7 @@ from dominion_gui.components.hand import Hand
 from dominion_gui.components.message_log import MessageLog
 from dominion_gui.event_manager import get_event_manager
 from dominion_gui.ui_elements.button import Button
+from dominion_gui.ui_elements.horizontal_scroll_container import HorizontalScrollContainer
 from dominion_gui.ui_elements.image import Image
 from dominion_gui.ui_elements.html_textbox import HTMLTextBox
 from dominion_gui.ui_elements.scroll_container import ScrollContainer, ScrollbarPosition, Scrollbar, Orientation
@@ -82,7 +83,7 @@ class DominionApp:
 
         # self.test_content_calc(blue_panel)
 
-        scroll_container = ScrollContainer(get_default_layout(), blue_panel, Hand, ScrollbarPosition.BOTTOM, 25)
+        scroll_container = HorizontalScrollContainer(get_default_layout(), blue_panel, Hand, 0.035)
         # scroll_container.scrollable.cards = ['artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat', 'artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat']
         scroll_container.scrollable.cards = ['artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat']
         # scroll_container.scrollable.cards = ['artisan', 'bandit', 'bureaucrat']

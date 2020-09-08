@@ -1,6 +1,7 @@
 from typing import Union
 import pygame
 
+from dominion_gui.event_manager import get_event_manager
 from layout_info.layout_info import LayoutInfo
 from dominion_gui.ui_elements.ui_manager import get_manager
 
@@ -30,10 +31,18 @@ class UIElement:
         self.layout()
         self._validate_padding()
 
+        self._event_manager = self._get_event_manager()
+
+    def _get_event_manager(self):
+        return get_event_manager()
+
     def _validate_padding(self):
         p = self.padding
         if p is not None and (not p.is_valid or p.width is not None or p.height is not None):
             raise Exception('Invalid padding')
+
+    def subscribe(self, *args, **kwargs):
+        self._event_manager.subscribe(*args, **kwargs)
 
     @property
     def element(self):
@@ -58,10 +67,6 @@ class UIElement:
             return
         self._bounds.topleft = tl
         self.layout(only_if_changed=False)
-
-    @property
-    def content_size(self):
-        return self.size
 
     @property
     def size(self):
@@ -145,8 +150,14 @@ class UIElement:
 
         return pygame.Rect(left, top, width, height)
 
-    def _on_enable(self, enabled: bool):
-        pass
+    def on_enable(self, enabled: bool):
+        if self.element is None:
+            return
+
+        if enabled:
+            self.element.enable()
+        else:
+            self.element.disable()
 
     @property
     def enabled(self) -> bool:
@@ -155,7 +166,7 @@ class UIElement:
     @enabled.setter
     def enabled(self, enabled: bool):
         self._enabled = enabled
-        self._on_enable(enabled)
+        self.on_enable(enabled)
 
     @property
     def visible(self):
