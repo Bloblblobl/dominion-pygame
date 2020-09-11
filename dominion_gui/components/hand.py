@@ -52,7 +52,14 @@ class Hand(UIElement, BaseEventHandler):
             self.first_index = min(self.first_index + delta, len(self.cards) - 1)
 
     def layout(self, only_if_changed=True):
+        if self.container is not None:
+            new_bounds = self.padded_rect
+            if only_if_changed and new_bounds == self.bounds:
+                return
+            self._bounds = new_bounds
+
         left_offset = 0
+        card_layouts = []
         overflow = False
         for i, card in enumerate(self.cards):
             if i < self.first_index or overflow:
@@ -69,12 +76,19 @@ class Hand(UIElement, BaseEventHandler):
                 continue
             new_layout = LayoutInfo(left=left_offset, top=0, bottom=0, width=new_width)
             card.layout_info = new_layout
+            card_layouts.append(new_layout)
             left_offset += new_width + card_spacing
 
         if not overflow:
             self.last_index = len(self.cards) - 1
 
-        super().layout(only_if_changed)
+        left_offset -= card_spacing
+        remaining_width = self.width - left_offset
+        for layout in card_layouts:
+            layout.left += remaining_width // 2
+
+        for child in self.children:
+            child.layout(only_if_changed)
 
     def on_ui_horizontal_slider_moved(self, ui_element, slider_value):
         print(slider_value)
