@@ -17,4 +17,7 @@ LIGHT_GRAY = pygame.Color(200, 200, 200)
 GRAY = pygame.Color(150, 150, 150)
 DARK_GRAY = pygame.Color(100, 100, 100)
 
+card_spacing = 5
+
+images_dir = str((Path.script_dir() / 'images').resolve())
 theme_path = str((Path.script_dir() / 'theme.json').resolve())

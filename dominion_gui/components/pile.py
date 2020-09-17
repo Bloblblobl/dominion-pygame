@@ -9,11 +9,10 @@ from dominion_gui.ui_elements.image import Image
 from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
 
-
 counter_layout = LayoutInfo(right=2, bottom=2, width=32, height=34)
 
 
-class Card(UIElement):
+class Pile(UIElement):
     def __init__(self,
                  image_name: str,
                  layout_info: Union[LayoutInfo, None] = None,
@@ -21,8 +20,8 @@ class Card(UIElement):
                  padding: Union[LayoutInfo, None] = None,
                  count: int = -1):
         self.image = None
-        self.image_path = f'{images_dir}/{image_name}.jpg'
-        self.gray_image_path = f'{images_dir}/{image_name}_gray.jpg'
+        self.image_path = f'{images_dir}/{image_name}_pic.jpg'
+        self.gray_image_path = f'{images_dir}/{image_name}_pic_gray.jpg'
         super().__init__(layout_info, container, padding)
         self.counter = self.build_counter(count)
 
@@ -34,7 +33,7 @@ class Card(UIElement):
         if count == -1:
             return
 
-        html = f'<font face=fira_code size=3>{count}</font>'
+        html = f'<font face=fira_code size=7>{count}</font>'
 
         counter = HTMLTextBox(html,
                               counter_layout,

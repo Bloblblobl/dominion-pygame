@@ -1,5 +1,3 @@
-import pygame
-
 from dominion_gui.ui_elements.html_textbox import HTMLTextBox
 
 

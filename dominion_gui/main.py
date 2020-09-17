@@ -6,6 +6,7 @@ from dominion_gui.components.card import Card
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.components.hand import Hand
 from dominion_gui.components.message_log import MessageLog
+from dominion_gui.components.shop import Shop
 from dominion_gui.event_manager import get_event_manager
 from dominion_gui.ui_elements.button import Button
 from dominion_gui.ui_elements.horizontal_scroll_container import HorizontalScrollContainer
@@ -91,6 +92,11 @@ class DominionApp:
 
         yellow_li = LayoutInfo(left=20, right=30.25, top=20, bottom=10.3)
         yellow_panel = Panel(yellow_li, gray_panel, YELLOW)
+
+        shop_li = LayoutInfo(left=0, right=0, top=0, height=0.5)
+        shop = Shop(shop_li, yellow_panel)
+        # shop.piles = ['bandit']
+        shop.piles = ['artisan', 'bandit', 'bureaucrat', 'festival', 'councilroom', 'estate', 'duchy', 'province', 'curse', 'market', 'gardens', 'smithy', 'militia', 'laboratory', 'copper', 'silver', 'gold']
 
     def handle_screen_resize(self, raw_size):
         manager = get_manager()

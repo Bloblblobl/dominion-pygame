@@ -30,7 +30,7 @@ class Manager(ClientEventHandler):
             self.client.play_action_card(card.name)
         elif isinstance(card_view, PlayArea):
             play_area = card_view
-            self.discard_pile.cards.insert(0, play_area.selected_card)
+            self.discard_pile.piles.insert(0, play_area.selected_card)
             del play_area.cards[play_area.selected_index + play_area.start_index]
             if play_area.start_index > 0:
                 play_area.start_index -= 1
@@ -41,7 +41,7 @@ class Manager(ClientEventHandler):
         if isinstance(card_stack, Deck):
             deck = card_stack
             if deck.cards:
-                self.hand.cards.append(deck.cards[-1])
+                self.hand.piles.append(deck.cards[-1])
                 del deck.cards[-1]
 
     # ClientEventHandler methods

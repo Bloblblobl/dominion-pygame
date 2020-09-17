@@ -1,15 +1,12 @@
-import copy
-
 import pygame
 from typing import List, Union
 
 from dominion_gui.base_event_handler import BaseEventHandler
 from dominion_gui.components.card import Card
 from dominion_gui.components.default import get_default_layout
+from dominion_gui.constants import card_spacing
 from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
-
-card_spacing = 5
 
 
 class Hand(UIElement, BaseEventHandler):
@@ -89,6 +86,3 @@ class Hand(UIElement, BaseEventHandler):
 
         for child in self.children:
             child.layout(only_if_changed)
-
-    def on_ui_horizontal_slider_moved(self, ui_element, slider_value):
-        print(slider_value)
