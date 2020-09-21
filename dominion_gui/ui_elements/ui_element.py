@@ -168,6 +168,15 @@ class UIElement:
         self._enabled = enabled
         self.on_enable(enabled)
 
+    def on_visible(self, visible: bool):
+        if self.element is None:
+            return
+
+        if visible:
+            self.element.show()
+        else:
+            self.element.hide()
+
     @property
     def visible(self):
         return self._visible
@@ -175,18 +184,7 @@ class UIElement:
     @visible.setter
     def visible(self, visible: bool):
         self._visible = visible
-        if visible:
-            self.show()
-        else:
-            self.hide()
-
-    def hide(self):
-        if self.element is not None:
-            self.element.hide()
-
-    def show(self):
-        if self.element is not None:
-            self.element.show()
+        self.on_visible(visible)
 
     def rebuild(self):
         self.element.set_position(self.topleft)

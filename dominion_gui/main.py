@@ -4,7 +4,7 @@ import pygame_gui
 from dominion_gui.base_event_handler import BaseEventHandler
 from dominion_gui.components.card import Card
 from dominion_gui.components.default import get_default_layout
-from dominion_gui.components.hand import Hand
+from dominion_gui.components.card_view import CardView
 from dominion_gui.components.message_log import MessageLog
 from dominion_gui.components.shop import Shop
 from dominion_gui.event_manager import get_event_manager
@@ -84,11 +84,11 @@ class DominionApp:
 
         # self.test_content_calc(blue_panel)
 
-        scroll_container = HorizontalScrollContainer(get_default_layout(), blue_panel, Hand, 0.035)
+        hand = HorizontalScrollContainer(get_default_layout(), blue_panel, CardView, 0.035)
         # scroll_container.scrollable.cards = ['artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat', 'artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat']
-        scroll_container.scrollable.cards = ['artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat']
+        hand.scrollable.cards = ['artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat']
         # scroll_container.scrollable.cards = ['artisan', 'bandit', 'bureaucrat']
-        scroll_container.layout(only_if_changed=False)
+        hand.layout(only_if_changed=False)
 
         yellow_li = LayoutInfo(left=20, right=30.25, top=20, bottom=10.3)
         yellow_panel = Panel(yellow_li, gray_panel, YELLOW)
@@ -97,6 +97,11 @@ class DominionApp:
         shop = Shop(shop_li, yellow_panel)
         # shop.piles = ['bandit']
         shop.piles = ['artisan', 'bandit', 'bureaucrat', 'festival', 'councilroom', 'estate', 'duchy', 'province', 'curse', 'market', 'gardens', 'smithy', 'militia', 'laboratory', 'copper', 'silver', 'gold']
+
+        play_area_li = LayoutInfo(left=0, right=0, bottom=0, height=0.5)
+        play_area = HorizontalScrollContainer(play_area_li, yellow_panel, CardView, 0.035)
+        play_area.scrollable.cards = ['artisan', 'bandit', 'bureaucrat', 'copper', 'festival', 'artisan', 'bandit', 'bureaucrat']
+        play_area.layout(only_if_changed=False)
 
     def handle_screen_resize(self, raw_size):
         manager = get_manager()
@@ -135,7 +140,7 @@ class DominionApp:
 
     def test_content_calc(self, container):
         layout_info = get_default_layout()
-        hand = Hand(layout_info, container)
+        hand = CardView(layout_info, container)
         hand.cards = ['artisan']
         content_width = hand.content_size[0]
         expected = 0

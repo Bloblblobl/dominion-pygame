@@ -9,7 +9,7 @@ from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
 
 
-class Hand(UIElement, BaseEventHandler):
+class CardView(UIElement, BaseEventHandler):
     def __init__(self,
                  layout_info: Union[LayoutInfo, None] = None,
                  container: Union[pygame.Rect, UIElement, None] = None,

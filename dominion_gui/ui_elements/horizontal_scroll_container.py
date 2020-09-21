@@ -44,5 +44,5 @@ class HorizontalScrollContainer(UIElement, BaseEventHandler):
 
         if self.scrollable is not None:
             first_offset, last_offset = self.scrollable.visible_content
-            self.left_button.enabled = first_offset > 0
-            self.right_button.enabled = last_offset < 1
+            self.left_button.visible = first_offset > 0
+            self.right_button.visible = last_offset < 1
