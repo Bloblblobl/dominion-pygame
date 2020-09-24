@@ -17,6 +17,15 @@ LIGHT_GRAY = pygame.Color(200, 200, 200)
 GRAY = pygame.Color(150, 150, 150)
 DARK_GRAY = pygame.Color(100, 100, 100)
 
+
+class Colors:
+    BORDER = pygame.Color('#8FB2B9')
+    SIDE_PANEL = pygame.Color('#C2C2C2')
+    STORE = pygame.Color('#B3C8CB')
+    HAND = pygame.Color('#ECECEC')
+    HAND_BORDER = pygame.Color('#B3C8CB')
+
+
 card_spacing = 5
 
 images_dir = str((Path.script_dir() / 'images').resolve())
