@@ -2,6 +2,7 @@ from typing import Union
 
 import pygame
 
+from dominion_gui.base_event_handler import BaseEventHandler
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.constants import DARK_GRAY, images_dir
 from dominion_gui.ui_elements.html_textbox import HTMLTextBox
@@ -28,6 +29,8 @@ class Card(UIElement):
 
     def on_enable(self, enabled: bool):
         image_path = self.image_path if enabled else self.gray_image_path
+        if self.image is not None:
+            self.image.kill()
         self.image = Image(get_default_layout(), self, image_path)
 
     def build_counter(self, count):

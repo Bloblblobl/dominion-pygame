@@ -22,8 +22,7 @@ class Colors:
     BORDER = pygame.Color('#8FB2B9')
     SIDE_PANEL = pygame.Color('#C2C2C2')
     STORE = pygame.Color('#B3C8CB')
-    HAND = pygame.Color('#ECECEC')
-    HAND_BORDER = pygame.Color('#B3C8CB')
+    HAND = pygame.Color('#B3C8CB')
 
 
 card_spacing = 5

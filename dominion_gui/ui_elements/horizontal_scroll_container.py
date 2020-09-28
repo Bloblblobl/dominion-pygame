@@ -25,6 +25,8 @@ class HorizontalScrollContainer(UIElement, BaseEventHandler):
         scrollable_layout = LayoutInfo(left=button_thickness, right=button_thickness, top=0, bottom=0)
         self.left_button = Button('<', left_layout_info, self, bg_colors)
         self.right_button = Button('>', right_layout_info, self, bg_colors)
+        self.left_button.visible = False
+        self.right_button.visible = False
         self.scrollable = scrollable_class(scrollable_layout, self)
 
         self.subscribe(self.left_button, pygame_gui.UI_BUTTON_PRESSED, self)
@@ -46,4 +48,4 @@ class HorizontalScrollContainer(UIElement, BaseEventHandler):
         if self.scrollable is not None:
             first_offset, last_offset = self.scrollable.visible_content
             self.left_button.visible = first_offset > 0
-            self.right_button.visible = last_offset < 1
+            self.right_button.visible = 0 < last_offset < 1

@@ -39,7 +39,7 @@ class HTMLTextBox(ColorElement):
 
     def _build_textbox(self):
         if self.element is not None:
-            self.element.kill()
+            self.kill()
         self.element = UITextBox(relative_rect=self.bounds,
                                  manager=self.manager,
                                  html_text=self.html,

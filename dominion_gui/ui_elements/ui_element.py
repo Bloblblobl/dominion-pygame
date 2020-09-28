@@ -186,6 +186,10 @@ class UIElement:
         self._visible = visible
         self.on_visible(visible)
 
+    def kill(self):
+        if self.element is not None:
+            self.element.kill()
+
     def rebuild(self):
         self.element.set_position(self.topleft)
         self.element.set_dimensions(self.size)

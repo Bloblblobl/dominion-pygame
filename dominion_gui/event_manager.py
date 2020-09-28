@@ -42,6 +42,7 @@ class EventManager:
     def __init__(self, root_element):
         self.subscribers = defaultdict(list)
         self.root_element = root_element
+        self.current_element = None
 
     def find_source_element(self, position, element=None):
         if element is None:
@@ -61,6 +62,12 @@ class EventManager:
         elif event.type in self.mouse_events:
             owner = self.find_source_element(event.pos)
             ui_event_type = event.type
+
+            if ui_event_type == pygame.MOUSEMOTION:
+                if owner != self.current_element:
+                    self.on_mouse_leave()
+                    self.current_element = owner
+                    self.on_mouse_enter()
         else:
             return
 
@@ -72,3 +79,9 @@ class EventManager:
                   event_type: pygame.event.Event,
                   subscriber: BaseEventHandler):
         self.subscribers[(id(owner), event_type)].append(subscriber)
+
+    def on_mouse_leave(self):
+        pass
+
+    def on_mouse_enter(self):
+        pass

@@ -19,12 +19,19 @@ class CardView(UIElement, BaseEventHandler):
         self.last_index = 0
         super().__init__(layout_info, container, padding)
 
+    def _kill_cards(self):
+        for card in self._cards:
+            card.image.kill()
+            if card.counter is not None:
+                card.counter.kill()
+
     @property
     def cards(self):
         return self._cards
 
     @cards.setter
     def cards(self, card_names: List[str]):
+        self._kill_cards()
         self._cards = []
         for card_name in card_names:
             card = Card(layout_info=get_default_layout(),
@@ -39,8 +46,9 @@ class CardView(UIElement, BaseEventHandler):
     def visible_content(self):
         if not self.cards:
             return (0, 0)
-        return (self.first_index / (len(self.cards) - 1),
-                self.last_index / (len(self.cards) - 1))
+        adjusted_len = len(self.cards) - 1 if len(self.cards) > 1 else 1
+        return (self.first_index / adjusted_len,
+                self.last_index / adjusted_len)
 
     def on_scroll(self, direction, delta=1):
         if direction == 'left':
@@ -77,7 +85,7 @@ class CardView(UIElement, BaseEventHandler):
             left_offset += new_width + card_spacing
 
         if not overflow:
-            self.last_index = len(self.cards) - 1
+            self.last_index = len(self.cards) - 1 if self.cards else 0
 
         left_offset -= card_spacing
         remaining_width = self.width - left_offset
