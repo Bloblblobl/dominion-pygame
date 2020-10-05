@@ -33,6 +33,12 @@ class BaseEventHandler:
     def on_key_up(self, key, modifiers):
         pass
 
+    def on_mouse_enter(self, ui_element):
+        pass
+
+    def on_mouse_leave(self, ui_element):
+        pass
+
     '''PYGAME GUI EVENTS
 
     https://pygame-gui.readthedocs.io/en/latest/events.html

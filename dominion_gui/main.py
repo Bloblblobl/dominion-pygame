@@ -7,7 +7,7 @@ from threading import Thread
 from dominion_gui.base_event_handler import BaseEventHandler
 from dominion_gui.constants import screen_size, preloaded_fonts, min_screen_width, min_screen_height, \
     DISPLAY_FLAGS
-from dominion_gui.event_manager import get_event_manager
+import dominion_gui.event_manager as em
 from dominion_gui.ui_elements.ui_manager import get_manager
 from dominion_gui.ui_factory import UI
 from ui_player import UIPlayer
@@ -32,7 +32,7 @@ class DominionApp:
         self.connect_events()
 
     def connect_events(self):
-        self.event_manager = get_event_manager(self.ui.window)
+        self.event_manager = em.get_event_manager(self.ui.window)
         button_eh = BaseEventHandler()
         button_eh.on_ui_button_pressed = lambda ui_element: self.connect()
         self.event_manager.subscribe(self.ui.top_button, pygame_gui.UI_BUTTON_PRESSED, button_eh)
@@ -94,6 +94,7 @@ class DominionApp:
                 self.ui.play_area.scrollable.cards = play_area_cards
                 self.ui.play_area.layout(only_if_changed=False)
                 self.ui.hand.scrollable.cards = hand_cards
+                em.first_card = self.ui.hand.scrollable.cards[0]
                 self.ui.hand.layout(only_if_changed=False)
                 prev_state = self.player.state
 

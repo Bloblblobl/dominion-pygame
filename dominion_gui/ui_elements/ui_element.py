@@ -20,6 +20,8 @@ class UIElement:
         self.padding = padding
         self.children = []
         self.enabled = enabled
+        # participates in Mouse Enter and Mouse Leave events
+        self.mouse_target = True
 
         if self.layout_info is None:
             self.layout_info = LayoutInfo(0, 0, 0, 0)

@@ -8,6 +8,8 @@ from dominion_gui.base_event_handler import BaseEventHandler
 
 event_manager = None
 
+first_card = None
+
 
 def get_event_manager(root_element=None):
     return _get_event_manager(root_element)
@@ -28,9 +30,25 @@ def __get_event_manager(root_element):
 def get_handler(subscriber: BaseEventHandler, event: pygame.event.Event):
     owner = event.ui_element.owner
     handler = None
-    if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+
+    if event.type == MouseEvent.Enter:
+        handler = partial(subscriber.on_mouse_enter, owner)
+    elif event.type == MouseEvent.Leave:
+        handler = partial(subscriber.on_mouse_leave, owner)
+    elif event.user_type == pygame_gui.UI_BUTTON_PRESSED:
         handler = partial(subscriber.on_ui_button_pressed, owner)
     return handler
+
+
+class MouseEvent:
+    Enter = 'mouse_enter'
+    Leave = 'mouse_leave'
+
+    def __init__(self, owner, mouse_event_type, mouse_position):
+        self.ui_element = lambda: None
+        self.ui_element.owner = owner
+        self.type = mouse_event_type
+        self.mouse_position = mouse_position
 
 
 class EventManager:
@@ -49,7 +67,7 @@ class EventManager:
             element = self.root_element
 
         for child in element.children:
-            if child.bounds.collidepoint(position):
+            if child.mouse_target and child.bounds.collidepoint(position):
                 return self.find_source_element(position, child)
         return element
 
@@ -64,10 +82,20 @@ class EventManager:
             ui_event_type = event.type
 
             if ui_event_type == pygame.MOUSEMOTION:
-                if owner != self.current_element:
-                    self.on_mouse_leave()
-                    self.current_element = owner
-                    self.on_mouse_enter()
+                if owner == self.current_element:
+                    return
+
+                print(owner)
+                print(self.current_element)
+                leave_event = MouseEvent(self.current_element, MouseEvent.Leave, event.pos)
+                self.handle_event(leave_event)
+                self.current_element = owner
+                enter_event = MouseEvent(owner, MouseEvent.Enter, event.pos)
+                self.handle_event(enter_event)
+                return
+        elif event.type in (MouseEvent.Enter, MouseEvent.Leave):
+            owner = event.ui_element.owner
+            ui_event_type = event.type
         else:
             return
 
@@ -76,12 +104,9 @@ class EventManager:
 
     def subscribe(self,
                   owner,
-                  event_type: pygame.event.Event,
+                  event_type,
                   subscriber: BaseEventHandler):
         self.subscribers[(id(owner), event_type)].append(subscriber)
 
-    def on_mouse_leave(self):
-        pass
-
-    def on_mouse_enter(self):
-        pass
+    def unsubscribe(self, owner, event_type):
+        del self.subscribers[(id(owner), event_type)]
