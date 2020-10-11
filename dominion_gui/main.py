@@ -24,6 +24,7 @@ class DominionApp:
         self.event_manager = None
         self.client = None
         self.player = None
+        self.state = None
 
         manager = get_manager(screen_size)
         manager.preload_fonts(preloaded_fonts)
@@ -83,9 +84,29 @@ class DominionApp:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 em.on_ui_button_press(ui_element=ui_element)
 
+    def update_state(self):
+        if self.player is None or self.player.state == self.state:
+            return
+
+        supply = self.player.state['supply']
+        play_area = self.player.state['play_area']
+        hand = self.player.state['hand']
+        draw_deck = self.player.state['draw_deck']
+        discard_pile = self.player.state['discard_pile']
+
+        shop_piles = [pile.lower() for pile in supply]
+        play_area_cards = [card['name'].lower() for card in play_area]
+        hand_cards = [card['name'].lower() for card in hand]
+
+        self.ui.shop.piles = shop_piles
+        self.ui.play_area.scrollable.cards = play_area_cards
+        self.ui.play_area.layout(only_if_changed=False)
+        self.ui.hand.scrollable.cards = hand_cards
+        self.ui.hand.layout(only_if_changed=False)
+        self.state = self.player.state
+
     def run(self):
         manager = get_manager()
-        prev_state = None
         mouse_events = (pygame.MOUSEMOTION,
                         pygame.MOUSEBUTTONDOWN,
                         pygame.MOUSEBUTTONUP)
@@ -106,24 +127,7 @@ class DominionApp:
 
                 manager.process_events(event)
 
-            if self.player is not None and self.player.state != prev_state:
-                supply = self.player.state['supply']
-                play_area = self.player.state['play_area']
-                hand = self.player.state['hand']
-                draw_deck = self.player.state['draw_deck']
-                discard_pile = self.player.state['discard_pile']
-
-                shop_piles = [pile.lower() for pile in supply]
-                play_area_cards = [card['name'].lower() for card in play_area]
-                hand_cards = [card['name'].lower() for card in hand]
-
-                self.ui.shop.piles = shop_piles
-                self.ui.play_area.scrollable.cards = play_area_cards
-                self.ui.play_area.layout(only_if_changed=False)
-                self.ui.hand.scrollable.cards = hand_cards
-                em.first_card = self.ui.hand.scrollable.cards[0]
-                self.ui.hand.layout(only_if_changed=False)
-                prev_state = self.player.state
+            self.update_state()
 
             manager.update(time_delta)
 

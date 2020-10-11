@@ -5,8 +5,6 @@ from dominion_gui.base_event_handler import BaseEventHandler
 
 event_manager = None
 
-first_card = None
-
 MouseButton = Enum('MouseButton', 'Left Middle Right')
 Direction = Enum('Direction', 'Left Right Up Down')
 

@@ -32,7 +32,6 @@ class Card(UIElement):
         if self.image is not None:
             self.image.kill()
         self.image = Image(get_default_layout(), self, image_path)
-        self.image.card = self
 
     def build_counter(self, count):
         if count == -1:

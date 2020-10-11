@@ -5,6 +5,7 @@ from dominion_gui.base_event_handler import BaseEventHandler
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.components.pile import Pile
 from dominion_gui.constants import card_spacing
+from dominion_gui.event_manager import get_event_manager
 from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
 
@@ -19,6 +20,13 @@ class Shop(UIElement, BaseEventHandler):
         self._piles = []
         super().__init__(layout_info, container, padding)
 
+    def _kill_piles(self):
+        for pile in self._piles:
+            get_event_manager().unsubscribe(pile.image, 'on_click')
+            pile.image.kill()
+            if pile.counter is not None:
+                pile.counter.kill()
+
     @property
     def piles(self):
         return self._piles
@@ -31,9 +39,15 @@ class Shop(UIElement, BaseEventHandler):
                         container=self,
                         image_name=pile_name)
 
+            get_event_manager().subscribe(pile.image, 'on_click', self)
+
             self._piles.append(pile)
 
         self.layout(only_if_changed=False)
+
+    def on_click(self, ui_element):
+        pile = ui_element.container
+        pile.enabled = not pile.enabled
 
     def _calc_pile_size(self):
         pile_width = (self.width - (piles_per_row + 1) * card_spacing) / piles_per_row

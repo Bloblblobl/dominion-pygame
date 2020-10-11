@@ -22,6 +22,7 @@ class CardView(UIElement, BaseEventHandler):
 
     def _kill_cards(self):
         for card in self._cards:
+            get_event_manager().unsubscribe(card.image, 'on_click')
             card.image.kill()
             if card.counter is not None:
                 card.counter.kill()
@@ -60,7 +61,7 @@ class CardView(UIElement, BaseEventHandler):
             self.first_index = min(self.first_index + delta, len(self.cards) - 1)
 
     def on_click(self, ui_element):
-        card = ui_element.card
+        card = ui_element.container
         card.enabled = not card.enabled
 
     def layout(self, only_if_changed=True):
