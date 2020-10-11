@@ -39,8 +39,7 @@ class CardView(UIElement, BaseEventHandler):
                         container=self,
                         image_name=card_name)
 
-            get_event_manager().subscribe(card.image, 'on_mouse_enter', self)
-            get_event_manager().subscribe(card.image, 'on_mouse_leave', self)
+            get_event_manager().subscribe(card.image, 'on_click', self)
 
             self._cards.append(card)
 
@@ -60,13 +59,9 @@ class CardView(UIElement, BaseEventHandler):
         elif direction == 'right':
             self.first_index = min(self.first_index + delta, len(self.cards) - 1)
 
-    def on_mouse_enter(self, ui_element):
+    def on_click(self, ui_element):
         card = ui_element.card
-        card.enabled = False
-
-    def on_mouse_leave(self, ui_element):
-        card = ui_element.card
-        card.enabled = True
+        card.enabled = not card.enabled
 
     def layout(self, only_if_changed=True):
         if self.container is not None:

@@ -4,7 +4,7 @@ import time
 from dominion_grpc_client.client import Client as GRPCClient
 from threading import Thread
 
-from dominion_gui.base_event_handler import BaseEventHandler
+from dominion_gui.base_event_handler import BaseEventHandler, MouseButton
 from dominion_gui.constants import screen_size, preloaded_fonts, min_screen_width, min_screen_height, \
     DISPLAY_FLAGS
 import dominion_gui.event_manager as em
@@ -34,8 +34,8 @@ class DominionApp:
     def connect_events(self):
         self.event_manager = em.get_event_manager(self.ui.window)
         button_eh = BaseEventHandler()
-        button_eh.on_ui_button_pressed = lambda ui_element: self.connect()
-        self.event_manager.subscribe(self.ui.top_button, 'on_ui_button_pressed', button_eh)
+        button_eh.on_ui_button_press = lambda ui_element: self.connect()
+        self.event_manager.subscribe(self.ui.top_button, 'on_ui_button_press', button_eh)
 
     def handle_screen_resize(self, raw_size):
         manager = get_manager()
@@ -63,20 +63,25 @@ class DominionApp:
 
     def handle_event(self, event):
         em = self.event_manager
+        mouse_buttons = {
+            1: MouseButton.Left,
+            2: MouseButton.Middle,
+            3: MouseButton.Right,
+        }
 
         if event.type == pygame.MOUSEMOTION:
             em.on_mouse_move(*event.pos)
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            print(event.button)
+            em.on_mouse_button_down(mouse_buttons[event.button])
         elif event.type == pygame.MOUSEBUTTONUP:
-            print(event.button)
+            em.on_mouse_button_up(mouse_buttons[event.button])
         elif event.type == pygame.USEREVENT:
             if not hasattr(event.ui_element, 'owner'):
                 return
 
             ui_element = event.ui_element.owner
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
-                em.on_ui_button_pressed(ui_element=ui_element)
+                em.on_ui_button_press(ui_element=ui_element)
 
     def run(self):
         manager = get_manager()

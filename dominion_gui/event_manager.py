@@ -1,9 +1,14 @@
 from collections import defaultdict
+from enum import Enum
+
 from dominion_gui.base_event_handler import BaseEventHandler
 
 event_manager = None
 
 first_card = None
+
+MouseButton = Enum('MouseButton', 'Left Middle Right')
+Direction = Enum('Direction', 'Left Right Up Down')
 
 
 def get_event_manager(root_element=None):
@@ -23,17 +28,16 @@ def __get_event_manager(root_element):
 
 
 def delegate(f):
-    def decorated(*args, **kwargs):
+    def decorated(event_manager, *args, **kwargs):
         handler_name = f.__name__
 
-        # args[0] is the event manager
-        subscribers = args[0].subscribers
-        # remove args[0] (self) because the handler is a bound method
-        args = args[1:]
+        subscribers = event_manager.subscribers
         owner = kwargs.get('ui_element', None)
         for subscriber in subscribers[(id(owner), handler_name)]:
             handler = getattr(subscriber, handler_name)
             handler(*args, **kwargs)
+
+        f(event_manager, *args, **kwargs)
     return decorated
 
 
@@ -42,6 +46,8 @@ class EventManager(BaseEventHandler):
         self.subscribers = defaultdict(list)
         self.root_element = root_element
         self.current_element = None
+        # element under the mouse cursor on mouse button down event
+        self.pressed_element = None
 
     def find_source_element(self, x, y, element=None):
         if element is None:
@@ -56,6 +62,8 @@ class EventManager(BaseEventHandler):
                   owner,
                   handler_name: str,
                   subscriber: BaseEventHandler):
+        if not hasattr(self, handler_name):
+            raise ValueError('No such handler ' + handler_name)
         self.subscribers[(id(owner), handler_name)].append(subscriber)
 
     def unsubscribe(self, owner, handler_name: str):
@@ -72,11 +80,12 @@ class EventManager(BaseEventHandler):
 
     @delegate
     def on_mouse_button_down(self, button):
-        pass
+        self.pressed_element = self.current_element
 
     @delegate
     def on_mouse_button_up(self, button):
-        pass
+        if self.current_element == self.pressed_element:
+            self.on_click(ui_element=self.current_element)
 
     @delegate
     def on_mouse_scroll(self, direction):
@@ -91,43 +100,39 @@ class EventManager(BaseEventHandler):
         pass
 
     @delegate
-    def on_mouse_enter(self, ui_element):
+    def on_mouse_enter(self, *, ui_element):
         pass
 
     @delegate
-    def on_mouse_leave(self, ui_element):
+    def on_mouse_leave(self, *, ui_element):
         pass
 
     @delegate
-    def on_ui_button_pressed(self, *, ui_element):
+    def on_click(self, *, ui_element):
         pass
 
     @delegate
-    def on_ui_button_hovered(self, *, ui_element):
+    def on_ui_button_press(self, *, ui_element):
         pass
 
     @delegate
-    def on_ui_button_unhovered(self, *, ui_element):
+    def on_ui_text_entry_change(self, *, ui_element, text):
         pass
 
     @delegate
-    def on_ui_text_entry_changed(self, *, ui_element, text):
+    def on_ui_text_entry_finish(self, *, ui_element, text):
         pass
 
     @delegate
-    def on_ui_text_entry_finished(self, *, ui_element, text):
+    def on_ui_drop_down_menu_change(self, *, ui_element, option):
         pass
 
     @delegate
-    def on_ui_drop_down_menu_changed(self, *, ui_element, option):
+    def on_ui_textbox_link_click(self, *, ui_element, link_target):
         pass
 
     @delegate
-    def on_ui_textbox_link_clicked(self, *, ui_element, link_target):
-        pass
-
-    @delegate
-    def on_ui_horizontal_slider_moved(self, *, ui_element, slider_value):
+    def on_ui_horizontal_slider_move(self, *, ui_element, slider_value):
         pass
 
     @delegate
@@ -135,21 +140,21 @@ class EventManager(BaseEventHandler):
         pass
 
     @delegate
-    def on_ui_selection_list_dropped_selection(self, *, ui_element, selection):
+    def on_ui_selection_list_drop_selection(self, *, ui_element, selection):
         pass
 
     @delegate
-    def on_ui_window_closed(self, *, ui_element):
+    def on_ui_window_close(self, *, ui_element):
         pass
 
     @delegate
-    def on_ui_window_moved_to_front(self, *, ui_element):
+    def on_ui_window_move_to_front(self, *, ui_element):
         pass
 
     @delegate
-    def on_ui_confirmation_dialog_confirmed(self, *, ui_element):
+    def on_ui_confirmation_dialog_confirm(self, *, ui_element):
         pass
 
     @delegate
-    def on_ui_file_dialog_path_picked(self, *, ui_element, filepath):
+    def on_ui_file_dialog_path_pick(self, *, ui_element, filepath):
         pass

@@ -43,6 +43,9 @@ class BaseEventHandler:
     def on_mouse_leave(self, *, ui_element):
         pass
 
+    def on_click(self, *, ui_element):
+        pass
+
     '''PYGAME GUI EVENTS
 
     https://pygame-gui.readthedocs.io/en/latest/events.html
@@ -53,44 +56,38 @@ class BaseEventHandler:
     UI_COLOUR_PICKER_COLOUR_PICKED
     UI_COLOUR_PICKER_COLOUR_CHANNEL_CHANGED
     '''
-    def on_ui_button_pressed(self, *, ui_element):
+    def on_ui_button_press(self, *, ui_element):
         pass
 
-    def on_ui_button_hovered(self, *, ui_element):
+    def on_ui_text_entry_change(self, *, ui_element, text):
         pass
 
-    def on_ui_button_unhovered(self, *, ui_element):
+    def on_ui_text_entry_finish(self, *, ui_element, text):
         pass
 
-    def on_ui_text_entry_changed(self, *, ui_element, text):
+    def on_ui_drop_down_menu_change(self, *, ui_element, option):
         pass
 
-    def on_ui_text_entry_finished(self, *, ui_element, text):
+    def on_ui_textbox_link_click(self, *, ui_element, link_target):
         pass
 
-    def on_ui_drop_down_menu_changed(self, *, ui_element, option):
-        pass
-
-    def on_ui_textbox_link_clicked(self, *, ui_element, link_target):
-        pass
-
-    def on_ui_horizontal_slider_moved(self, *, ui_element, slider_value):
+    def on_ui_horizontal_slider_move(self, *, ui_element, slider_value):
         pass
 
     def on_ui_selection_list_new_selection(self, *, ui_element, selection):
         pass
 
-    def on_ui_selection_list_dropped_selection(self, *, ui_element, selection):
+    def on_ui_selection_list_drop_selection(self, *, ui_element, selection):
         pass
 
-    def on_ui_window_closed(self, *, ui_element):
+    def on_ui_window_close(self, *, ui_element):
         pass
 
-    def on_ui_window_moved_to_front(self, *, ui_element):
+    def on_ui_window_move_to_front(self, *, ui_element):
         pass
 
-    def on_ui_confirmation_dialog_confirmed(self, *, ui_element):
+    def on_ui_confirmation_dialog_confirm(self, *, ui_element):
         pass
 
-    def on_ui_file_dialog_path_picked(self, *, ui_element, filepath):
+    def on_ui_file_dialog_path_pick(self, *, ui_element, filepath):
         pass

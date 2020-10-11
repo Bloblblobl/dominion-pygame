@@ -29,10 +29,10 @@ class HorizontalScrollContainer(UIElement, BaseEventHandler):
         self.right_button.visible = False
         self.scrollable = scrollable_class(scrollable_layout, self)
 
-        self.subscribe(self.left_button, 'on_ui_button_pressed', self)
-        self.subscribe(self.right_button, 'on_ui_button_pressed', self)
+        self.subscribe(self.left_button, 'on_ui_button_press', self)
+        self.subscribe(self.right_button, 'on_ui_button_press', self)
 
-    def on_ui_button_pressed(self, ui_element):
+    def on_ui_button_press(self, ui_element):
         direction = ''
         if ui_element == self.left_button:
             direction = 'left'
