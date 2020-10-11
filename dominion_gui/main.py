@@ -35,7 +35,7 @@ class DominionApp:
         self.event_manager = em.get_event_manager(self.ui.window)
         button_eh = BaseEventHandler()
         button_eh.on_ui_button_pressed = lambda ui_element: self.connect()
-        self.event_manager.subscribe(self.ui.top_button, pygame_gui.UI_BUTTON_PRESSED, button_eh)
+        self.event_manager.subscribe(self.ui.top_button, 'on_ui_button_pressed', button_eh)
 
     def handle_screen_resize(self, raw_size):
         manager = get_manager()
@@ -61,9 +61,31 @@ class DominionApp:
             except:
                 time.sleep(0.1)
 
+    def handle_event(self, event):
+        em = self.event_manager
+
+        if event.type == pygame.MOUSEMOTION:
+            em.on_mouse_move(*event.pos)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            print(event.button)
+        elif event.type == pygame.MOUSEBUTTONUP:
+            print(event.button)
+        elif event.type == pygame.USEREVENT:
+            if not hasattr(event.ui_element, 'owner'):
+                return
+
+            ui_element = event.ui_element.owner
+            if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                em.on_ui_button_pressed(ui_element=ui_element)
+
     def run(self):
         manager = get_manager()
         prev_state = None
+        mouse_events = (pygame.MOUSEMOTION,
+                        pygame.MOUSEBUTTONDOWN,
+                        pygame.MOUSEBUTTONUP)
+        events = (pygame.USEREVENT,) + mouse_events
+
         while self.is_running:
             time_delta = self.clock.tick(60) / 1000.0
 
@@ -74,8 +96,8 @@ class DominionApp:
                 elif event.type == pygame.VIDEORESIZE:
                     self.handle_screen_resize(event.dict['size'])
 
-                elif event.type in self.event_manager.events:
-                    self.event_manager.handle_event(event)
+                elif event.type in events:
+                    self.handle_event(event)
 
                 manager.process_events(event)
 

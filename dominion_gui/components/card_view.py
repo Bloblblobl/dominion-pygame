@@ -5,7 +5,7 @@ from dominion_gui.base_event_handler import BaseEventHandler
 from dominion_gui.components.card import Card
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.constants import card_spacing
-from dominion_gui.event_manager import get_event_manager, MouseEvent
+from dominion_gui.event_manager import get_event_manager
 from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
 
@@ -39,8 +39,8 @@ class CardView(UIElement, BaseEventHandler):
                         container=self,
                         image_name=card_name)
 
-            get_event_manager().subscribe(card.image, MouseEvent.Enter, self)
-            get_event_manager().subscribe(card.image, MouseEvent.Leave, self)
+            get_event_manager().subscribe(card.image, 'on_mouse_enter', self)
+            get_event_manager().subscribe(card.image, 'on_mouse_leave', self)
 
             self._cards.append(card)
 
