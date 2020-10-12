@@ -1,6 +1,7 @@
 import pygame
 from typing import List, Union
 
+from dominion_gui import game_client
 from dominion_gui.base_event_handler import BaseEventHandler
 from dominion_gui.components.card import Card
 from dominion_gui.components.default import get_default_layout
@@ -24,6 +25,7 @@ class CardView(UIElement, BaseEventHandler):
         for card in self._cards:
             get_event_manager().unsubscribe(card.image, 'on_click')
             card.image.kill()
+            card.container.children.remove(card)
             if card.counter is not None:
                 card.counter.kill()
 
@@ -34,6 +36,7 @@ class CardView(UIElement, BaseEventHandler):
     @cards.setter
     def cards(self, card_names: List[str]):
         self._kill_cards()
+        self.first_index = 0
         self._cards = []
         for card_name in card_names:
             card = Card(layout_info=get_default_layout(),
@@ -62,6 +65,7 @@ class CardView(UIElement, BaseEventHandler):
 
     def on_click(self, ui_element):
         card = ui_element.container
+        game_client.get_instance().play_action_card(card.name)
         card.enabled = not card.enabled
 
     def layout(self, only_if_changed=True):

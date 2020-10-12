@@ -1,6 +1,7 @@
 import pygame
 from typing import List, Union
 
+from dominion_gui import game_client
 from dominion_gui.base_event_handler import BaseEventHandler
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.components.pile import Pile
@@ -24,6 +25,7 @@ class Shop(UIElement, BaseEventHandler):
         for pile in self._piles:
             get_event_manager().unsubscribe(pile.image, 'on_click')
             pile.image.kill()
+            pile.container.children.remove(pile)
             if pile.counter is not None:
                 pile.counter.kill()
 
@@ -33,6 +35,7 @@ class Shop(UIElement, BaseEventHandler):
 
     @piles.setter
     def piles(self, pile_names: List[str]):
+        self._kill_piles()
         self._piles = []
         for pile_name in pile_names:
             pile = Pile(layout_info=get_default_layout(),
@@ -47,6 +50,7 @@ class Shop(UIElement, BaseEventHandler):
 
     def on_click(self, ui_element):
         pile = ui_element.container
+        game_client.get_instance().buy(pile.name)
         pile.enabled = not pile.enabled
 
     def _calc_pile_size(self):

@@ -1,9 +1,8 @@
 import pygame
 import pygame_gui
-import time
-from dominion_grpc_client.client import Client as GRPCClient
-from threading import Thread
 
+
+from dominion_gui import game_client, util
 from dominion_gui.base_event_handler import BaseEventHandler, MouseButton
 from dominion_gui.constants import screen_size, preloaded_fonts, min_screen_width, min_screen_height, \
     DISPLAY_FLAGS
@@ -22,7 +21,6 @@ class DominionApp:
         self.is_running = True
 
         self.event_manager = None
-        self.client = None
         self.player = None
         self.state = None
 
@@ -34,9 +32,12 @@ class DominionApp:
 
     def connect_events(self):
         self.event_manager = em.get_event_manager(self.ui.window)
-        button_eh = BaseEventHandler()
-        button_eh.on_ui_button_press = lambda ui_element: self.connect()
-        self.event_manager.subscribe(self.ui.top_button, 'on_ui_button_press', button_eh)
+        button_top_eh = BaseEventHandler()
+        button_top_eh.on_ui_button_press = lambda ui_element: self.connect()
+        button_bottom_eh = BaseEventHandler()
+        button_bottom_eh.on_ui_button_press = lambda ui_element: game_client.get_instance().done()
+        self.event_manager.subscribe(self.ui.top_button, 'on_ui_button_press', button_top_eh)
+        self.event_manager.subscribe(self.ui.bottom_button, 'on_ui_button_press', button_bottom_eh)
 
     def handle_screen_resize(self, raw_size):
         manager = get_manager()
@@ -50,17 +51,8 @@ class DominionApp:
         manager.root_container.set_dimensions(size)
 
     def connect(self):
-        self.client = GRPCClient('test', UIPlayer)
+        game_client.connect()
         self.player = UIPlayer.instance
-
-        Thread(target=self.client.run).start()
-        game_started = False
-        while not game_started:
-            try:
-                self.client.start_game()
-                game_started = True
-            except:
-                time.sleep(0.1)
 
     def handle_event(self, event):
         em = self.event_manager
@@ -73,8 +65,12 @@ class DominionApp:
         if event.type == pygame.MOUSEMOTION:
             em.on_mouse_move(*event.pos)
         elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button not in mouse_buttons:
+                return
             em.on_mouse_button_down(mouse_buttons[event.button])
         elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button not in mouse_buttons:
+                return
             em.on_mouse_button_up(mouse_buttons[event.button])
         elif event.type == pygame.USEREVENT:
             if not hasattr(event.ui_element, 'owner'):
@@ -94,9 +90,9 @@ class DominionApp:
         draw_deck = self.player.state['draw_deck']
         discard_pile = self.player.state['discard_pile']
 
-        shop_piles = [pile.lower() for pile in supply]
-        play_area_cards = [card['name'].lower() for card in play_area]
-        hand_cards = [card['name'].lower() for card in hand]
+        shop_piles = [util.get_card_name(pile) for pile in supply]
+        play_area_cards = [util.get_card_name(card['name']) for card in play_area]
+        hand_cards = [util.get_card_name(card['name']) for card in hand]
 
         self.ui.shop.piles = shop_piles
         self.ui.play_area.scrollable.cards = play_area_cards

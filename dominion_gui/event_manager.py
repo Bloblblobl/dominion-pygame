@@ -1,4 +1,3 @@
-from collections import defaultdict
 from enum import Enum
 
 from dominion_gui.base_event_handler import BaseEventHandler
@@ -31,9 +30,10 @@ def delegate(f):
 
         subscribers = event_manager.subscribers
         owner = kwargs.get('ui_element', None)
-        for subscriber in subscribers[(id(owner), handler_name)]:
-            handler = getattr(subscriber, handler_name)
-            handler(*args, **kwargs)
+        if (id(owner), handler_name) in subscribers:
+            for subscriber in subscribers[(id(owner), handler_name)]:
+                handler = getattr(subscriber, handler_name)
+                handler(*args, **kwargs)
 
         f(event_manager, *args, **kwargs)
     return decorated
@@ -41,7 +41,7 @@ def delegate(f):
 
 class EventManager(BaseEventHandler):
     def __init__(self, root_element):
-        self.subscribers = defaultdict(list)
+        self.subscribers = {}
         self.root_element = root_element
         self.current_element = None
         # element under the mouse cursor on mouse button down event
@@ -62,10 +62,11 @@ class EventManager(BaseEventHandler):
                   subscriber: BaseEventHandler):
         if not hasattr(self, handler_name):
             raise ValueError('No such handler ' + handler_name)
-        self.subscribers[(id(owner), handler_name)].append(subscriber)
+        self.subscribers.setdefault((id(owner), handler_name), []).append(subscriber)
 
     def unsubscribe(self, owner, handler_name: str):
-        del self.subscribers[(id(owner), handler_name)]
+        if (id(owner), handler_name) in self.subscribers:
+            del self.subscribers[(id(owner), handler_name)]
 
     def on_mouse_move(self, x, y):
         owner = self.find_source_element(x, y)

@@ -2,6 +2,7 @@ from typing import Union
 
 import pygame
 
+from dominion_gui import util
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.constants import DARK_GRAY, images_dir
 from dominion_gui.ui_elements.html_textbox import HTMLTextBox
@@ -19,6 +20,7 @@ class Pile(UIElement):
                  container: Union[pygame.Rect, 'UIElement', None] = None,
                  padding: Union[LayoutInfo, None] = None,
                  count: int = -1):
+        self.name = util.get_card_class(image_name)
         self.image = None
         self.image_path = f'{images_dir}/{image_name}_pic.jpg'
         self.gray_image_path = f'{images_dir}/{image_name}_pic_gray.jpg'
