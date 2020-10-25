@@ -111,6 +111,10 @@ class EventManager(BaseEventHandler):
         pass
 
     @delegate
+    def on_custom_event(self, event):
+        pass
+
+    @delegate
     def on_ui_button_press(self, *, ui_element):
         pass
 

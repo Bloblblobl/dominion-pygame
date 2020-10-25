@@ -46,6 +46,9 @@ class BaseEventHandler:
     def on_click(self, *, ui_element):
         pass
 
+    def on_custom_event(self, event):
+        pass
+
     '''PYGAME GUI EVENTS
 
     https://pygame-gui.readthedocs.io/en/latest/events.html

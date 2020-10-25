@@ -29,6 +29,8 @@ class Pile(UIElement):
 
     def on_enable(self, enabled: bool):
         image_path = self.image_path if enabled else self.gray_image_path
+        if self.image is not None:
+            self.image.kill()
         self.image = Image(get_default_layout(), self, image_path)
 
     def build_counter(self, count):
