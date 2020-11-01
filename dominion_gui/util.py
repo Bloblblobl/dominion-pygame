@@ -1,4 +1,10 @@
+from typing import Union
+
 import re
+
+
+def Noneable(t):
+    return Union[t, None]
 
 
 def get_card_class(card_name: str) -> str:

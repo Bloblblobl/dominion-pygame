@@ -1,9 +1,9 @@
-from dominion_gui.base_event_handler import BaseEventHandler
+from dominion_gui.event_handler import EventHandler
 from dominion_gui.event_manager import get_event_manager
 from dominion_gui.ui_elements.html_textbox import HTMLTextBox
 
 
-class MessageLog(HTMLTextBox, BaseEventHandler):
+class MessageLog(HTMLTextBox, EventHandler):
     def __init__(self, layout_info, container, bg_color=None, padding=None):
         super().__init__('', layout_info, container, bg_color, padding)
         self.messages = []
@@ -23,5 +23,5 @@ class MessageLog(HTMLTextBox, BaseEventHandler):
                 for player in event['player_names']:
                     self.add_message(player)
                 self.add_message('-' * 10)
-        else:
-            self.add_message(str(event))
+        elif isinstance(event, str):
+            self.add_message(event)

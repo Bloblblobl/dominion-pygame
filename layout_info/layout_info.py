@@ -18,7 +18,11 @@ class LayoutInfo:
         x_dimension = [self.left, self.right, self.width]
         y_dimension = [self.top, self.bottom, self.height]
 
-        return x_dimension.count(None) == 1 and y_dimension.count(None) == 1
+        if x_dimension.count(None) != 1:
+            return False
+        if y_dimension.count(None) != 1:
+            return False
+        return True
 
     def _absolutize(self, item: LayoutItem, parent: int):
         if not isinstance(item, float):

@@ -1,20 +1,23 @@
+import functools
+
 import pygame
 
-from dominion_gui.base_event_handler import BaseEventHandler
+from dominion_gui.event_handler import EventHandler
 from dominion_gui.components.card_view import CardView
 from dominion_gui.components.message_log import MessageLog
 from dominion_gui.components.shop import Shop
-from dominion_gui.constants import background_color, screen_size, Colors
+from dominion_gui.constants import background_color, screen_size, Colors, GREEN, BLUE, RED
 from dominion_gui.ui_elements.button import Button
 from dominion_gui.ui_elements.horizontal_scroll_container import HorizontalScrollContainer
 from dominion_gui.ui_elements.panel import Panel
+from dominion_gui.ui_elements.tab_container import TabContainer
 from dominion_gui.ui_elements.top_level_window import TopLevelWindow
 from layout_info.layout_info import LayoutInfo
 
 li_all_10 = LayoutInfo(left=10, right=10, top=10, bottom=10)
 
 
-class UI(BaseEventHandler):
+class UI(EventHandler):
     def __init__(self):
         self.background = pygame.Surface(screen_size)
         self.background.fill(background_color)
@@ -37,6 +40,16 @@ class UI(BaseEventHandler):
         side_panel_container_li = LayoutInfo(right=20, top=20, bottom=20, width=0.25)
         side_panel_container = Panel(side_panel_container_li, top_level_container, Colors.SIDE_PANEL)
         self.build_side_panel(side_panel_container)
+
+        tab_container = TabContainer(play_area_li, top_level_container, 30)
+        green_panel = functools.partial(Panel, bg_color=GREEN)
+        blue_panel = functools.partial(Panel, bg_color=BLUE)
+        red_panel = functools.partial(Panel, bg_color=RED)
+        pink_panel = functools.partial(Panel, bg_color=pygame.Color(255, 190, 200))
+        tab_container.add_tab('green', green_panel, 100)
+        tab_container.add_tab('blue', blue_panel, 100)
+        tab_container.add_tab('red', red_panel, 100)
+        tab_container.add_tab('pink', pink_panel, 100)
 
     def build_side_panel(self, container):
         message_log_li = LayoutInfo(left=0, right=0, top=0, height=0.8)

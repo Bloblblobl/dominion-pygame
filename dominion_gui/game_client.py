@@ -8,6 +8,7 @@ from dominion_object_model import object_model
 from dominion_grpc_client.client import Client as GRPCClient
 
 from dominion_gui.ui_player import UIPlayer
+from dominion_gui.util import Noneable
 
 instance = None
 
@@ -25,10 +26,6 @@ def connect():
             game_started = True
         except:
             time.sleep(0.1)
-
-
-def Noneable(t):
-    return Union[t, None]
 
 
 def get_instance() -> Noneable(object_model.GameClient):

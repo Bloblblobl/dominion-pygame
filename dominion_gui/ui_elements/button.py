@@ -32,6 +32,10 @@ class Button(UIElement):
         self._set_colors(bg_colors)
         self.layout()
 
+    @property
+    def text(self):
+        return self.element.text
+
     def _set_colors(self, bg_colors):
         if bg_colors is None:
             return

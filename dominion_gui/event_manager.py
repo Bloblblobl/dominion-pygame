@@ -1,6 +1,6 @@
 from enum import Enum
 
-from dominion_gui.base_event_handler import BaseEventHandler
+from dominion_gui.event_handler import EventHandler
 
 event_manager = None
 
@@ -39,7 +39,7 @@ def delegate(f):
     return decorated
 
 
-class EventManager(BaseEventHandler):
+class EventManager(EventHandler):
     def __init__(self, root_element):
         self.subscribers = {}
         self.root_element = root_element
@@ -59,7 +59,7 @@ class EventManager(BaseEventHandler):
     def subscribe(self,
                   owner,
                   handler_name: str,
-                  subscriber: BaseEventHandler):
+                  subscriber: EventHandler):
         if not hasattr(self, handler_name):
             raise ValueError('No such handler ' + handler_name)
         self.subscribers.setdefault((id(owner), handler_name), []).append(subscriber)

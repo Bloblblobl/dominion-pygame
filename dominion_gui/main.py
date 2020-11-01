@@ -3,7 +3,7 @@ import pygame_gui
 
 
 from dominion_gui import game_client, util
-from dominion_gui.base_event_handler import BaseEventHandler, MouseButton
+from dominion_gui.event_handler import EventHandler, MouseButton
 from dominion_gui.constants import screen_size, preloaded_fonts, min_screen_width, min_screen_height, \
     DISPLAY_FLAGS
 import dominion_gui.event_manager as em
@@ -32,9 +32,9 @@ class DominionApp:
 
     def connect_events(self):
         self.event_manager = em.get_event_manager(self.ui.window)
-        button_top_eh = BaseEventHandler()
+        button_top_eh = EventHandler()
         button_top_eh.on_ui_button_press = lambda ui_element: self.connect()
-        button_bottom_eh = BaseEventHandler()
+        button_bottom_eh = EventHandler()
         button_bottom_eh.on_ui_button_press = lambda ui_element: game_client.get_instance().done()
         self.event_manager.subscribe(self.ui.top_button, 'on_ui_button_press', button_top_eh)
         self.event_manager.subscribe(self.ui.bottom_button, 'on_ui_button_press', button_bottom_eh)

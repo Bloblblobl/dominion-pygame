@@ -5,7 +5,7 @@ from typing import Callable
 
 import pygame_gui
 
-from dominion_gui.base_event_handler import BaseEventHandler
+from dominion_gui.event_handler import EventHandler
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.constants import RED
 from dominion_gui.event_manager import get_event_manager
@@ -76,7 +76,7 @@ class Scrollbar(UIElement):
         self.thumb.show()
 
 
-class ScrollContainer(UIElement, BaseEventHandler):
+class ScrollContainer(UIElement, EventHandler):
     def __init__(self,
                  layout_info: LayoutInfo,
                  container: UIElement,

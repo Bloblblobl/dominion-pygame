@@ -2,7 +2,8 @@ from enum import Enum
 
 MouseButton = Enum('MouseButton', 'Left Middle Right')
 
-class BaseEventHandler:
+
+class EventHandler:
     '''PYGAME EVENTS
 
     https://www.pygame.org/docs/ref/event.html

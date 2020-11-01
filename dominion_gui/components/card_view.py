@@ -2,7 +2,7 @@ import pygame
 from typing import List, Union
 
 from dominion_gui import game_client
-from dominion_gui.base_event_handler import BaseEventHandler
+from dominion_gui.event_handler import EventHandler
 from dominion_gui.components.card import Card
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.constants import card_spacing
@@ -11,7 +11,7 @@ from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
 
 
-class CardView(UIElement, BaseEventHandler):
+class CardView(UIElement, EventHandler):
     def __init__(self,
                  layout_info: Union[LayoutInfo, None] = None,
                  container: Union[pygame.Rect, UIElement, None] = None,
