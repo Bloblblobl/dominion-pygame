@@ -12,6 +12,7 @@ class BackgroundColors:
     Disabled: pygame.Color = None
 
 
+# valid button shapes: 'rectangle', 'rounded_rectangle', ellipse'
 class Button(UIElement):
     def __init__(self,
                  text,
@@ -19,7 +20,7 @@ class Button(UIElement):
                  container,
                  bg_colors: BackgroundColors = None,
                  padding=None,
-                 shape='rounded_rectangle',
+                 shape='rectangle',
                  corner_radius_ratio=None):
         self._corner_radius_ratio = corner_radius_ratio
         self.bg_colors = bg_colors

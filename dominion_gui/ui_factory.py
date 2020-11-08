@@ -31,7 +31,13 @@ class UI(EventHandler):
         self.shop = Shop(shop_li, shop_play_container)
 
         play_area_li = LayoutInfo(left=0, right=0, bottom=0, height=0.5)
-        self.play_area = HorizontalScrollContainer(play_area_li, shop_play_container, CardView, 0.035)
+        self.play_tabs = TabContainer(play_area_li, shop_play_container, tab_bar_height=30)
+        self.play_tabs.add_tab(name='Play Area',
+                               tab_button_width=100,
+                               tab_factory=HorizontalScrollContainer,
+                               scrollable_class=CardView,
+                               button_thickness=0.035)
+        self.play_area = self.play_tabs.tabs['Play Area'].content
 
         hand_container_li = LayoutInfo(left=20, right=30.25, top=0.7, bottom=20)
         hand_container = Panel(hand_container_li, top_level_container, Colors.HAND)
@@ -40,16 +46,6 @@ class UI(EventHandler):
         side_panel_container_li = LayoutInfo(right=20, top=20, bottom=20, width=0.25)
         side_panel_container = Panel(side_panel_container_li, top_level_container, Colors.SIDE_PANEL)
         self.build_side_panel(side_panel_container)
-
-        tab_container = TabContainer(play_area_li, top_level_container, 30)
-        green_panel = functools.partial(Panel, bg_color=GREEN)
-        blue_panel = functools.partial(Panel, bg_color=BLUE)
-        red_panel = functools.partial(Panel, bg_color=RED)
-        pink_panel = functools.partial(Panel, bg_color=pygame.Color(255, 190, 200))
-        tab_container.add_tab('green', green_panel, 100)
-        tab_container.add_tab('blue', blue_panel, 100)
-        tab_container.add_tab('red', red_panel, 100)
-        tab_container.add_tab('pink', pink_panel, 100)
 
     def build_side_panel(self, container):
         message_log_li = LayoutInfo(left=0, right=0, top=0, height=0.8)

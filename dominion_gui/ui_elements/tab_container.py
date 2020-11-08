@@ -18,7 +18,8 @@ class TabContainer(UIElement, EventHandler):
                  layout_info: LayoutInfo,
                  container: UIElement,
                  tab_bar_height,
-                 padding: LayoutInfo = None):
+                 padding: LayoutInfo = None,
+                 show_single_tab: bool = False):
         super().__init__(layout_info, container, padding)
         self.tabs = {}
         self.tab_buttons = []
@@ -26,6 +27,7 @@ class TabContainer(UIElement, EventHandler):
         self.tab_bar_li = LayoutInfo(left=0, right=0, top=0, height=tab_bar_height)
         self.active_tab_li = LayoutInfo(left=0, right=0, top=tab_bar_height, bottom=0)
         self.button_li = LayoutInfo(left=0, top=0, width=0, height=self.tab_bar_li.height)
+        self.show_single_tab = show_single_tab
 
     def select_tab(self, name: str):
         if name == self.active_tab:
@@ -36,8 +38,8 @@ class TabContainer(UIElement, EventHandler):
         self.active_tab = name
         self.tabs[name].content.visible = True
 
-    def add_tab(self, name: str, tab_factory: Callable, tab_button_width: int):
-        tab = tab_factory(layout_info=self.active_tab_li, container=self)
+    def add_tab(self, name: str, tab_button_width: int, tab_factory: Callable, **kwargs):
+        tab = tab_factory(layout_info=self.active_tab_li, container=self, **kwargs)
         if not self.active_tab:
             self.active_tab = name
         else:
@@ -49,6 +51,12 @@ class TabContainer(UIElement, EventHandler):
         get_event_manager().subscribe(tab_button, 'on_ui_button_press', self)
         self.tab_buttons.append(tab_button)
         self.button_li.left += self.button_li.width
+
+        if len(self.tab_buttons) == 1:
+            tab_button.visible = self.show_single_tab
+        else:
+            for b in self.tab_buttons:
+                b.visible = True
 
     def remove_tab(self, name: str, new_active: str = ''):
         if name == new_active:
@@ -72,6 +80,9 @@ class TabContainer(UIElement, EventHandler):
         for b in self.tab_buttons:
             b.layout_info.left = left
             left += b.layout_info.width
+
+        if len(self.tab_buttons) == 1:
+            self.tab_buttons[0].visible = self.show_single_tab
 
         self.layout(only_if_changed=False)
 
