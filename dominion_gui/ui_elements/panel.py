@@ -7,7 +7,7 @@ class Panel(ColorElement):
     def __init__(self,
                  layout_info,
                  container,
-                 bg_color=None,
+                 background_color=None,
                  padding=None,
                  depth=0,
                  corner_radius=None):
@@ -15,7 +15,7 @@ class Panel(ColorElement):
         self.element = UIPanel(relative_rect=self.bounds,
                                manager=self.manager,
                                starting_layer_height=depth)
-        self.background_color = bg_color
+        self.background_color = background_color
 
         if corner_radius is not None:
             self.element.shape = 'rounded_rectangle'

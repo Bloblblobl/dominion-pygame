@@ -3,7 +3,7 @@ import pygame
 
 from dominion_gui.event_manager import get_event_manager
 from layout_info.layout_info import LayoutInfo
-from dominion_gui.ui_elements.ui_manager import get_manager
+from dominion_gui.ui_manager import get_manager
 
 
 class UIElement:

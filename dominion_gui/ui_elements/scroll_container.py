@@ -32,14 +32,14 @@ class ScrollThumb(Panel):
                  scrollbar: UIElement,
                  get_content_size_func: Callable,
                  get_offset_func: Callable,
-                 bg_color: pygame.Color = None,
+                 background_color: pygame.Color = None,
                  padding: LayoutInfo = None,
                  depth: int = 0,
                  corner_radius: int = None):
         self.get_content_size = get_content_size_func
         self.get_offset = get_offset_func
         self.ratio = 0.0
-        super().__init__(layout_info, scrollbar, bg_color, padding, depth, corner_radius)
+        super().__init__(layout_info, scrollbar, background_color, padding, depth, corner_radius)
 
     def layout(self, only_if_changed=True):
         content_width, content_height = self.get_content_size()

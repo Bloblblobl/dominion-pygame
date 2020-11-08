@@ -7,7 +7,7 @@ from dominion_gui.event_handler import EventHandler, MouseButton
 from dominion_gui.constants import screen_size, preloaded_fonts, min_screen_width, min_screen_height, \
     DISPLAY_FLAGS
 import dominion_gui.event_manager as em
-from dominion_gui.ui_elements.ui_manager import get_manager
+from dominion_gui.ui_manager import get_manager
 from dominion_gui.ui_factory import UI
 from dominion_gui.ui_player import UIPlayer
 
