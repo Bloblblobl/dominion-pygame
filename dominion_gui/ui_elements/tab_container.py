@@ -39,12 +39,19 @@ class TabContainer(UIElement, EventHandler):
         tab = tab_factory(layout_info=self.active_tab_li, container=self)
         if not self.active_tab:
             self.active_tab = name
+        else:
+            tab.visible = False
+
         self.button_li.width = tab_button_width
-        tab_button = Button(name, self.button_li, self)
+        tab_button = Button(name, self.button_li.clone(), self)
         self.tabs[name] = Tab(tab, tab_button)
         get_event_manager().subscribe(tab_button, 'on_ui_button_press', self)
         self.tab_buttons.append(tab_button)
         self.button_li.left += self.button_li.width
+
+        print('add ' + name)
+        for b in self.tab_buttons:
+            print(b.layout_info)
 
     def remove_tab(self, name: str, new_active: str = ''):
         if name == new_active:
@@ -69,9 +76,9 @@ class TabContainer(UIElement, EventHandler):
             b.layout_info.left = left
             left += b.layout_info.width
 
-        self.layout()
+        self.layout(only_if_changed=False)
 
     def on_ui_button_press(self, *, ui_element):
         self.select_tab(ui_element.text)
-        if ui_element.text == 'red':
+        if ui_element.text == 'red' and 'blue' in self.tabs:
             self.remove_tab('blue')
