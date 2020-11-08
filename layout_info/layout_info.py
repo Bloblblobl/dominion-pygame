@@ -57,6 +57,3 @@ class LayoutInfo:
             height = _height
 
         return left, top, width, height
-
-    def clone(self):
-        return LayoutInfo(self.left, self.right, self.top, self.bottom, self.width, self.height)

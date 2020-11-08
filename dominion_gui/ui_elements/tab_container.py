@@ -1,3 +1,4 @@
+import copy
 from collections import namedtuple
 
 from typing import Callable
@@ -43,15 +44,11 @@ class TabContainer(UIElement, EventHandler):
             tab.visible = False
 
         self.button_li.width = tab_button_width
-        tab_button = Button(name, self.button_li.clone(), self)
+        tab_button = Button(name, copy.deepcopy(self.button_li), self)
         self.tabs[name] = Tab(tab, tab_button)
         get_event_manager().subscribe(tab_button, 'on_ui_button_press', self)
         self.tab_buttons.append(tab_button)
         self.button_li.left += self.button_li.width
-
-        print('add ' + name)
-        for b in self.tab_buttons:
-            print(b.layout_info)
 
     def remove_tab(self, name: str, new_active: str = ''):
         if name == new_active:
