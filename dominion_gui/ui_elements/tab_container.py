@@ -37,6 +37,7 @@ class TabContainer(UIElement, EventHandler):
         self.tabs[self.active_tab].content.visible = False
         self.active_tab = name
         self.tabs[name].content.visible = True
+        self.layout(only_if_changed=False)
 
     def add_tab(self, name: str, tab_button_width: int, tab_factory: Callable, **kwargs):
         tab = tab_factory(layout_info=self.active_tab_li, container=self, **kwargs)

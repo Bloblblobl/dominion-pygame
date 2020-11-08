@@ -171,6 +171,9 @@ class UIElement:
         self.on_enable(enabled)
 
     def on_visible(self, visible: bool):
+        for child in self.children:
+            child.visible = visible
+
         if self.element is None:
             return
 

@@ -16,6 +16,8 @@ YELLOW = pygame.Color(255, 255, 0)
 LIGHT_GRAY = pygame.Color(200, 200, 200)
 GRAY = pygame.Color(150, 150, 150)
 DARK_GRAY = pygame.Color(100, 100, 100)
+BLACK = pygame.Color(0, 0, 0)
+TRANSPARENT = pygame.Color(0, 0, 0, 0)
 
 
 class Colors:

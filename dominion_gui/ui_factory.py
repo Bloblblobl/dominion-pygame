@@ -2,6 +2,7 @@ import functools
 
 import pygame
 
+from dominion_gui.components.response import Response
 from dominion_gui.event_handler import EventHandler
 from dominion_gui.components.card_view import CardView
 from dominion_gui.components.message_log import MessageLog
@@ -37,6 +38,10 @@ class UI(EventHandler):
                                tab_factory=HorizontalScrollContainer,
                                scrollable_class=CardView,
                                button_thickness=0.035)
+        self.play_tabs.add_tab(name='Response',
+                               tab_button_width=100,
+                               tab_factory=Response,
+                               prompt_text='This is a test prompt')
         self.play_area = self.play_tabs.tabs['Play Area'].content
 
         hand_container_li = LayoutInfo(left=20, right=30.25, top=0.7, bottom=20)
