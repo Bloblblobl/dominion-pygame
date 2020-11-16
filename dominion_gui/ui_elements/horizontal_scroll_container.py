@@ -1,10 +1,7 @@
-import pygame
-import pygame_gui
 from typing import Callable, Union
 
-from dominion_gui.event_handler import EventHandler
 from dominion_gui.constants import GRAY
-from dominion_gui.event_manager import get_event_manager
+from dominion_gui.event_handler import EventHandler
 from dominion_gui.ui_elements.button import Button, BackgroundColors
 from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo

@@ -13,6 +13,7 @@ class UIElement:
                  padding: Union[LayoutInfo, None] = None,
                  enabled: bool = True):
         self._bounds = pygame.Rect(0, 0, 0, 0)
+        self._container = None
         self._element = None
         self._visible = True
         self.layout_info = layout_info
@@ -25,10 +26,8 @@ class UIElement:
 
         if self.layout_info is None:
             self.layout_info = LayoutInfo(0, 0, 0, 0)
-        if not self.layout_info.is_valid:
+        if not self.layout_info.valid:
             raise Exception('Invalid layout')
-        if self.container is not None:
-            self.container.children.append(self)
 
         self.layout()
         self._validate_padding()
@@ -40,7 +39,7 @@ class UIElement:
 
     def _validate_padding(self):
         p = self.padding
-        if p is not None and (not p.is_valid or p.width is not None or p.height is not None):
+        if p is not None and (not p.valid or p.width is not None or p.height is not None):
             raise Exception('Invalid padding')
 
     def subscribe(self, *args, **kwargs):
@@ -54,6 +53,16 @@ class UIElement:
     def element(self, value):
         self._element = value
         self._element.owner = self
+
+    @property
+    def container(self):
+        return self._container
+
+    @container.setter
+    def container(self, c):
+        if c is not None:
+            c.children.append(self)
+        self._container = c
 
     @property
     def manager(self):
@@ -93,6 +102,17 @@ class UIElement:
         self.layout(only_if_changed=False)
 
     @property
+    def right(self):
+        return self._bounds.right
+
+    @right.setter
+    def right(self, r):
+        if r == self._bounds.right:
+            return
+        self._bounds.right = r
+        self.layout(only_if_changed=False)
+
+    @property
     def top(self):
         return self._bounds.top
 
@@ -101,6 +121,17 @@ class UIElement:
         if t == self._bounds.top:
             return
         self._bounds.top = t
+        self.layout(only_if_changed=False)
+
+    @property
+    def bottom(self):
+        return self._bounds.bottom
+
+    @bottom.setter
+    def bottom(self, b):
+        if b == self._bounds.bottom:
+            return
+        self._bounds.bottom = b
         self.layout(only_if_changed=False)
 
     @property

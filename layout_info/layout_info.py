@@ -14,7 +14,7 @@ class LayoutInfo:
     height: LayoutItem = None
 
     @property
-    def is_valid(self):
+    def valid(self):
         x_dimension = [self.left, self.right, self.width]
         y_dimension = [self.top, self.bottom, self.height]
 

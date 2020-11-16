@@ -9,21 +9,10 @@ from dominion_gui.event_handler import EventHandler
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.constants import RED
 from dominion_gui.event_manager import get_event_manager
+from dominion_gui.ui_elements.enums import Orientation, Position
 from dominion_gui.ui_elements.panel import Panel
 from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
-
-
-class Orientation(Enum):
-    HORIZONTAL = 1
-    VERTICAL = 2
-
-
-class ScrollbarPosition(Enum):
-    LEFT = 1
-    RIGHT = 2
-    TOP = 3
-    BOTTOM = 4
 
 
 class ScrollThumb(Panel):
@@ -81,7 +70,7 @@ class ScrollContainer(UIElement, EventHandler):
                  layout_info: LayoutInfo,
                  container: UIElement,
                  scrollable_class,
-                 scrollbar_position: ScrollbarPosition,
+                 scrollbar_position: Position,
                  scrollbar_thickness: int,
                  padding: LayoutInfo = None):
         self.scrollable = None
@@ -95,15 +84,15 @@ class ScrollContainer(UIElement, EventHandler):
         get_event_manager().subscribe(self.scrollbar, pygame_gui.UI_HORIZONTAL_SLIDER_MOVED, self.scrollable)
 
     def _configure(self):
-        if self.scrollbar_position == ScrollbarPosition.LEFT:
+        if self.scrollbar_position == Position.LEFT:
             scrollable_layout = LayoutInfo(left=self.scrollbar_thickness, right=0, top=0, bottom=0)
             scrollbar_layout = LayoutInfo(left=0, top=0, bottom=0, width=self.scrollbar_thickness)
             orientation = Orientation.VERTICAL
-        elif self.scrollbar_position == ScrollbarPosition.RIGHT:
+        elif self.scrollbar_position == Position.RIGHT:
             scrollable_layout = LayoutInfo(left=0, right=self.scrollbar_thickness, top=0, bottom=0)
             scrollbar_layout = LayoutInfo(right=0, top=0, bottom=0, width=self.scrollbar_thickness)
             orientation = Orientation.VERTICAL
-        elif self.scrollbar_position == ScrollbarPosition.TOP:
+        elif self.scrollbar_position == Position.TOP:
             scrollable_layout = LayoutInfo(left=0, right=0, top=self.scrollbar_thickness, bottom=0)
             scrollbar_layout = LayoutInfo(left=0, right=0, top=0, height=self.scrollbar_thickness)
             orientation = Orientation.HORIZONTAL
