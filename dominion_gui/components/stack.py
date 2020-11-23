@@ -14,11 +14,14 @@ class Stack(UIElement):
                  alignment: Position = Position.LEFT,
                  layout_info: Union[LayoutInfo, None] = None,
                  container: Union[pygame.Rect, UIElement, None] = None,
-                 padding: Union[LayoutInfo, None] = None):
+                 padding: Union[LayoutInfo, None] = None,
+                 initial_spacing: bool = False):
         self._ui_elements = []
         self.spacing = spacing
         self.orientation = orientation
         self.alignment = alignment
+        # whether there is spacing before the first element
+        self.initial_spacing = initial_spacing
         super().__init__(layout_info, container, padding)
         self.ui_elements = ui_elements
 
@@ -46,6 +49,10 @@ class Stack(UIElement):
     def ui_elements(self):
         return self._ui_elements
 
+    @property
+    def initial_offset(self):
+        return self.spacing if self.initial_spacing else 0
+
     @ui_elements.setter
     def ui_elements(self, elements: List[Union[Callable, UIElement]]):
         for element in self._ui_elements:
@@ -70,7 +77,7 @@ class Stack(UIElement):
                 left += element.layout_info.width + self.spacing
 
         if self.alignment == Position.LEFT:
-            left = self.spacing
+            left = self.initial_offset
             left_layout(left)
         elif self.alignment == Position.CENTER:
             total_width = sum(e.width for e in self.ui_elements)
@@ -78,7 +85,7 @@ class Stack(UIElement):
             left = (self.width - total_width) // 2
             left_layout(left)
         else:
-            right = self.spacing
+            right = self.initial_offset
             for element in self.ui_elements:
                 element.layout_info.right = right
                 if element.layout_info.width is None:
@@ -98,7 +105,7 @@ class Stack(UIElement):
                 top += element.layout_info.height + self.spacing
 
         if self.alignment == Position.TOP:
-            top = self.spacing
+            top = self.initial_offset
             top_layout(top)
         elif self.alignment == Position.CENTER:
             total_height = sum(e.height for e in self.ui_elements)
@@ -106,7 +113,7 @@ class Stack(UIElement):
             top = (self.height - total_height) // 2
             top_layout(top)
         else:
-            bottom = self.spacing
+            bottom = self.initial_offset
             for element in self.ui_elements:
                 element.layout_info.bottom = bottom
                 if element.layout_info.height is None:
