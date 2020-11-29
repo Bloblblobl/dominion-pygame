@@ -10,12 +10,12 @@ from dominion_gui.components.default import get_default_layout
 from dominion_gui.constants import RED
 from dominion_gui.event_manager import get_event_manager
 from dominion_gui.ui_elements.enums import Orientation, Position
-from dominion_gui.ui_elements.panel import Panel
+from dominion_gui.ui_elements.base_panel import BasePanel
 from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
 
 
-class ScrollThumb(Panel):
+class ScrollThumb(BasePanel):
     def __init__(self,
                  layout_info: LayoutInfo,
                  scrollbar: UIElement,

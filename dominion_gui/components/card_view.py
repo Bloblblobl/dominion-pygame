@@ -24,10 +24,8 @@ class CardView(UIElement, EventHandler):
     def _kill_cards(self):
         for card in self._cards:
             get_event_manager().unsubscribe(card.image, 'on_click')
-            card.image.kill()
+            card.kill()
             card.container.children.remove(card)
-            if card.counter is not None:
-                card.counter.kill()
 
     @property
     def cards(self):

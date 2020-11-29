@@ -1,23 +1,71 @@
-from pygame_gui.elements import UIPanel
+import pygame
 
-from dominion_gui.ui_elements.color_element import ColorElement
+from dominion_gui.constants import RED
+from dominion_gui.ui_elements.base_panel import BasePanel
+from dominion_gui.ui_elements.ui_element import UIElement
+from dominion_gui.util import Noneable
+from layout_info.layout_info import LayoutInfo
 
 
-class Panel(ColorElement):
+class Border:
     def __init__(self,
-                 layout_info,
-                 container,
-                 background_color=None,
-                 padding=None,
-                 depth=0,
-                 corner_radius=None):
-        super().__init__(layout_info, container, padding)
-        self.element = UIPanel(relative_rect=self.bounds,
-                               manager=self.manager,
-                               starting_layer_height=depth)
-        self.background_color = background_color
+                 thickness: int = 0,
+                 color: pygame.color = RED,
+                 visible: bool = False):
+        self.thickness = thickness
+        self.color = color
+        self._visible = visible
+        self.callback = None
 
-        if corner_radius is not None:
-            self.element.shape = 'rounded_rectangle'
-            self.element.shape_corner_radius = corner_radius
-            self.rebuild()
+    @property
+    def visible(self) -> bool:
+        return self._visible
+
+    @visible.setter
+    def visible(self, v: bool):
+        self._visible = v
+        self.callback()
+
+
+class Panel(BasePanel):
+    def __init__(self,
+                 layout_info: LayoutInfo,
+                 container: UIElement,
+                 background_color: Noneable(pygame.Color) = None,
+                 padding: LayoutInfo = None,
+                 depth: int = 0,
+                 corner_radius: Noneable(int) = None,
+                 border: Noneable(Border) = None):
+        self.border = border
+        self.border_panel = None
+        super().__init__(layout_info, container, background_color, padding, depth, corner_radius)
+
+        self.update_border()
+
+    def update_border(self):
+        if self.border is None:
+            return
+
+        if self.border.callback is None:
+            self.border.callback = self.update_border
+
+        bt = -self.border.thickness
+        border_li = LayoutInfo(left=bt, right=bt, top=bt, bottom=bt)
+        if self.border_panel is None:
+            self.border_panel = BasePanel(border_li, self, self.border.color)
+        else:
+            self.border_panel.layout_info = border_li
+            self.border_panel.background_color = self.border.color
+        self.border_panel.visible = self.border.visible
+
+    def add_child(self, child: 'UIElement'):
+        if self.border_panel in self.children:
+            self.children.remove(self.border_panel)
+        super().add_child(child)
+        if self.border_panel is not None:
+            self.children.append(self.border_panel)
+
+    def kill(self):
+        super().kill()
+        if self.border_panel is not None:
+            self.border_panel.kill()

@@ -1,16 +1,16 @@
-from typing import Union
 import pygame
 
 from dominion_gui.event_manager import get_event_manager
-from layout_info.layout_info import LayoutInfo
 from dominion_gui.ui_manager import get_manager
+from dominion_gui.util import Noneable
+from layout_info.layout_info import LayoutInfo
 
 
 class UIElement:
     def __init__(self,
-                 layout_info: Union[LayoutInfo, None] = None,
-                 container: Union['UIElement', None] = None,
-                 padding: Union[LayoutInfo, None] = None,
+                 layout_info: Noneable(LayoutInfo) = None,
+                 container: Noneable('UIElement') = None,
+                 padding: Noneable(LayoutInfo) = None,
                  enabled: bool = True):
         self._bounds = pygame.Rect(0, 0, 0, 0)
         self._container = None
@@ -45,6 +45,11 @@ class UIElement:
     def subscribe(self, *args, **kwargs):
         self._event_manager.subscribe(*args, **kwargs)
 
+    def add_child(self, child: 'UIElement'):
+        if child in self.children:
+            raise Exception(f'Child already exists {child}')
+        self.children.append(child)
+
     @property
     def element(self):
         return self._element
@@ -61,7 +66,9 @@ class UIElement:
     @container.setter
     def container(self, c):
         if c is not None:
-            c.children.append(self)
+            if self._container is not None:
+                self._container.children.remove(self)
+            c.add_child(self)
         self._container = c
 
     @property

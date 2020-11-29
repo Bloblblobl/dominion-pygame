@@ -8,7 +8,7 @@ from dominion_gui.ui_elements.button import Button
 from dominion_gui.ui_elements.enums import Orientation, Position
 from dominion_gui.ui_elements.label import Label
 from dominion_gui.ui_elements.ui_element import UIElement
-from dominion_gui.util import calculate_text_size
+from dominion_gui.ui_util import calculate_text_size
 from layout_info.layout_info import LayoutInfo
 
 button_padding = 10

@@ -13,7 +13,7 @@ from dominion_gui.constants import background_color, screen_size, Colors, GREEN,
 from dominion_gui.ui_elements.button import Button
 from dominion_gui.ui_elements.enums import Position, Orientation
 from dominion_gui.ui_elements.horizontal_scroll_container import HorizontalScrollContainer
-from dominion_gui.ui_elements.panel import Panel
+from dominion_gui.ui_elements.base_panel import BasePanel
 from dominion_gui.ui_elements.tab_container import TabContainer
 from dominion_gui.ui_elements.top_level_window import TopLevelWindow
 from layout_info.layout_info import LayoutInfo
@@ -27,10 +27,10 @@ class UI(EventHandler):
         self.background.fill(background_color)
         self.window = TopLevelWindow(screen_size)
 
-        top_level_container = Panel(li_all_10, self.window, Colors.BORDER)
+        top_level_container = BasePanel(li_all_10, self.window, Colors.BORDER)
 
         shop_play_container_li = LayoutInfo(left=20, right=30.25, top=20, bottom=10.3)
-        shop_play_container = Panel(shop_play_container_li, top_level_container, Colors.STORE)
+        shop_play_container = BasePanel(shop_play_container_li, top_level_container, Colors.STORE)
         shop_li = LayoutInfo(left=0, right=0, top=0, height=0.5)
         self.shop = Shop(shop_li, shop_play_container)
 
@@ -50,11 +50,11 @@ class UI(EventHandler):
         self.play_area = self.play_tabs.tabs['Play Area'].content
 
         hand_container_li = LayoutInfo(left=20, right=30.25, top=0.7, bottom=20)
-        hand_container = Panel(hand_container_li, top_level_container, Colors.HAND)
+        hand_container = BasePanel(hand_container_li, top_level_container, Colors.HAND)
         self.hand = HorizontalScrollContainer(li_all_10, hand_container, CardView, 0.035)
 
         side_panel_container_li = LayoutInfo(right=20, top=20, bottom=20, width=0.25)
-        side_panel_container = Panel(side_panel_container_li, top_level_container, Colors.SIDE_PANEL)
+        side_panel_container = BasePanel(side_panel_container_li, top_level_container, Colors.SIDE_PANEL)
         self.build_side_panel(side_panel_container)
 
     def build_side_panel(self, container):

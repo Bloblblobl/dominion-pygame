@@ -24,10 +24,8 @@ class Shop(UIElement, EventHandler):
     def _kill_piles(self):
         for pile in self._piles:
             get_event_manager().unsubscribe(pile.image, 'on_click')
-            pile.image.kill()
+            pile.kill()
             pile.container.children.remove(pile)
-            if pile.counter is not None:
-                pile.counter.kill()
 
     @property
     def piles(self):

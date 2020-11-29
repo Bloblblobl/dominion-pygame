@@ -28,6 +28,7 @@ class Colors:
 
 
 card_spacing = 5
+border_thickness = 3
 
 images_dir = str((Path.script_dir() / 'images').resolve())
 theme_path = str((Path.script_dir() / 'theme.json').resolve())

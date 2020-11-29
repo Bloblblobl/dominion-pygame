@@ -1,6 +1,6 @@
-from dominion_gui.ui_elements.panel import Panel
+from dominion_gui.ui_elements.base_panel import BasePanel
 
 
-class SidePanel(Panel):
+class SidePanel(BasePanel):
     def __init__(self):
         self.message_log
