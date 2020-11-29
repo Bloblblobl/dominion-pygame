@@ -52,6 +52,8 @@ class EventManager(EventHandler):
             element = self.root_element
 
         for child in element.children:
+            if not child.visible:
+                continue
             if child.mouse_target and child.bounds.collidepoint((x, y)):
                 return self.find_source_element(x, y, child)
         return element
