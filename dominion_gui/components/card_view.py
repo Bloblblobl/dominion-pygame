@@ -64,7 +64,6 @@ class CardView(UIElement, EventHandler):
     def on_click(self, ui_element):
         card = ui_element.container
         game_client.get_instance().play_action_card(card.name)
-        card.enabled = not card.enabled
 
     def layout(self, only_if_changed=True):
         if self.container is not None:

@@ -49,7 +49,6 @@ class Shop(UIElement, EventHandler):
     def on_click(self, ui_element):
         pile = ui_element.container
         game_client.get_instance().buy(pile.name)
-        pile.enabled = not pile.enabled
 
     def _calc_pile_size(self):
         pile_width = (self.width - (piles_per_row + 1) * card_spacing) / piles_per_row
