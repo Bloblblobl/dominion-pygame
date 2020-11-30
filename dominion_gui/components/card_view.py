@@ -32,8 +32,9 @@ class CardView(UIElement, EventHandler):
 
     @cards.setter
     def cards(self, card_names: List[str]):
+        if len(card_names) < len(self.cards):
+            self.first_index = max(0, self.first_index - (len(self.cards) - len(card_names)))
         self._kill_cards()
-        self.first_index = 0
         self._cards = []
         for card_name in card_names:
             card = Card(layout_info=get_default_layout(),
