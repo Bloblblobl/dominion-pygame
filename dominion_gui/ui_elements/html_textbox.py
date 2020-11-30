@@ -38,18 +38,20 @@ class HTMLTextBox(ColorElement):
         self._build_textbox()
 
     def _build_textbox(self):
-        if self.element is not None:
-            self.kill()
-        self.element = UITextBox(relative_rect=self.bounds,
-                                 manager=self.manager,
-                                 html_text=self.html,
-                                 wrap_to_height=self._wrap_to_height)
-        self.background_color = self._background_color
+        new_element = UITextBox(relative_rect=self.bounds,
+                                manager=self.manager,
+                                html_text=self.html,
+                                wrap_to_height=self._wrap_to_height)
 
         if self._shape is not None:
-            self.element.shape = self._shape
+            new_element.shape = self._shape
         if self._shape_corner_radius is not None:
-            self.element.shape_corner_radius = self._shape_corner_radius
+            new_element.shape_corner_radius = self._shape_corner_radius
+
+        if self.element is not None:
+            self.kill()
+        self.element = new_element
+        self.background_color = self._background_color
 
     def rebuild(self):
         self._build_textbox()
