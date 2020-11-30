@@ -52,6 +52,16 @@ class HTMLTextBox(ColorElement):
             self.kill()
         self.element = new_element
         self.background_color = self._background_color
+        self.scroll_to_bottom()
+
+    def scroll_to_bottom(self):
+        sb = self.element.scroll_bar
+        if sb is not None:
+            sb.start_percentage = 1.0 - sb.sliding_button.rect.height / sb.scrollable_height
+            sb.has_moved_recently = True
+            new_y = sb.scrollable_height - sb.sliding_button.rect.height + sb.arrow_button_height
+            new_pos = (sb.sliding_rect_position.x, new_y)
+            sb.sliding_button.set_relative_position(new_pos)
 
     def rebuild(self):
         self._build_textbox()
