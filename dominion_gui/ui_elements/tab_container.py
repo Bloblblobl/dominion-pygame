@@ -49,7 +49,7 @@ class TabContainer(UIElement, EventHandler):
         self.button_li.width = tab_button_width
         tab_button = Button(name, copy.deepcopy(self.button_li), self)
         self.tabs[name] = Tab(tab, tab_button)
-        get_event_manager().subscribe(tab_button, 'on_ui_button_press', self)
+        self.subscribe(tab_button, 'on_ui_button_press', self)
         self.tab_buttons.append(tab_button)
         self.button_li.left += self.button_li.width
 
@@ -71,7 +71,7 @@ class TabContainer(UIElement, EventHandler):
 
         if name == self.active_tab:
             self.select_tab(new_active)
-        get_event_manager().unsubscribe(self.tabs[name].button, 'on_ui_button_press')
+        self.unsubscribe(self.tabs[name].button, 'on_ui_button_press')
         self.tabs[name].content.kill()
         self.tabs[name].button.kill()
         del self.tabs[name]
@@ -84,6 +84,8 @@ class TabContainer(UIElement, EventHandler):
 
         if len(self.tab_buttons) == 1:
             self.tab_buttons[0].visible = self.show_single_tab
+
+        self.button_li.left = left
 
         self.layout(only_if_changed=False)
 

@@ -12,10 +12,28 @@ class Border:
                  thickness: int = 0,
                  color: pygame.color = RED,
                  visible: bool = False):
-        self.thickness = thickness
-        self.color = color
+        self._thickness = thickness
+        self._color = color
         self._visible = visible
         self.callback = None
+
+    @property
+    def thickness(self) -> int:
+        return self._thickness
+
+    @thickness.setter
+    def thickness(self, t: int):
+        self._thickness = t
+        self.callback()
+
+    @property
+    def color(self) -> pygame.color:
+        return self._color
+
+    @color.setter
+    def color(self, c: pygame.color):
+        self._color = c
+        self.callback()
 
     @property
     def visible(self) -> bool:
@@ -64,6 +82,14 @@ class Panel(BasePanel):
         super().add_child(child)
         if self.border_panel is not None:
             self.children.append(self.border_panel)
+
+    def on_visible(self, visible: bool):
+        super().on_visible(visible)
+        self.update_border()
+
+        # always hide the border if the panel itself is not visible
+        if not visible:
+            self.border_panel.visible = False
 
     def kill(self):
         super().kill()

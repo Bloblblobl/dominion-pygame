@@ -23,7 +23,7 @@ class CardView(UIElement, EventHandler):
 
     def _kill_cards(self):
         for card in self._cards:
-            get_event_manager().unsubscribe(card.image, 'on_click')
+            self.unsubscribe(card.image, 'on_click')
             card.kill()
             card.container.children.remove(card)
 
@@ -41,7 +41,7 @@ class CardView(UIElement, EventHandler):
                         container=self,
                         image_name=card_name)
 
-            get_event_manager().subscribe(card.image, 'on_click', self)
+            self.subscribe(card.image, 'on_click', self)
 
             self._cards.append(card)
 
@@ -63,7 +63,7 @@ class CardView(UIElement, EventHandler):
 
     def on_click(self, ui_element):
         card = ui_element.container
-        game_client.get_instance().play_action_card(card.name)
+        # game_client.get_instance().play_action_card(card.name)
 
     def layout(self, only_if_changed=True):
         if self.container is not None:

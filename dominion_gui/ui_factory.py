@@ -1,17 +1,13 @@
-import functools
-
 import pygame
 
-from dominion_gui.components.default import get_default_layout
-from dominion_gui.components.response import Response
-from dominion_gui.components.stack import Stack
+from dominion_gui.components.responses.response import Response
 from dominion_gui.event_handler import EventHandler
 from dominion_gui.components.card_view import CardView
 from dominion_gui.components.message_log import MessageLog
 from dominion_gui.components.shop import Shop
-from dominion_gui.constants import background_color, screen_size, Colors, GREEN, BLUE, RED
+from dominion_gui.constants import background_color, screen_size, Colors
+from dominion_gui.responder import Responder
 from dominion_gui.ui_elements.button import Button
-from dominion_gui.ui_elements.enums import Position, Orientation
 from dominion_gui.ui_elements.horizontal_scroll_container import HorizontalScrollContainer
 from dominion_gui.ui_elements.base_panel import BasePanel
 from dominion_gui.ui_elements.tab_container import TabContainer
@@ -41,12 +37,7 @@ class UI(EventHandler):
                                tab_factory=HorizontalScrollContainer,
                                scrollable_class=CardView,
                                button_thickness=0.035)
-        self.play_tabs.add_tab(name='Response',
-                               tab_button_width=100,
-                               tab_factory=Response,
-                               prompt_text='This is a test prompt',
-                               card_names=['village', 'market'],
-                               button_names=['Yes', 'No'])
+        Responder.create(self.play_tabs)
         self.play_area = self.play_tabs.tabs['Play Area'].content
 
         hand_container_li = LayoutInfo(left=20, right=30.25, top=0.7, bottom=20)

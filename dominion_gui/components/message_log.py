@@ -7,7 +7,7 @@ class MessageLog(HTMLTextBox, EventHandler):
     def __init__(self, layout_info, container, bg_color=None, padding=None):
         super().__init__('', layout_info, container, bg_color, padding)
         self.messages = []
-        get_event_manager().subscribe(owner=None,
+        self.subscribe(owner=None,
                                       handler_name='on_custom_event',
                                       subscriber=self)
 

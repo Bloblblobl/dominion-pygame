@@ -12,6 +12,8 @@ class UIElement:
                  container: Noneable('UIElement') = None,
                  padding: Noneable(LayoutInfo) = None,
                  enabled: bool = True):
+        self._event_manager = self._get_event_manager()
+
         self._bounds = pygame.Rect(0, 0, 0, 0)
         self._container = None
         self._element = None
@@ -32,8 +34,6 @@ class UIElement:
         self.layout()
         self._validate_padding()
 
-        self._event_manager = self._get_event_manager()
-
     def _get_event_manager(self):
         return get_event_manager()
 
@@ -44,6 +44,9 @@ class UIElement:
 
     def subscribe(self, *args, **kwargs):
         self._event_manager.subscribe(*args, **kwargs)
+
+    def unsubscribe(self, *args, **kwargs):
+        self._event_manager.unsubscribe(*args, **kwargs)
 
     def add_child(self, child: 'UIElement'):
         if child in self.children:

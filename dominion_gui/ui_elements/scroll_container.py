@@ -81,7 +81,7 @@ class ScrollContainer(UIElement, EventHandler):
 
         super().__init__(layout_info, container, padding)
 
-        get_event_manager().subscribe(self.scrollbar, pygame_gui.UI_HORIZONTAL_SLIDER_MOVED, self.scrollable)
+        self.subscribe(self.scrollbar, pygame_gui.UI_HORIZONTAL_SLIDER_MOVED, self.scrollable)
 
     def _configure(self):
         if self.scrollbar_position == Position.LEFT:

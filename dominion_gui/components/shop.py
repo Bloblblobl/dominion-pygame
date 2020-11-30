@@ -23,7 +23,7 @@ class Shop(UIElement, EventHandler):
 
     def _kill_piles(self):
         for pile in self._piles:
-            get_event_manager().unsubscribe(pile.image, 'on_click')
+            self.unsubscribe(pile.image, 'on_click')
             pile.kill()
             pile.container.children.remove(pile)
 
@@ -40,7 +40,7 @@ class Shop(UIElement, EventHandler):
                         container=self,
                         image_name=pile_name)
 
-            get_event_manager().subscribe(pile.image, 'on_click', self)
+            self.subscribe(pile.image, 'on_click', self)
 
             self._piles.append(pile)
 

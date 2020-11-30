@@ -38,8 +38,8 @@ class Pile(Panel, EventHandler):
         image_path = self.image_path if enabled else self.gray_image_path
         self._kill_image()
         self.image = Image(get_default_layout(), self, image_path)
-        get_event_manager().subscribe(self.image, 'on_mouse_enter', self)
-        get_event_manager().subscribe(self.image, 'on_mouse_leave', self)
+        self.subscribe(self.image, 'on_mouse_enter', self)
+        self.subscribe(self.image, 'on_mouse_leave', self)
 
     def on_mouse_enter(self, *, ui_element):
         self.border.visible = True
@@ -64,8 +64,8 @@ class Pile(Panel, EventHandler):
     def _kill_image(self):
         if self.image is not None:
             self.image.kill()
-            get_event_manager().unsubscribe(self.image, 'on_mouse_enter')
-            get_event_manager().unsubscribe(self.image, 'on_mouse_leave')
+            self.unsubscribe(self.image, 'on_mouse_enter')
+            self.unsubscribe(self.image, 'on_mouse_leave')
             self.children.remove(self.image)
 
     def kill(self):

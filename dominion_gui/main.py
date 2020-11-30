@@ -73,6 +73,12 @@ class DominionApp:
                 return
             em.on_mouse_button_up(mouse_buttons[event.button])
         elif event.type == pygame.USEREVENT:
+            # handle our custom events
+            if event.user_type == 'custom_event':
+                em.on_custom_event(event.event)
+                return
+
+            # handle pygame GUI's user events
             if not hasattr(event.ui_element, 'owner'):
                 return
 

@@ -3,8 +3,8 @@ from time import sleep
 from dominion_object_model import object_model
 
 from dominion_gui.event_handler import EventHandler
-from dominion_gui.event_manager import get_event_manager
-from dominion_gui.responder import get_responder, ResponseEvent
+from dominion_gui.event_manager import get_event_manager, ResponseEvent
+from dominion_gui.responder import Responder
 
 
 class UIPlayer(object_model.Player, EventHandler):
@@ -21,7 +21,7 @@ class UIPlayer(object_model.Player, EventHandler):
         pass
 
     def respond(self, action, *args):
-        get_responder().handle(action, *args)
+        Responder.get_instance().handle(action, self.state, *args)
         while self.response is None:
             sleep(0.5)
 
@@ -29,6 +29,7 @@ class UIPlayer(object_model.Player, EventHandler):
             return self.response
         finally:
             self.response = None
+            Responder.get_instance().cleanup()
 
     def on_game_event(self, event):
         em = get_event_manager()

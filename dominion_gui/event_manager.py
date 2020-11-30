@@ -39,6 +39,11 @@ def delegate(f):
     return decorated
 
 
+class ResponseEvent:
+    def __init__(self, response):
+        self.response = response
+
+
 class EventManager(EventHandler):
     def __init__(self, root_element):
         self.subscribers = {}
