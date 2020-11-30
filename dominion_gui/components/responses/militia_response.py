@@ -33,7 +33,6 @@ class MilitiaResponse(Response):
 
     def on_ui_button_press(self, *, ui_element):
         selected_card_names = [card.name for card in self.selected_cards]
-        print(selected_card_names)
         response_event = pygame.event.Event(
             pygame.USEREVENT,
             dict(user_type='custom_event', event=ResponseEvent(selected_card_names))
