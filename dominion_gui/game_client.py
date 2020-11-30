@@ -1,12 +1,9 @@
-from typing import Union
-
+import time
 from threading import Thread
 
-import time
-
 from dominion_object_model import object_model
-from dominion_grpc_client.client import Client as GRPCClient
 
+from dominion_grpc_client.client import Client as GRPCClient
 from dominion_gui.ui_player import UIPlayer
 from dominion_gui.util import Noneable
 

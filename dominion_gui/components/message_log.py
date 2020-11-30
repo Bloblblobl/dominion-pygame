@@ -1,5 +1,4 @@
 from dominion_gui.event_handler import EventHandler
-from dominion_gui.event_manager import get_event_manager
 from dominion_gui.ui_elements.html_textbox import HTMLTextBox
 
 
@@ -8,8 +7,8 @@ class MessageLog(HTMLTextBox, EventHandler):
         super().__init__('', layout_info, container, bg_color, padding)
         self.messages = []
         self.subscribe(owner=None,
-                                      handler_name='on_custom_event',
-                                      subscriber=self)
+                       handler_name='on_custom_event',
+                       subscriber=self)
 
     def add_message(self, message):
         self.messages.append(message)

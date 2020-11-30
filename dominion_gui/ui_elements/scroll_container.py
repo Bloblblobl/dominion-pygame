@@ -1,16 +1,13 @@
-from enum import Enum
-
-import pygame
 from typing import Callable
 
+import pygame
 import pygame_gui
 
-from dominion_gui.event_handler import EventHandler
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.constants import RED
-from dominion_gui.event_manager import get_event_manager
-from dominion_gui.ui_elements.enums import Orientation, Position
+from dominion_gui.event_handler import EventHandler
 from dominion_gui.ui_elements.base_panel import BasePanel
+from dominion_gui.ui_elements.enums import Orientation, Position
 from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
 

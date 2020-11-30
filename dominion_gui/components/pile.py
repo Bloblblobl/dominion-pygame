@@ -6,7 +6,6 @@ from dominion_gui import util
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.constants import DARK_GRAY, images_dir, border_thickness
 from dominion_gui.event_handler import EventHandler
-from dominion_gui.event_manager import get_event_manager
 from dominion_gui.ui_elements.html_textbox import HTMLTextBox
 from dominion_gui.ui_elements.image import Image
 from dominion_gui.ui_elements.panel import Panel, Border

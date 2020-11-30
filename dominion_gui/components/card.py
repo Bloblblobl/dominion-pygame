@@ -1,5 +1,6 @@
-import pygame
 from typing import Union
+
+import pygame
 
 from dominion_gui import util
 from dominion_gui.components.default import get_default_layout

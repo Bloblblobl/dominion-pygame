@@ -1,14 +1,11 @@
 import copy
 from collections import namedtuple
-
 from typing import Callable
 
 from dominion_gui.event_handler import EventHandler
-from dominion_gui.event_manager import get_event_manager
 from dominion_gui.ui_elements.button import Button
 from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
-
 
 Tab = namedtuple('Tab', ['content', 'button'])
 

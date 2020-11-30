@@ -1,12 +1,12 @@
-import pygame
 from typing import List, Union
 
+import pygame
+
 from dominion_gui import game_client
-from dominion_gui.event_handler import EventHandler
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.components.pile import Pile
 from dominion_gui.constants import card_spacing
-from dominion_gui.event_manager import get_event_manager
+from dominion_gui.event_handler import EventHandler
 from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
 
