@@ -1,17 +1,25 @@
 from dominion_gui.event_handler import EventHandler
 from dominion_gui.ui_elements.html_textbox import HTMLTextBox
+from dominion_gui.ui_util import get_random_color
 
 
 class MessageLog(HTMLTextBox, EventHandler):
     def __init__(self, layout_info, container, bg_color=None, padding=None):
         super().__init__('', layout_info, container, bg_color, padding)
         self.messages = []
+        self.players = {}
         self.subscribe(owner=None,
                        handler_name='on_custom_event',
                        subscriber=self)
 
+    def format_message(self, message):
+        for player, color in self.players.items():
+            message = message.replace(player, f'<font color={color}>{player}</font>')
+        return message
+
     def add_message(self, message):
-        self.messages.append(message)
+        formatted_message = self.format_message(message)
+        self.messages.append(formatted_message)
         self.html = '<br>'.join(self.messages)
 
     def on_custom_event(self, event):
@@ -20,6 +28,7 @@ class MessageLog(HTMLTextBox, EventHandler):
                 self.add_message('Game Started!')
                 self.add_message('Players:')
                 for player in event['player_names']:
+                    self.players[player] = get_random_color()
                     self.add_message(player)
                 self.add_message('-' * 10)
         elif isinstance(event, str):
