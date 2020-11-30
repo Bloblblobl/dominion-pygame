@@ -131,7 +131,10 @@ class DominionApp:
 
             self.update_state()
 
-            manager.update(time_delta)
+            try:
+                manager.update(time_delta)
+            except Exception as e:
+                print(f'pygame GUI messed up: {e}')
 
             self.surface.blit(self.ui.background, (0, 0))
             manager.draw_ui(self.surface)
