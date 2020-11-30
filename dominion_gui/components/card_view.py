@@ -1,12 +1,11 @@
-import pygame
 from typing import List, Union
 
-from dominion_gui import game_client
-from dominion_gui.event_handler import EventHandler
+import pygame
+
 from dominion_gui.components.card import Card
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.constants import card_spacing
-from dominion_gui.event_manager import get_event_manager
+from dominion_gui.event_handler import EventHandler
 from dominion_gui.ui_elements.ui_element import UIElement
 from layout_info.layout_info import LayoutInfo
 
@@ -60,10 +59,6 @@ class CardView(UIElement, EventHandler):
             self.first_index = max(self.first_index - delta, 0)
         elif direction == 'right':
             self.first_index = min(self.first_index + delta, len(self.cards) - 1)
-
-    def on_click(self, ui_element):
-        card = ui_element.container
-        # game_client.get_instance().play_action_card(card.name)
 
     def layout(self, only_if_changed=True):
         if self.container is not None:

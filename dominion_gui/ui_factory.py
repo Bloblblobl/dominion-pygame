@@ -1,15 +1,15 @@
 import pygame
 
-from dominion_gui.components.responses.response import Response
-from dominion_gui.event_handler import EventHandler
 from dominion_gui.components.card_view import CardView
+from dominion_gui.components.hand import Hand
 from dominion_gui.components.message_log import MessageLog
 from dominion_gui.components.shop import Shop
 from dominion_gui.constants import background_color, screen_size, Colors
+from dominion_gui.event_handler import EventHandler
 from dominion_gui.responder import Responder
+from dominion_gui.ui_elements.base_panel import BasePanel
 from dominion_gui.ui_elements.button import Button
 from dominion_gui.ui_elements.horizontal_scroll_container import HorizontalScrollContainer
-from dominion_gui.ui_elements.base_panel import BasePanel
 from dominion_gui.ui_elements.tab_container import TabContainer
 from dominion_gui.ui_elements.top_level_window import TopLevelWindow
 from layout_info.layout_info import LayoutInfo
@@ -42,7 +42,7 @@ class UI(EventHandler):
 
         hand_container_li = LayoutInfo(left=20, right=30.25, top=0.7, bottom=20)
         hand_container = BasePanel(hand_container_li, top_level_container, Colors.HAND)
-        self.hand = HorizontalScrollContainer(li_all_10, hand_container, CardView, 0.035)
+        self.hand = HorizontalScrollContainer(li_all_10, hand_container, Hand, 0.035)
 
         side_panel_container_li = LayoutInfo(right=20, top=20, bottom=20, width=0.25)
         side_panel_container = BasePanel(side_panel_container_li, top_level_container, Colors.SIDE_PANEL)
