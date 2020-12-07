@@ -23,7 +23,6 @@ class Response(UIElement, EventHandler):
                  prompt_text: str,
                  card_names: List[str],
                  button_names: List[str],
-                 selected_card_count: int = 0,
                  layout_info: Union[LayoutInfo, None] = None,
                  container: Union[pygame.Rect, 'UIElement', None] = None,
                  padding: Union[LayoutInfo, None] = None):

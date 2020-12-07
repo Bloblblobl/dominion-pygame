@@ -6,11 +6,11 @@ from dominion_gui.components.responses.response import Response
 from dominion_gui.event_manager import ResponseEvent
 from layout_info.layout_info import LayoutInfo
 
-prompt_text = 'Discard down to 3 cards (select the cards you want to keep)'
-button_names = ['Done']
+prompt_text = 'Would you like to trash a copper?'
+button_names = ['Yes', 'No']
 
 
-class MilitiaResponse(Response):
+class MoneylenderResponse(Response):
     def __init__(self,
                  card_names: List[str],
                  layout_info: Union[LayoutInfo, None] = None,
@@ -23,16 +23,13 @@ class MilitiaResponse(Response):
                          container,
                          padding)
 
-        self.buttons['Done'].enabled = False
-        self.subscribe(self.buttons['Done'], 'on_ui_button_press', self)
-
-    def on_card_select(self, card: Card, selected: bool):
-        self.buttons['Done'].enabled = len(self.selected_cards) == 3
+        self.subscribe(self.buttons['Yes'], 'on_ui_button_press', self)
+        self.subscribe(self.buttons['No'], 'on_ui_button_press', self)
 
     def on_ui_button_press(self, *, ui_element):
-        selected_card_names = [card.name for card in self.selected_cards]
+        answer = 'Yes' if ui_element == self.buttons['Yes'] else 'No'
         response_event = pygame.event.Event(
             pygame.USEREVENT,
-            dict(user_type='custom_event', event=ResponseEvent(selected_card_names))
+            dict(user_type='custom_event', event=ResponseEvent(answer))
         )
         pygame.event.post(response_event)

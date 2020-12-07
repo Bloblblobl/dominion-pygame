@@ -6,11 +6,11 @@ from dominion_gui.components.responses.response import Response
 from dominion_gui.event_manager import ResponseEvent
 from layout_info.layout_info import LayoutInfo
 
-prompt_text = 'Discard down to 3 cards (select the cards you want to keep)'
+prompt_text = 'Select up to 4 cards to trash'
 button_names = ['Done']
 
 
-class MilitiaResponse(Response):
+class ChapelResponse(Response):
     def __init__(self,
                  card_names: List[str],
                  layout_info: Union[LayoutInfo, None] = None,
@@ -23,11 +23,10 @@ class MilitiaResponse(Response):
                          container,
                          padding)
 
-        self.buttons['Done'].enabled = False
         self.subscribe(self.buttons['Done'], 'on_ui_button_press', self)
 
     def on_card_select(self, card: Card, selected: bool):
-        self.buttons['Done'].enabled = len(self.selected_cards) == 3
+        self.buttons['Done'].enabled = len(self.selected_cards) <= 4
 
     def on_ui_button_press(self, *, ui_element):
         selected_card_names = [card.name for card in self.selected_cards]
