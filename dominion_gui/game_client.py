@@ -10,7 +10,7 @@ from dominion_gui.util import Noneable
 instance = None
 
 
-def connect():
+def connect(host, port):
     global instance
 
     instance = GRPCClient('test', UIPlayer)
