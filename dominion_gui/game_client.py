@@ -15,13 +15,13 @@ def connect(host, port):
 
     instance = GRPCClient('test', UIPlayer)
 
-    Thread(target=instance.run).start()
+    Thread(target=instance.run, args=(host, port)).start()
     game_started = False
     while not game_started:
         try:
             instance.start_game()
             game_started = True
-        except:
+        except Exception as e:
             time.sleep(0.1)
 
 
