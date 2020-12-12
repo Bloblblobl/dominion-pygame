@@ -53,7 +53,7 @@ class DominionApp:
         manager.root_container.set_dimensions(size)
 
     def connect(self):
-        host = os.environ.get('DOMINION_HOST', 'locahost')
+        host = os.environ.get('DOMINION_HOST', 'localhost')
         port = os.environ.get('DOMINION_PORT', '50051')
         game_client.connect(host, int(port))
         self.player = UIPlayer.instance
