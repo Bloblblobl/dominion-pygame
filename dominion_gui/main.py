@@ -9,6 +9,7 @@ from dominion_gui.event_handler import EventHandler, MouseButton
 from dominion_gui.constants import screen_size, preloaded_fonts, min_screen_width, min_screen_height, \
     DISPLAY_FLAGS
 import dominion_gui.event_manager as em
+from dominion_gui.responder import Responder
 from dominion_gui.ui_manager import get_manager
 from dominion_gui.ui_factory import UI
 from dominion_gui.ui_player import UIPlayer
@@ -91,6 +92,11 @@ class DominionApp:
                 em.on_ui_button_press(ui_element=ui_element)
 
     def update_state(self):
+        if self.player is not None and self.player.pending_response is not None:
+            action, args = self.player.pending_response
+            Responder.get_instance().handle(action, self.player.state, *args)
+            self.player.pending_response = None
+
         if self.player is None or self.player.state == self.state:
             return
 
@@ -119,6 +125,7 @@ class DominionApp:
         events = (pygame.USEREVENT,) + mouse_events
 
         while self.is_running:
+            print('abc')
             time_delta = self.clock.tick(60) / 1000.0
 
             for event in pygame.event.get():

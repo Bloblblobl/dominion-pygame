@@ -13,6 +13,7 @@ class UIPlayer(object_model.Player, EventHandler):
     def __init__(self, game_client):
         self.game_client = game_client
         self.state = None
+        self.pending_response = None
         self.response = None
         UIPlayer.instance = self
         get_event_manager().subscribe(None, 'on_custom_event', self)
@@ -21,7 +22,7 @@ class UIPlayer(object_model.Player, EventHandler):
         pass
 
     def respond(self, action, *args):
-        Responder.get_instance().handle(action, self.state, *args)
+        self.pending_response = (action, *args)
         while self.response is None:
             sleep(0.5)
 
