@@ -3,7 +3,6 @@ from dominion_gui.components.responses.cellar_response import CellarResponse
 from dominion_gui.components.responses.chapel_response import ChapelResponse
 from dominion_gui.components.responses.harbinger_response import HarbingerResponse
 from dominion_gui.components.responses.militia_response import MilitiaResponse
-from dominion_gui.components.responses.moneylender_response import MoneylenderResponse
 
 
 class Responder:
@@ -58,13 +57,6 @@ class Responder:
                                    tab_button_width=100,
                                    tab_factory=HarbingerResponse,
                                    card_names=card_names)
-        self.tab_container.select_tab(name='Response')
-
-    def handle_moneylender(self, state, *args):
-        self.tab_container.add_tab(name='Response',
-                                   tab_button_width=100,
-                                   tab_factory=MoneylenderResponse,
-                                   card_names=[])
         self.tab_container.select_tab(name='Response')
 
     def cleanup(self):

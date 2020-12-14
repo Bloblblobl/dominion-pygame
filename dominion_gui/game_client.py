@@ -1,29 +1,47 @@
-import time
-from threading import Thread
-
-from dominion_object_model import object_model
+import multiprocessing as mp
 
 from dominion_grpc_client.client import Client as GRPCClient
-from dominion_gui.ui_player import UIPlayer
-from dominion_gui.util import Noneable
-
-instance = None
+from dominion_object_model import object_model
 
 
-def connect(host, port):
-    global instance
+def get_instance():
+    if GameClient.instance is None:
+        GameClient.instance = GameClient()
 
-    instance = GRPCClient('test', UIPlayer)
-
-    Thread(target=instance.run, args=(host, port)).start()
-    game_started = False
-    while not game_started:
-        try:
-            instance.start_game()
-            game_started = True
-        except Exception as e:
-            time.sleep(0.1)
+    return GameClient.instance
 
 
-def get_instance() -> Noneable(object_model.GameClient):
-    return instance
+class GameClient(object_model.GameClient):
+    instance = None
+
+    def __init__(self, name='test'):
+        self._in_queue = mp.Queue()
+        self._out_queue = mp.Queue()
+        self._out_response_queue = mp.Queue()
+        self._grpc_client = GRPCClient(name, self._in_queue, self._out_queue, self._out_response_queue)
+
+    def connect(self, host, port):
+        mp.Process(target=self._grpc_client.run, args=(host, port)).start()
+
+    def get_message(self):
+        """Get message from queue (non-blocking)"""
+        if self._in_queue.empty():
+            return None
+        return self._in_queue.get()
+
+    def start_game(self):
+        self._out_queue.put(('start_game', None))
+
+    def respond(self, action, *args):
+        print(f'**** GameClient.respond({action}, {args}) - puts in out response queue')
+        self._out_response_queue.put(('respond', (action, *args)))
+
+    # GameClient interface
+    def play_action_card(self, card_name: str):
+        self._out_queue.put(('play_action_card', card_name))
+
+    def buy(self, card_name: str):
+        self._out_queue.put(('buy', card_name))
+
+    def done(self):
+        self._out_queue.put(('done', None))

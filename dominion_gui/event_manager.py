@@ -36,12 +36,17 @@ def delegate(f):
                 handler(*args, **kwargs)
 
         f(event_manager, *args, **kwargs)
+
     return decorated
 
 
 class ResponseEvent:
-    def __init__(self, response):
+    def __init__(self, action, response):
+        self.action = action
         self.response = response
+
+    def __repr__(self):
+        return f'action: {self.action}, response: {self.response}'
 
 
 class EventManager(EventHandler):

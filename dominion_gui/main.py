@@ -5,6 +5,7 @@ import pygame_gui
 
 
 from dominion_gui import game_client, util
+
 from dominion_gui.event_handler import EventHandler, MouseButton
 from dominion_gui.constants import screen_size, preloaded_fonts, min_screen_width, min_screen_height, \
     DISPLAY_FLAGS
@@ -25,6 +26,7 @@ class DominionApp:
 
         self.event_manager = None
         self.player = None
+        self.game_client = game_client.get_instance()
         self.state = None
 
         manager = get_manager(screen_size)
@@ -35,12 +37,12 @@ class DominionApp:
 
     def connect_events(self):
         self.event_manager = em.get_event_manager(self.ui.window)
-        button_top_eh = EventHandler()
-        button_top_eh.on_ui_button_press = lambda ui_element: self.connect()
-        button_bottom_eh = EventHandler()
-        button_bottom_eh.on_ui_button_press = lambda ui_element: game_client.get_instance().done()
-        self.event_manager.subscribe(self.ui.top_button, 'on_ui_button_press', button_top_eh)
-        self.event_manager.subscribe(self.ui.bottom_button, 'on_ui_button_press', button_bottom_eh)
+        connect_handler = EventHandler()
+        connect_handler.on_ui_button_press = lambda ui_element: self.connect()
+        done_handler = EventHandler()
+        done_handler.on_ui_button_press = lambda ui_element: game_client.get_instance().done()
+        self.event_manager.subscribe(self.ui.top_button, 'on_ui_button_press', connect_handler)
+        self.event_manager.subscribe(self.ui.bottom_button, 'on_ui_button_press', done_handler)
 
     def handle_screen_resize(self, raw_size):
         manager = get_manager()
@@ -56,8 +58,8 @@ class DominionApp:
     def connect(self):
         host = os.environ.get('DOMINION_HOST', 'localhost')
         port = os.environ.get('DOMINION_PORT', '50051')
-        game_client.connect(host, int(port))
-        self.player = UIPlayer.instance
+        self.game_client.connect(host, int(port))
+        self.player = UIPlayer(self.game_client)
 
     def handle_event(self, event):
         em = self.event_manager
@@ -91,10 +93,32 @@ class DominionApp:
             if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
                 em.on_ui_button_press(ui_element=ui_element)
 
+    def _handle_message(self, action, data):
+        if action == 'play':
+            self.player.play()
+        elif action == 'respond':
+            self.player.pending_response = (action, data)
+        elif action == 'on_game_event':
+            self.player.on_game_event(data)
+        elif action == 'on_state_change':
+            self.player.on_state_change(data)
+        elif action == 'ack':
+            self.name = data['name']
+            self.game_client.start_game()
+        else:
+            print('Unknown message type:', action)
+
     def update_state(self):
+        try:
+            message = self.game_client.get_message()
+            if message:
+                self._handle_message(*message)
+        except Exception as e:
+            pass
+
         if self.player is not None and self.player.pending_response is not None:
-            action, args = self.player.pending_response
-            Responder.get_instance().handle(action, self.player.state, *args)
+            _, args = self.player.pending_response
+            Responder.get_instance().handle(args['action'], self.player.state, *args['args'])
             self.player.pending_response = None
 
         if self.player is None or self.player.state == self.state:
@@ -125,7 +149,7 @@ class DominionApp:
         events = (pygame.USEREVENT,) + mouse_events
 
         while self.is_running:
-            print('abc')
+            #print('abc')
             time_delta = self.clock.tick(60) / 1000.0
 
             for event in pygame.event.get():

@@ -33,6 +33,6 @@ class MilitiaResponse(Response):
         selected_card_names = [card.name for card in self.selected_cards]
         response_event = pygame.event.Event(
             pygame.USEREVENT,
-            dict(user_type='custom_event', event=ResponseEvent(selected_card_names))
+            dict(user_type='custom_event', event=ResponseEvent('militia', selected_card_names))
         )
         pygame.event.post(response_event)

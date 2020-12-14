@@ -2,7 +2,7 @@ from typing import List, Union
 
 import pygame
 
-from dominion_gui import game_client
+from dominion_gui.game_client import GameClient
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.components.pile import Pile
 from dominion_gui.constants import card_spacing
@@ -48,7 +48,7 @@ class Shop(UIElement, EventHandler):
 
     def on_click(self, ui_element):
         pile = ui_element.container
-        game_client.get_instance().buy(pile.name)
+        GameClient.instance.buy(pile.name)
 
     def _calc_pile_size(self):
         pile_width = (self.width - (piles_per_row + 1) * card_spacing) / piles_per_row
