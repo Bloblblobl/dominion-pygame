@@ -6,16 +6,16 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-pygame = ">=2.0.0.dev6"
-podsixnet = "*"
-pillow = "*"
-pygame-gui = "*"
-pathology = "*"
-dominion-object-model = "*"
+dominion-grpc-client = "0.13.0"
+dominion-object-model = "1.1.0"
+dominion-grpc-proto = "0.3.0"
 grpcio = "*"
 grpcio-tools = "*"
-dominion-grpc-proto = "*"
-dominion-grpc-client = "0.13.0"
+podsixnet = "*"
+pathology = "*"
+pillow = "*"
+pygame = ">=2.0.0.dev6"
+pygame-gui = "*"
 
 [requires]
 python_version = "3.8"
