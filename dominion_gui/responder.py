@@ -3,6 +3,9 @@ from dominion_gui.components.responses.cellar_response import CellarResponse
 from dominion_gui.components.responses.chapel_response import ChapelResponse
 from dominion_gui.components.responses.harbinger_response import HarbingerResponse
 from dominion_gui.components.responses.militia_response import MilitiaResponse
+from dominion_gui.components.responses.workshop_response import WorkshopResponse
+
+tab_button_width = 100
 
 
 class Responder:
@@ -30,7 +33,7 @@ class Responder:
     def handle_militia(self, state, *args):
         card_names = [util.get_card_name(card['name']) for card in state['hand']]
         self.tab_container.add_tab(name='Response',
-                                   tab_button_width=100,
+                                   tab_button_width=tab_button_width,
                                    tab_factory=MilitiaResponse,
                                    card_names=card_names)
         self.tab_container.select_tab(name='Response')
@@ -38,7 +41,7 @@ class Responder:
     def handle_cellar(self, state, *args):
         card_names = [util.get_card_name(card['name']) for card in state['hand']]
         self.tab_container.add_tab(name='Response',
-                                   tab_button_width=100,
+                                   tab_button_width=tab_button_width,
                                    tab_factory=CellarResponse,
                                    card_names=card_names)
         self.tab_container.select_tab(name='Response')
@@ -46,7 +49,7 @@ class Responder:
     def handle_chapel(self, state, *args):
         card_names = [util.get_card_name(card['name']) for card in state['hand']]
         self.tab_container.add_tab(name='Response',
-                                   tab_button_width=100,
+                                   tab_button_width=tab_button_width,
                                    tab_factory=ChapelResponse,
                                    card_names=card_names)
         self.tab_container.select_tab(name='Response')
@@ -54,8 +57,16 @@ class Responder:
     def handle_harbinger(self, state, *args):
         card_names = [util.get_card_name(card['name']) for card in state['discard_pile']]
         self.tab_container.add_tab(name='Response',
-                                   tab_button_width=100,
+                                   tab_button_width=tab_button_width,
                                    tab_factory=HarbingerResponse,
+                                   card_names=card_names)
+        self.tab_container.select_tab(name='Response')
+
+    def handle_workshop(self, state, *args):
+        card_names = [util.get_card_name(card_name) for card_name in state['supply']]
+        self.tab_container.add_tab(name='Response',
+                                   tab_button_width=tab_button_width,
+                                   tab_factory=WorkshopResponse,
                                    card_names=card_names)
         self.tab_container.select_tab(name='Response')
 
