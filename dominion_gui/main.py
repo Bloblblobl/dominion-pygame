@@ -57,7 +57,7 @@ class DominionApp:
 
     def connect(self):
         host = os.environ.get('DOMINION_HOST', 'localhost')
-        port = os.environ.get('DOMINION_PORT', '50051')
+        port = os.environ.get('DOMINION_PORT', '55555')
         self.game_client.connect(host, int(port))
         self.player = UIPlayer(self.game_client)
 
