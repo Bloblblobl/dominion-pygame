@@ -9,6 +9,7 @@ from dominion_gui.constants import BLUE, RED
 from dominion_gui.event_handler import EventHandler
 from dominion_gui.ui_elements.button import Button
 from dominion_gui.ui_elements.enums import Orientation, Position
+from dominion_gui.ui_elements.horizontal_scroll_container import HorizontalScrollContainer
 from dominion_gui.ui_elements.label import Label
 from dominion_gui.ui_elements.ui_element import UIElement
 from dominion_gui.ui_util import calculate_text_size
@@ -27,6 +28,7 @@ class Response(UIElement, EventHandler):
                  container: Union[pygame.Rect, 'UIElement', None] = None,
                  padding: Union[LayoutInfo, None] = None):
         super().__init__(layout_info, container, padding)
+        self._subscribed_cards = []
         self.selected_cards = []
 
         label = Label(prompt_text, get_default_layout(), None)
@@ -35,13 +37,12 @@ class Response(UIElement, EventHandler):
         prompt_layout = LayoutInfo(left=0, right=0, top=0, height=label_height)
         prompt = Stack([label], 0, Orientation.HORIZONTAL, Position.CENTER, prompt_layout, self)
 
-        self.card_view = CardView(LayoutInfo(left=0, right=0, top=0, height=.7), self)
+        card_view_li = LayoutInfo(left=0, right=0, top=0, height=.7)
+        self.scroll_container = HorizontalScrollContainer(card_view_li, self, CardView, 0.035)
+        self.card_view = self.scroll_container.scrollable
+        self.card_view.on_scroll = self.get_on_scroll_override(old_on_scroll=self.card_view.on_scroll)
         self.card_view.cards = card_names
-        for card in self.card_view.cards:
-            card.border_on_hover = False
-            self.subscribe(card.image, 'on_click', self)
-            self.subscribe(card.image, 'on_mouse_enter', self)
-            self.subscribe(card.image, 'on_mouse_leave', self)
+        self._subscribe_to_cards()
 
         self.buttons = {}
         button_stack = self.create_buttons(button_names)
@@ -55,6 +56,29 @@ class Response(UIElement, EventHandler):
                            initial_spacing=True)
 
         self.layout(only_if_changed=False)
+
+    def get_on_scroll_override(self, old_on_scroll):
+        def on_scroll(direction):
+            self._unsubscribe_from_cards()
+            old_on_scroll(direction)
+            self.layout(only_if_changed=False)
+            self._subscribe_to_cards()
+        return on_scroll
+
+    def _unsubscribe_from_cards(self):
+        for card in self._subscribed_cards:
+            self.unsubscribe(card.image, 'on_click', self)
+            self.unsubscribe(card.image, 'on_mouse_enter', self)
+            self.unsubscribe(card.image, 'on_mouse_leave', self)
+        self._subscribed_cards = []
+
+    def _subscribe_to_cards(self):
+        for card in self.card_view.cards:
+            card.border_on_hover = False
+            self.subscribe(card.image, 'on_click', self)
+            self.subscribe(card.image, 'on_mouse_enter', self)
+            self.subscribe(card.image, 'on_mouse_leave', self)
+            self._subscribed_cards.append(card)
 
     def create_buttons(self, button_names):
         for name in button_names:
