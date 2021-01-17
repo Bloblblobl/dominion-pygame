@@ -29,11 +29,11 @@ class Response(UIElement, EventHandler):
         super().__init__(layout_info, container, padding)
         self.selected_cards = []
 
-        label = Label(prompt_text, get_default_layout(), None)
-        label_width, label_height = label.element.font.size(label.text)
-        label.layout_info.width = label_width
+        self.label = Label(prompt_text, get_default_layout(), None)
+        label_width, label_height = self.label.element.font.size(self.label.text)
+        self.label.layout_info.width = label_width
         prompt_layout = LayoutInfo(left=0, right=0, top=0, height=label_height)
-        prompt = Stack([label], 0, Orientation.HORIZONTAL, Position.CENTER, prompt_layout, self)
+        prompt = Stack([self.label], 0, Orientation.HORIZONTAL, Position.CENTER, prompt_layout, self)
 
         self.card_view = CardView(LayoutInfo(left=0, right=0, top=0, height=.7), self)
         self.card_view.cards = card_names
@@ -69,6 +69,12 @@ class Response(UIElement, EventHandler):
                      alignment=Position.CENTER,
                      layout_info=LayoutInfo(left=0, right=0, top=0, height=stack_height),
                      container=None)
+
+    def set_prompt_text(self, prompt_text):
+        self.label.set_text(prompt_text)
+        label_width, label_height = self.label.element.font.size(self.label.text)
+        self.label.layout_info.width = label_width
+        self.label.layout(only_if_changed=False)
 
     def on_click(self, *, ui_element):
         card = ui_element.container

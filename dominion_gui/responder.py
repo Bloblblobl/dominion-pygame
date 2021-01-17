@@ -5,6 +5,7 @@ from dominion_gui.components.responses.chapel_response import ChapelResponse
 from dominion_gui.components.responses.harbinger_response import HarbingerResponse
 from dominion_gui.components.responses.militia_response import MilitiaResponse
 from dominion_gui.components.responses.mine_response import MineResponse
+from dominion_gui.components.responses.sentry_response import SentryResponse
 from dominion_gui.components.responses.vassal_response import VassalResponse
 from dominion_gui.components.responses.workshop_response import WorkshopResponse
 
@@ -78,6 +79,13 @@ class Responder:
                                    tab_button_width=tab_button_width,
                                    tab_factory=MineResponse,
                                    card_names=card_names)
+        self.tab_container.select_tab(name='Response')
+
+    def handle_sentry(self, state, *args):
+        self.tab_container.add_tab(name='Response',
+                                   tab_button_width=tab_button_width,
+                                   tab_factory=SentryResponse,
+                                   card_names=args[0])
         self.tab_container.select_tab(name='Response')
 
     def handle_vassal(self, state, *args):

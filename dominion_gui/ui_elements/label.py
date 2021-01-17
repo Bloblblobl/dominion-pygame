@@ -20,6 +20,10 @@ class Label(ColorElement):
         self.text_color = text_color
         self.background_color = background_color
 
+    def set_text(self, text):
+        self.text = text
+        self.element.set_text(text)
+
     @property
     def text_color(self):
         return self.element.text_colour
