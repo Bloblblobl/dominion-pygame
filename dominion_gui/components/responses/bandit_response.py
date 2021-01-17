@@ -1,15 +1,16 @@
 import pygame
 from typing import Union, List
 
+from dominion_gui.components.card import Card
 from dominion_gui.components.responses.response import Response
 from dominion_gui.event_manager import ResponseEvent
 from layout_info.layout_info import LayoutInfo
 
-prompt_text = 'Select the cards you want to discard'
+prompt_text = 'Select a non-Copper Treasure to discard'
 button_names = ['Done']
 
 
-class CellarResponse(Response):
+class BanditResponse(Response):
     def __init__(self,
                  card_names: List[str],
                  layout_info: Union[LayoutInfo, None] = None,
@@ -22,12 +23,16 @@ class CellarResponse(Response):
                          container,
                          padding)
 
+        self.buttons['Done'].enabled = False
         self.subscribe(self.buttons['Done'], 'on_ui_button_press', self)
+
+    def on_card_select(self, card: Card, selected: bool):
+        self.buttons['Done'].enabled = len(self.selected_cards) == 1
 
     def on_ui_button_press(self, *, ui_element):
         selected_card_names = [card.name for card in self.selected_cards]
         response_event = pygame.event.Event(
             pygame.USEREVENT,
-            dict(user_type='custom_event', event=ResponseEvent('cellar', selected_card_names))
+            dict(user_type='custom_event', event=ResponseEvent('bandit', selected_card_names))
         )
         pygame.event.post(response_event)

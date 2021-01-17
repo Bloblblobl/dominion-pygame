@@ -1,4 +1,5 @@
 from dominion_gui import util
+from dominion_gui.components.responses.bandit_response import BanditResponse
 from dominion_gui.components.responses.cellar_response import CellarResponse
 from dominion_gui.components.responses.chapel_response import ChapelResponse
 from dominion_gui.components.responses.harbinger_response import HarbingerResponse
@@ -31,12 +32,11 @@ class Responder:
         handler = getattr(self, 'handle_' + action.lower())
         return handler(state, *args)
 
-    def handle_militia(self, state, *args):
-        card_names = [util.get_card_name(card['name']) for card in state['hand']]
+    def handle_bandit(self, state, *args):
         self.tab_container.add_tab(name='Response',
                                    tab_button_width=tab_button_width,
-                                   tab_factory=MilitiaResponse,
-                                   card_names=card_names)
+                                   tab_factory=BanditResponse,
+                                   card_names=args[0])
         self.tab_container.select_tab(name='Response')
 
     def handle_cellar(self, state, *args):
@@ -63,11 +63,11 @@ class Responder:
                                    card_names=card_names)
         self.tab_container.select_tab(name='Response')
 
-    def handle_workshop(self, state, *args):
-        card_names = [util.get_card_name(card_name) for card_name in state['supply']]
+    def handle_militia(self, state, *args):
+        card_names = [util.get_card_name(card['name']) for card in state['hand']]
         self.tab_container.add_tab(name='Response',
                                    tab_button_width=tab_button_width,
-                                   tab_factory=WorkshopResponse,
+                                   tab_factory=MilitiaResponse,
                                    card_names=card_names)
         self.tab_container.select_tab(name='Response')
 
@@ -76,6 +76,14 @@ class Responder:
                                    tab_button_width=tab_button_width,
                                    tab_factory=VassalResponse,
                                    card_names=args)
+        self.tab_container.select_tab(name='Response')
+
+    def handle_workshop(self, state, *args):
+        card_names = [util.get_card_name(card_name) for card_name in state['supply']]
+        self.tab_container.add_tab(name='Response',
+                                   tab_button_width=tab_button_width,
+                                   tab_factory=WorkshopResponse,
+                                   card_names=card_names)
         self.tab_container.select_tab(name='Response')
 
     def cleanup(self):
