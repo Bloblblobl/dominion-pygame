@@ -29,9 +29,9 @@ class HarbingerResponse(Response):
         self.buttons['Done'].enabled = len(self.selected_cards) <= 1
 
     def on_ui_button_press(self, *, ui_element):
-        selected_card_names = [card.name for card in self.selected_cards]
+        selected_card_name = self.selected_cards[0].name if self.selected_cards else None
         response_event = pygame.event.Event(
             pygame.USEREVENT,
-            dict(user_type='custom_event', event=ResponseEvent('harbinger', selected_card_names))
+            dict(user_type='custom_event', event=ResponseEvent('harbinger', selected_card_name))
         )
         pygame.event.post(response_event)
