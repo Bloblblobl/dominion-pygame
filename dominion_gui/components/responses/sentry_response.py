@@ -1,7 +1,6 @@
 import pygame
 from typing import Union, List
 
-from dominion_gui.components.card import Card
 from dominion_gui.components.responses.response import Response
 from dominion_gui.event_manager import ResponseEvent
 from layout_info.layout_info import LayoutInfo
@@ -23,22 +22,31 @@ class SentryResponse(Response):
                          layout_info,
                          container,
                          padding)
-        self.set_prompt_text(second_prompt_text)
-        self.other_cards = card_names[:]
         self.cards_to_trash = []
         self.cards_to_discard = []
-        self.buttons['Done'].enabled = False
-        self.subscribe(self.buttons['Done'], 'on_ui_button_press', self)
+        self.last_step = False
 
-    def on_card_select(self, card: Card, selected: bool):
-        self.buttons['Done'].enabled = len(self.selected_cards) == 1
+        self.subscribe(self.buttons['Done'], 'on_ui_button_press', self)
 
     def on_ui_button_press(self, *, ui_element):
         selected_card_names = [card.name for card in self.selected_cards]
 
-        response_content = (self.cards_to_trash, self.cards_to_discard, self.other_cards)
+        if self.last_step:
+            self.cards_to_discard = selected_card_names
+        else:
+            self.cards_to_trash = selected_card_names
+
+            if len(selected_card_names) != 2:
+                next_cards = [card.name for card in self.card_view.cards if card not in self.selected_cards]
+                self.selected_cards = []
+                self.set_prompt_text(second_prompt_text)
+                self.set_cards(next_cards)
+                self.last_step = True
+                return
+
+        response_content = (self.cards_to_trash, self.cards_to_discard)
         response_event = pygame.event.Event(
             pygame.USEREVENT,
-            dict(user_type='custom_event', event=ResponseEvent('mine', response_content))
+            dict(user_type='custom_event', event=ResponseEvent('sentry', response_content))
         )
         pygame.event.post(response_event)

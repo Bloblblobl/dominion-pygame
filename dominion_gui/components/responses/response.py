@@ -36,12 +36,7 @@ class Response(UIElement, EventHandler):
         prompt = Stack([self.label], 0, Orientation.HORIZONTAL, Position.CENTER, prompt_layout, self)
 
         self.card_view = CardView(LayoutInfo(left=0, right=0, top=0, height=.7), self)
-        self.card_view.cards = card_names
-        for card in self.card_view.cards:
-            card.border_on_hover = False
-            self.subscribe(card.image, 'on_click', self)
-            self.subscribe(card.image, 'on_mouse_enter', self)
-            self.subscribe(card.image, 'on_mouse_leave', self)
+        self.set_cards(card_names)
 
         self.buttons = {}
         button_stack = self.create_buttons(button_names)
@@ -75,6 +70,18 @@ class Response(UIElement, EventHandler):
         label_width, label_height = self.label.element.font.size(self.label.text)
         self.label.layout_info.width = label_width
         self.label.layout(only_if_changed=False)
+
+    def set_cards(self, cards):
+        for card in self.card_view.cards:
+            self.unsubscribe(card.image, 'on_click')
+            self.unsubscribe(card.image, 'on_mouse_enter')
+            self.unsubscribe(card.image, 'on_mouse_leave')
+        self.card_view.cards = cards
+        for card in self.card_view.cards:
+            card.border_on_hover = False
+            self.subscribe(card.image, 'on_click', self)
+            self.subscribe(card.image, 'on_mouse_enter', self)
+            self.subscribe(card.image, 'on_mouse_leave', self)
 
     def on_click(self, *, ui_element):
         card = ui_element.container
