@@ -4,6 +4,7 @@ from dominion_gui.components.responses.bandit_response import BanditResponse
 from dominion_gui.components.responses.cellar_response import CellarResponse
 from dominion_gui.components.responses.chapel_response import ChapelResponse
 from dominion_gui.components.responses.harbinger_response import HarbingerResponse
+from dominion_gui.components.responses.library_response import LibraryResponse
 from dominion_gui.components.responses.militia_response import MilitiaResponse
 from dominion_gui.components.responses.mine_response import MineResponse
 from dominion_gui.components.responses.remodel_response import RemodelResponse
@@ -76,6 +77,16 @@ class Responder:
                                    tab_button_width=tab_button_width,
                                    tab_factory=HarbingerResponse,
                                    card_names=card_names)
+        self.tab_container.select_tab(name='Response')
+
+    def handle_library(self, state, *args):
+        candidate_card_names = [util.get_card_name(card_name) for card_name in args]
+        hand_count = len(state['hand'])
+        self.tab_container.add_tab(name='Response',
+                                   tab_button_width=tab_button_width,
+                                   tab_factory=LibraryResponse,
+                                   candidate_card_names=candidate_card_names,
+                                   hand_count=hand_count)
         self.tab_container.select_tab(name='Response')
 
     def handle_militia(self, state, *args):
