@@ -1,3 +1,4 @@
+from dominion_gui import util
 from dominion_gui.game_client import GameClient
 from dominion_gui.components.card_view import CardView
 

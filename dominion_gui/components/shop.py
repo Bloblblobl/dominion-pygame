@@ -2,6 +2,7 @@ from typing import List, Union
 
 import pygame
 
+from dominion_gui import util
 from dominion_gui.game_client import GameClient
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.components.pile import Pile
@@ -19,6 +20,7 @@ class Shop(UIElement, EventHandler):
                  container: Union[pygame.Rect, UIElement, None] = None,
                  padding: Union[LayoutInfo, None] = None):
         self._piles = []
+        self.disabled_piles = []
         super().__init__(layout_info, container, padding)
 
     def _kill_piles(self):
@@ -40,11 +42,16 @@ class Shop(UIElement, EventHandler):
                         container=self,
                         image_name=pile_name)
 
+            pile.enabled = pile_name not in self.disabled_piles
+
             self.subscribe(pile.image, 'on_click', self)
 
             self._piles.append(pile)
 
         self.layout(only_if_changed=False)
+
+    def disable_cards(self, disabled_card_names: List[str]):
+        self._disabled_cards = disabled_card_names
 
     def on_click(self, ui_element):
         pile = ui_element.container

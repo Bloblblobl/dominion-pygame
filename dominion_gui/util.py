@@ -17,6 +17,14 @@ def get_card_name(card_class: str) -> str:
     return '_'.join(re.findall('[A-Z][^A-Z]*', card_class)).lower()
 
 
+def calculate_money(state):
+    money = 0
+    money += sum([card['coins'] for card in state['hand'] if card['type'] == 'Treasure'])
+    money += sum([card['coins'] for card in state['play_area']])
+    money -= state['used_money']
+    return money
+
+
 def get_card_data(card_name: str):
     card_manifest = get_card_manifest()
     if card_manifest is None:

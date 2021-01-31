@@ -124,6 +124,10 @@ class DominionApp:
         if self.player is None or self.player.state == self.state:
             return
 
+        actions = self.player.state['actions']
+        buys = self.player.state['buys']
+        money = util.calculate_money(self.player.state)
+        print(f'a:{actions} b:{buys} $:{money}')
         supply = self.player.state['supply']
         play_area = self.player.state['play_area']
         hand = self.player.state['hand']
@@ -134,11 +138,17 @@ class DominionApp:
         play_area_cards = [util.get_card_name(card['name']) for card in play_area]
         hand_cards = [util.get_card_name(card['name']) for card in hand]
 
+        disabled_shop_piles = util.filter_card_names(shop_piles, f'card.cost > {money} or {buys == 0}')
+        self.ui.shop.disabled_piles = disabled_shop_piles
         self.ui.shop.piles = shop_piles
+
         self.ui.play_area.scrollable.cards = play_area_cards
         self.ui.play_area.layout(only_if_changed=False)
+
+        disabled_hand_cards = util.filter_card_names(hand_cards, f'card.type == "Action" and {actions == 0}')
+        self.ui.hand.scrollable.disabled_cards = disabled_hand_cards
         self.ui.hand.scrollable.cards = hand_cards
-        self.ui.hand.layout(only_if_changed=False)
+
         self.state = self.player.state
 
     def run(self):

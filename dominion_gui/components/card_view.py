@@ -16,6 +16,7 @@ class CardView(UIElement, EventHandler):
                  container: Union[pygame.Rect, UIElement, None] = None,
                  padding: Union[LayoutInfo, None] = None):
         self._cards = []
+        self.disabled_cards = []
         self.first_index = 0
         self.last_index = 0
         super().__init__(layout_info, container, padding)
@@ -40,6 +41,8 @@ class CardView(UIElement, EventHandler):
             card = Card(layout_info=get_default_layout(),
                         container=self,
                         image_name=card_name)
+
+            card.enabled = card_name not in self.disabled_cards
 
             self.subscribe(card.image, 'on_click', self)
 
