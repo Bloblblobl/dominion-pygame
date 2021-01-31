@@ -1,6 +1,7 @@
 import pygame
 from typing import Union, List
 
+from dominion_gui import util
 from dominion_gui.components.card import Card
 from dominion_gui.components.responses.response import Response
 from dominion_gui.event_manager import ResponseEvent
@@ -41,7 +42,12 @@ class RemodelResponse(Response):
             self.set_prompt_text(second_prompt_text + selected_card_name)
             self.selected_cards = []
             self.buttons['Done'].enabled = False
-            self.set_cards(self.supply_card_names)
+
+            next_cards = self.supply_card_names
+            trash_card_data = util.get_card_data(self.trash_card)
+            if trash_card_data is not None:
+                next_cards = util.filter_card_names(next_cards, f'card.cost <= {trash_card_data["Cost"] + 2}')
+            self.set_cards(next_cards)
             return
 
         response_content = (self.trash_card, selected_card_name)

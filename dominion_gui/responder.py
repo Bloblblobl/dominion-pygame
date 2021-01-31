@@ -40,6 +40,7 @@ class Responder:
 
     def handle_artisan(self, state, *args):
         supply_card_names = [util.get_card_name(card_name) for card_name in state['supply']]
+        supply_card_names = util.filter_card_names(supply_card_names, 'card.cost <= 5')
         hand_card_names = [util.get_card_name(card['name']) for card in state['hand']]
         self.tab_container.add_tab(name='Response',
                                    tab_button_width=tab_button_width,
@@ -124,6 +125,7 @@ class Responder:
 
     def handle_throneroom(self, state, *args):
         card_names = [util.get_card_name(card['name']) for card in state['hand']]
+        card_names = util.filter_card_names(card_names, 'card.type == "Action"')
         self.tab_container.add_tab(name='Response',
                                    tab_button_width=tab_button_width,
                                    tab_factory=ThroneRoomResponse,
@@ -139,6 +141,7 @@ class Responder:
 
     def handle_workshop(self, state, *args):
         card_names = [util.get_card_name(card_name) for card_name in state['supply']]
+        card_names = util.filter_card_names(card_names, 'card.cost <= 4')
         self.tab_container.add_tab(name='Response',
                                    tab_button_width=tab_button_width,
                                    tab_factory=WorkshopResponse,

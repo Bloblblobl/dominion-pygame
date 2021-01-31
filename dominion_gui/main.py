@@ -149,7 +149,6 @@ class DominionApp:
         events = (pygame.USEREVENT,) + mouse_events
 
         while self.is_running:
-            #print('abc')
             time_delta = self.clock.tick(60) / 1000.0
 
             for event in pygame.event.get():
