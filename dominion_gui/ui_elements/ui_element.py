@@ -236,6 +236,9 @@ class UIElement:
         if self.element is not None:
             self.element.kill()
 
+        for child in self.children:
+            child.kill()
+
     def rebuild(self):
         self.element.set_position(self.topleft)
         self.element.set_dimensions(self.size)

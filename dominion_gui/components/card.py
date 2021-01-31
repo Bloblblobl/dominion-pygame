@@ -66,13 +66,15 @@ class Card(Panel, EventHandler):
 
     def _kill_image(self):
         if self.image is not None:
-            self.image.kill()
             self.unsubscribe(self.image, 'on_mouse_enter')
             self.unsubscribe(self.image, 'on_mouse_leave')
-            self.children.remove(self.image)
+            # it may have already been removed
+            if self.image in self.children:
+                self.children.remove(self.image)
+            self.image.kill()
 
     def kill(self):
-        super().kill()
         self._kill_image()
         if self.counter is not None:
             self.counter.kill()
+        super().kill()

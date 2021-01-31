@@ -99,3 +99,6 @@ class CardView(UIElement, EventHandler):
 
         for child in self.children:
             child.layout(only_if_changed)
+
+        # hacky way to make sure cards are not visible if the card view is not
+        self.on_visible(self.visible)

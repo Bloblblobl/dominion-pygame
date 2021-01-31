@@ -46,3 +46,7 @@ class HorizontalScrollContainer(UIElement, EventHandler):
             first_offset, last_offset = self.scrollable.visible_content
             self.left_button.visible = first_offset > 0
             self.right_button.visible = 0 < last_offset < 1
+
+    def kill(self):
+        self.scrollable.kill()
+        super().kill()
