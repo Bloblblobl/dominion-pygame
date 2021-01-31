@@ -143,6 +143,7 @@ class DominionApp:
         disabled_shop_piles = util.filter_card_names(shop_piles, f'card.cost > {money} or {buys == 0}')
         self.ui.shop.disabled_piles = disabled_shop_piles
         self.ui.shop.piles = shop_piles
+        self.ui.shop.layout(only_if_changed=False)
 
         self.ui.play_area.scrollable.cards = play_area_cards
         self.ui.play_area.layout(only_if_changed=False)
@@ -150,6 +151,7 @@ class DominionApp:
         disabled_hand_cards = util.filter_card_names(hand_cards, f'card.type == "Action" and {actions == 0}')
         self.ui.hand.scrollable.disabled_cards = disabled_hand_cards
         self.ui.hand.scrollable.cards = hand_cards
+        self.ui.hand.layout(only_if_changed=False)
 
         self.state = self.player.state
 
