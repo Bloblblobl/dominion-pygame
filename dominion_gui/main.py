@@ -1,8 +1,12 @@
 import os
+import sys
 
 import pygame
 import pygame_gui
 
+from constants import root_dir
+
+sys.path.append(root_dir)
 
 from dominion_gui import game_client, util
 
@@ -53,7 +57,7 @@ class DominionApp:
         manager.root_container.set_dimensions(size)
 
     def connect(self):
-        host = os.environ.get('DOMINION_HOST', 'localhost')
+        host = sys.argv[1] if len(sys.argv) > 0 else os.environ.get('DOMINION_HOST', 'localhost')
         port = os.environ.get('DOMINION_PORT', '55555')
         self.game_client.connect(host, int(port))
         self.player = UIPlayer(self.game_client)

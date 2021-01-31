@@ -41,17 +41,13 @@ You will play against Dominion AI players.
 ### Connecting to a remote server
 
 You will need to get the IP addresses of the remote server from the person
-running it.
-
-On Mac type:
+running it. Then type:
 
 ```
-$ DOMINION_HOST=<server IP address> PYTHONPATH=$PWD pipenv run python ./dominion_gui/main.py
+$ pipenv run python dominion_gui/main.py <server IP address>
 ```
 
-On Windows type:
 
-?????
 
 You will play against other players (human or AIs). If you 
 (or any other human player) clicks the "Start Game" the server 
