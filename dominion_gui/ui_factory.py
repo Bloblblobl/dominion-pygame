@@ -49,23 +49,14 @@ class UI(EventHandler):
         self.build_side_panel(side_panel_container)
 
     def build_side_panel(self, container):
-        message_log_li = LayoutInfo(left=0, right=0, top=0, height=0.8)
+        message_log_li = LayoutInfo(left=0, right=0, top=0, height=0.9)
         self.message_log = MessageLog(message_log_li, container, padding=li_all_10)
 
-        top_button_li = LayoutInfo(left=0, right=0, top=0.8, height=0.1)
-        top_button_padding = LayoutInfo(left=10, right=10, top=0, bottom=10)
-        top_button_text = 'Start Game'
-        self.top_button = Button(text=top_button_text,
-                                 layout_info=top_button_li,
-                                 container=container,
-                                 padding=top_button_padding,
-                                 corner_radius_ratio=0.2)
-
-        bottom_button_li = LayoutInfo(left=0, right=0, top=0.9, height=0.1)
-        bottom_button_padding = LayoutInfo(left=10, right=10, top=0, bottom=10)
-        bottom_button = 'End Turn'
-        self.bottom_button = Button(text=bottom_button,
-                                    layout_info=bottom_button_li,
+        action_button_li = LayoutInfo(left=0, right=0, bottom=0, height=0.1)
+        action_button_padding = LayoutInfo(left=10, right=10, top=0, bottom=10)
+        action_button_text = 'Start Game'
+        self.action_button = Button(text=action_button_text,
+                                    layout_info=action_button_li,
                                     container=container,
-                                    padding=bottom_button_padding,
+                                    padding=action_button_padding,
                                     corner_radius_ratio=0.2)

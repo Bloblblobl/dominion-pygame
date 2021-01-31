@@ -39,10 +39,7 @@ class DominionApp:
         self.event_manager = em.get_event_manager(self.ui.window)
         connect_handler = EventHandler()
         connect_handler.on_ui_button_press = lambda ui_element: self.connect()
-        done_handler = EventHandler()
-        done_handler.on_ui_button_press = lambda ui_element: game_client.get_instance().done()
-        self.event_manager.subscribe(self.ui.top_button, 'on_ui_button_press', connect_handler)
-        self.event_manager.subscribe(self.ui.bottom_button, 'on_ui_button_press', done_handler)
+        self.event_manager.subscribe(self.ui.action_button, 'on_ui_button_press', connect_handler)
 
     def handle_screen_resize(self, raw_size):
         manager = get_manager()
@@ -60,6 +57,12 @@ class DominionApp:
         port = os.environ.get('DOMINION_PORT', '55555')
         self.game_client.connect(host, int(port))
         self.player = UIPlayer(self.game_client)
+
+        self.event_manager.unsubscribe(self.ui.action_button, 'on_ui_button_press')
+        self.ui.action_button.set_text('End Turn')
+        done_handler = EventHandler()
+        done_handler.on_ui_button_press = lambda ui_element: game_client.get_instance().done()
+        self.event_manager.subscribe(self.ui.action_button, 'on_ui_button_press', done_handler)
 
     def handle_event(self, event):
         em = self.event_manager
@@ -127,7 +130,6 @@ class DominionApp:
         actions = self.player.state['actions']
         buys = self.player.state['buys']
         money = util.calculate_money(self.player.state)
-        print(f'a:{actions} b:{buys} $:{money}')
         supply = self.player.state['supply']
         play_area = self.player.state['play_area']
         hand = self.player.state['hand']
