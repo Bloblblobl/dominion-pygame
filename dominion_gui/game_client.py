@@ -4,9 +4,9 @@ from dominion_grpc_client.client import Client as GRPCClient
 from dominion_object_model import object_model
 
 
-def get_instance():
+def get_instance(name='test'):
     if GameClient.instance is None:
-        GameClient.instance = GameClient()
+        GameClient.instance = GameClient(name)
 
     return GameClient.instance
 
@@ -14,7 +14,8 @@ def get_instance():
 class GameClient(object_model.GameClient):
     instance = None
 
-    def __init__(self, name='test'):
+    def __init__(self, name):
+        print('#### player_name', name)
         self._in_queue = mp.Queue()
         self._out_queue = mp.Queue()
         self._out_response_queue = mp.Queue()

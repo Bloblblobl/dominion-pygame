@@ -19,6 +19,8 @@ from dominion_gui.ui_manager import get_manager
 from dominion_gui.ui_factory import UI
 from dominion_gui.ui_player import UIPlayer
 
+# Replace for each player until we have a name selection in the UI
+player_name = 'Gigi'
 
 class DominionApp:
     def __init__(self):
@@ -33,8 +35,7 @@ class DominionApp:
         manager.preload_fonts(preloaded_fonts)
 
         self.ui = UI()
-
-        self.game_client = game_client.get_instance()
+        self.game_client = game_client.get_instance(player_name)
         self.join()
         self.player = UIPlayer(self.game_client)
         self.event_manager = em.get_event_manager(self.ui.window)
