@@ -44,7 +44,7 @@ class DominionApp:
         handler.on_ui_button_press = lambda ui_element: self.start()
         handler.on_custom_event = self.on_custom_game_event
         self.event_manager.subscribe(self.ui.action_button, 'on_ui_button_press', handler)
-        self.event_manager.subscribe(self.player, 'on_custom_event', handler)
+        self.event_manager.subscribe(None, 'on_custom_event', handler)
 
     def on_custom_game_event(self, event):
         if 'event' in event and event['event'] == 'game start':
