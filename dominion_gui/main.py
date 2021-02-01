@@ -22,6 +22,7 @@ from dominion_gui.ui_player import UIPlayer
 # Replace for each player until we have a name selection in the UI
 player_name = 'Gigi'
 
+
 class DominionApp:
     def __init__(self):
         pygame.init()
