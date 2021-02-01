@@ -38,9 +38,15 @@ class DominionApp:
         self.join()
         self.player = UIPlayer(self.game_client)
         self.event_manager = em.get_event_manager(self.ui.window)
-        start_handler = EventHandler()
-        start_handler.on_ui_button_press = lambda ui_element: self.start()
-        self.event_manager.subscribe(self.ui.action_button, 'on_ui_button_press', start_handler)
+        handler = EventHandler()
+        handler.on_ui_button_press = lambda ui_element: self.start()
+        handler.on_custom_event = self.on_custom_game_event
+        self.event_manager.subscribe(self.ui.action_button, 'on_ui_button_press', handler)
+        self.event_manager.subscribe(self.player, 'on_custom_event', handler)
+
+    def on_custom_game_event(self, event):
+        if 'event' in event and event['event'] == 'game start':
+            self.handle_game_start()
 
     def join(self):
         host = sys.argv[1] if len(sys.argv) > 1 else os.environ.get('DOMINION_HOST', 'localhost')
@@ -59,8 +65,11 @@ class DominionApp:
         manager.root_container.set_dimensions(size)
 
     def start(self):
-        self.event_manager.unsubscribe(self.ui.action_button, 'on_ui_button_press')
         self.game_client.start_game()
+        self.handle_game_start()
+
+    def handle_game_start(self):
+        self.event_manager.unsubscribe(self.ui.action_button, 'on_ui_button_press')
         self.ui.action_button.set_text('End Turn')
         done_handler = EventHandler()
         done_handler.on_ui_button_press = lambda ui_element: game_client.get_instance().done()
