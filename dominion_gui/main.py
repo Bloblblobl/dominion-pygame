@@ -27,23 +27,25 @@ class DominionApp:
         self.surface = pygame.display.set_mode(screen_size, flags=DISPLAY_FLAGS)
         self.clock = pygame.time.Clock()
         self.is_running = True
-
-        self.event_manager = None
-        self.player = None
-        self.game_client = game_client.get_instance()
         self.state = None
 
         manager = get_manager(screen_size)
         manager.preload_fonts(preloaded_fonts)
 
         self.ui = UI()
-        self.connect_events()
 
-    def connect_events(self):
+        self.game_client = game_client.get_instance()
+        self.join()
+        self.player = UIPlayer(self.game_client)
         self.event_manager = em.get_event_manager(self.ui.window)
-        connect_handler = EventHandler()
-        connect_handler.on_ui_button_press = lambda ui_element: self.connect()
-        self.event_manager.subscribe(self.ui.action_button, 'on_ui_button_press', connect_handler)
+        start_handler = EventHandler()
+        start_handler.on_ui_button_press = lambda ui_element: self.start()
+        self.event_manager.subscribe(self.ui.action_button, 'on_ui_button_press', start_handler)
+
+    def join(self):
+        host = sys.argv[1] if len(sys.argv) > 1 else os.environ.get('DOMINION_HOST', 'localhost')
+        port = os.environ.get('DOMINION_PORT', '55555')
+        self.game_client.connect(host, int(port))
 
     def handle_screen_resize(self, raw_size):
         manager = get_manager()
@@ -56,13 +58,9 @@ class DominionApp:
         manager.set_window_resolution(size)
         manager.root_container.set_dimensions(size)
 
-    def connect(self):
-        host = sys.argv[1] if len(sys.argv) > 1 else os.environ.get('DOMINION_HOST', 'localhost')
-        port = os.environ.get('DOMINION_PORT', '55555')
-        self.game_client.connect(host, int(port))
-        self.player = UIPlayer(self.game_client)
-
+    def start(self):
         self.event_manager.unsubscribe(self.ui.action_button, 'on_ui_button_press')
+        self.game_client.start_game()
         self.ui.action_button.set_text('End Turn')
         done_handler = EventHandler()
         done_handler.on_ui_button_press = lambda ui_element: game_client.get_instance().done()
@@ -111,7 +109,6 @@ class DominionApp:
             self.player.on_state_change(data)
         elif action == 'ack':
             self.name = data['name']
-            self.game_client.start_game()
         else:
             print('Unknown message type:', action)
 
