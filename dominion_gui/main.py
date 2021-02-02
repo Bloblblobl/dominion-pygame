@@ -167,6 +167,32 @@ class DominionApp:
 
         self.state = self.player.state
 
+    def main_loop(self, manager, events):
+        time_delta = self.clock.tick(60) / 1000.0
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.is_running = False
+
+            elif event.type == pygame.VIDEORESIZE:
+                self.handle_screen_resize(event.dict['size'])
+
+            elif event.type in events:
+                self.handle_event(event)
+
+            manager.process_events(event)
+
+        self.update_state()
+
+        try:
+            manager.update(time_delta)
+        except Exception as e:
+            print(f'pygame GUI messed up: {e}')
+
+        self.surface.blit(self.ui.background, (0, 0))
+        manager.draw_ui(self.surface)
+
+        pygame.display.update()
+
     def run(self):
         manager = get_manager()
         mouse_events = (pygame.MOUSEMOTION,
@@ -175,31 +201,13 @@ class DominionApp:
         events = (pygame.USEREVENT,) + mouse_events
 
         while self.is_running:
-            time_delta = self.clock.tick(60) / 1000.0
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.is_running = False
-
-                elif event.type == pygame.VIDEORESIZE:
-                    self.handle_screen_resize(event.dict['size'])
-
-                elif event.type in events:
-                    self.handle_event(event)
-
-                manager.process_events(event)
-
-            self.update_state()
-
             try:
-                manager.update(time_delta)
-            except Exception as e:
-                print(f'pygame GUI messed up: {e}')
+                self.main_loop(manager, events)
+            except KeyboardInterrupt:
+                self.is_running = False
+        pygame.quit()
+        self.game_client.shutdown()
 
-            self.surface.blit(self.ui.background, (0, 0))
-            manager.draw_ui(self.surface)
-
-            pygame.display.update()
 
 
 if __name__ == '__main__':

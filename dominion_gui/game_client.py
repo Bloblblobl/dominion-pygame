@@ -20,9 +20,14 @@ class GameClient(object_model.GameClient):
         self._out_queue = mp.Queue()
         self._out_response_queue = mp.Queue()
         self._grpc_client = GRPCClient(name, self._in_queue, self._out_queue, self._out_response_queue)
+        self._client_process = None
 
     def connect(self, host, port):
-        mp.Process(target=self._grpc_client.run, args=(host, port)).start()
+        self._client_process = mp.Process(target=self._grpc_client.run, args=(host, port))
+        self._client_process.start()
+
+    def shutdown(self):
+        self._client_process.terminate()
 
     def get_message(self):
         """Get message from queue (non-blocking)"""
