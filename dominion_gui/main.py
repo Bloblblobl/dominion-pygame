@@ -73,11 +73,15 @@ class DominionApp:
         self.game_client.start_game()
         self.handle_game_start()
 
+    def on_done_press(self):
+        self.event_manager.on_custom_event('done')
+        game_client.get_instance().done()
+
     def handle_game_start(self):
         self.event_manager.unsubscribe(self.ui.action_button, 'on_ui_button_press')
         self.ui.action_button.set_text('End Turn')
         done_handler = EventHandler()
-        done_handler.on_ui_button_press = lambda ui_element: game_client.get_instance().done()
+        done_handler.on_ui_button_press = lambda ui_element: self.on_done_press()
         self.event_manager.subscribe(self.ui.action_button, 'on_ui_button_press', done_handler)
 
     def handle_event(self, event):
@@ -148,8 +152,6 @@ class DominionApp:
         supply = self.player.state['supply']
         play_area = self.player.state['play_area']
         hand = self.player.state['hand']
-        draw_deck = self.player.state['draw_deck']
-        discard_pile = self.player.state['discard_pile']
 
         shop_piles = [util.get_card_name(pile) for pile in supply]
         play_area_cards = [util.get_card_name(card['name']) for card in play_area]
@@ -163,7 +165,8 @@ class DominionApp:
         self.ui.play_area.scrollable.cards = play_area_cards
         self.ui.play_area.layout(only_if_changed=False)
 
-        disabled_hand_cards = util.filter_card_names(hand_cards, f'card.type == "Action" and {actions == 0}')
+        filter = f'card.type == "Action" and {actions == 0}'
+        disabled_hand_cards = util.filter_card_names(hand_cards, filter)
         self.ui.hand.scrollable.disabled_cards = disabled_hand_cards
         self.ui.hand.scrollable.cards = hand_cards
         self.ui.hand.layout(only_if_changed=False)
