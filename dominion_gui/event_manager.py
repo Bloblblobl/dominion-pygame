@@ -49,6 +49,14 @@ class ResponseEvent:
         return f'action: {self.action}, response: {self.response}'
 
 
+class CardZoomEvent:
+    def __init__(self, card_name):
+        self.card_name = card_name
+
+    def __repr__(self):
+        return f'card name: {self.card_name}'
+
+
 class EventManager(EventHandler):
     def __init__(self, root_element):
         self.subscribers = {}

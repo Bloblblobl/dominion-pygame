@@ -1,6 +1,7 @@
 import pygame
 
 from dominion_gui.components.card_view import CardView
+from dominion_gui.components.card_zoom import CardZoom
 from dominion_gui.components.hand import Hand
 from dominion_gui.components.message_log import MessageLog
 from dominion_gui.components.shop import Shop
@@ -49,7 +50,10 @@ class UI(EventHandler):
         self.build_side_panel(side_panel_container)
 
     def build_side_panel(self, container):
-        message_log_li = LayoutInfo(left=0, right=0, top=0, height=0.9)
+        card_zoom_li = LayoutInfo(left=0, right=0, top=0, height=0.5)
+        self.card_zoom = CardZoom(card_zoom_li, container)
+
+        message_log_li = LayoutInfo(left=0, right=0, top=0.5, height=0.4)
         self.message_log = MessageLog(message_log_li, container, padding=li_all_10)
 
         action_button_li = LayoutInfo(left=0, right=0, bottom=0, height=0.1)

@@ -2,7 +2,7 @@ from dominion_object_model import object_model
 
 from dominion_gui.card_manifest import create_card_manifest
 from dominion_gui.event_handler import EventHandler
-from dominion_gui.event_manager import get_event_manager, ResponseEvent
+from dominion_gui.event_manager import get_event_manager, ResponseEvent, CardZoomEvent
 from dominion_gui.responder import Responder
 
 
@@ -29,11 +29,14 @@ class UIPlayer(object_model.Player, EventHandler):
         self.state = state
 
     def on_custom_event(self, event):
-        if not isinstance(event, ResponseEvent):
+        if isinstance(event, dict):
             if 'event' in event and event['event'] == 'game start':
                 card_manifest_dict = {key: value for key, value in event.items() if
                                       key not in ('event', 'player_names')}
                 create_card_manifest(card_manifest_dict)
+            return
+
+        if not isinstance(event, ResponseEvent):
             return
 
         self.game_client.respond(event.action, event.response)

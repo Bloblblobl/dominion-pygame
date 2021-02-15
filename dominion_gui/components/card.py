@@ -6,6 +6,7 @@ from dominion_gui import util
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.constants import DARK_GRAY, images_dir, border_thickness
 from dominion_gui.event_handler import EventHandler
+from dominion_gui.event_manager import CardZoomEvent
 from dominion_gui.ui_elements.html_textbox import HTMLTextBox
 from dominion_gui.ui_elements.image import Image
 from dominion_gui.ui_elements.panel import Panel, Border
@@ -45,6 +46,12 @@ class Card(Panel, EventHandler):
     def on_mouse_enter(self, *, ui_element):
         if self.border_on_hover:
             self.border.visible = True
+
+        zoom_event = pygame.event.Event(
+            pygame.USEREVENT,
+            dict(user_type='custom_event', event=CardZoomEvent(self.name))
+        )
+        pygame.event.post(zoom_event)
 
     def on_mouse_leave(self, *, ui_element):
         if self.border_on_hover:

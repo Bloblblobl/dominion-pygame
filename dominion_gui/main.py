@@ -47,6 +47,9 @@ class DominionApp:
         self.event_manager.subscribe(None, 'on_custom_event', handler)
 
     def on_custom_game_event(self, event):
+        if not isinstance(event, dict):
+            return
+
         if 'event' in event and event['event'] == 'game start':
             self.handle_game_start()
 
