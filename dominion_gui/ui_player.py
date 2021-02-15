@@ -1,9 +1,12 @@
+import pygame
 from dominion_object_model import object_model
 
 from dominion_gui.card_manifest import create_card_manifest
 from dominion_gui.event_handler import EventHandler
-from dominion_gui.event_manager import get_event_manager, ResponseEvent, CardZoomEvent
+from dominion_gui.event_manager import get_event_manager, ResponseEvent
 from dominion_gui.responder import Responder
+
+your_turn_message = '<font color=#7df9ff>Your turn!</font>'
 
 
 class UIPlayer(object_model.Player, EventHandler):
@@ -16,7 +19,11 @@ class UIPlayer(object_model.Player, EventHandler):
         get_event_manager().subscribe(None, 'on_custom_event', self)
 
     def play(self):
-        pass
+        your_turn_event = pygame.event.Event(
+            pygame.USEREVENT,
+            dict(user_type='custom_event', event=your_turn_message)
+        )
+        pygame.event.post(your_turn_event)
 
     def respond(self, action, *args):
         pass
