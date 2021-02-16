@@ -3,6 +3,7 @@ import sys
 
 import pygame
 import pygame_gui
+from components.hand import your_turn
 
 from constants import root_dir
 
@@ -165,8 +166,12 @@ class DominionApp:
         self.ui.play_area.scrollable.cards = play_area_cards
         self.ui.play_area.layout(only_if_changed=False)
 
-        filter = f'card.type == "Action" and {actions == 0}'
-        disabled_hand_cards = util.filter_card_names(hand_cards, filter)
+        if your_turn:
+            f = f'card.type == "Action" and {actions == 0}'
+            disabled_hand_cards = util.filter_card_names(hand_cards, f)
+        else:
+            disabled_hand_cards = hand_cards
+
         self.ui.hand.scrollable.disabled_cards = disabled_hand_cards
         self.ui.hand.scrollable.cards = hand_cards
         self.ui.hand.layout(only_if_changed=False)
