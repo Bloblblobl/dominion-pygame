@@ -3,25 +3,28 @@ import sys
 
 import pygame
 import pygame_gui
-from components.hand import your_turn
 
-from constants import (
+
+from .constants import (
     root_dir,
     images_dir
 )
 
 sys.path.append(root_dir)
 
-from dominion_gui import game_client, util
+from .components.hand import your_turn
 
-from dominion_gui.event_handler import EventHandler, MouseButton
-from dominion_gui.constants import screen_size, preloaded_fonts, min_screen_width, min_screen_height, \
+
+from . import game_client, util
+
+from .event_handler import EventHandler, MouseButton
+from .constants import screen_size, preloaded_fonts, min_screen_width, min_screen_height, \
     DISPLAY_FLAGS
-import dominion_gui.event_manager as em
-from dominion_gui.responder import Responder
-from dominion_gui.ui_manager import get_manager
-from dominion_gui.ui_factory import UI
-from dominion_gui.ui_player import UIPlayer
+from . import event_manager as em
+from .responder import Responder
+from .ui_manager import get_manager
+from .ui_factory import UI
+from .ui_player import UIPlayer
 
 # Replace for each player until we have a name selection in the UI
 player_name = 'Gigi'
@@ -223,9 +226,3 @@ class DominionApp:
                 self.is_running = False
         pygame.quit()
         self.game_client.shutdown()
-
-
-
-if __name__ == '__main__':
-    app = DominionApp()
-    app.run()
