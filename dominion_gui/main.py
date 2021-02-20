@@ -5,7 +5,10 @@ import pygame
 import pygame_gui
 from components.hand import your_turn
 
-from constants import root_dir
+from constants import (
+    root_dir,
+    images_dir
+)
 
 sys.path.append(root_dir)
 
@@ -28,6 +31,8 @@ class DominionApp:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption('Dominion')
+        icon = pygame.image.load(f'{images_dir}/_dominion_icon.png')
+        pygame.display.set_icon(icon)
         self.surface = pygame.display.set_mode(screen_size, flags=DISPLAY_FLAGS)
         self.clock = pygame.time.Clock()
         self.is_running = True
