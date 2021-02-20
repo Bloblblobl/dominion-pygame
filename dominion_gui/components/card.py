@@ -56,6 +56,12 @@ class Card(Panel, EventHandler):
     def on_mouse_leave(self, *, ui_element):
         if self.border_on_hover:
             self.border.visible = False
+        zoom_event = pygame.event.Event(
+            pygame.USEREVENT,
+            dict(user_type='custom_event', event=CardZoomEvent(None))
+        )
+        pygame.event.post(zoom_event)
+
 
     def build_counter(self, count):
         if count == -1:

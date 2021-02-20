@@ -26,9 +26,11 @@ class CardZoom(UIElement, EventHandler):
     def set_image(self, image_name):
         if self.image is not None:
             self.image.kill()
+            self.image = None
 
-        image_path = f'{images_dir}/{get_card_name(image_name)}.jpg'
-        self.image = Image(get_default_layout(), self, image_path)
+        if image_name is not None:
+            image_path = f'{images_dir}/{get_card_name(image_name)}.jpg'
+            self.image = Image(get_default_layout(), self, image_path)
 
     def on_custom_event(self, event):
         if isinstance(event, CardZoomEvent):
