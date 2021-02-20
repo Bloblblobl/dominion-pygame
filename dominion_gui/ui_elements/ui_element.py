@@ -43,6 +43,9 @@ class UIElement:
             raise Exception('Invalid padding')
 
     def subscribe(self, *args, **kwargs):
+        # subscriber is the 3rd argument. if not specified use `self`
+        if len(args) < 3 and 'subscriber' not in kwargs:
+            kwargs['subscriber'] = self
         self._event_manager.subscribe(*args, **kwargs)
 
     def unsubscribe(self, *args, **kwargs):

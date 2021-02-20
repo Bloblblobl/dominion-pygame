@@ -46,7 +46,7 @@ class TabContainer(UIElement, EventHandler):
         self.button_li.width = tab_button_width
         tab_button = Button(name, copy.deepcopy(self.button_li), self)
         self.tabs[name] = Tab(tab, tab_button)
-        self.subscribe(tab_button, 'on_ui_button_press', self)
+        self.subscribe(tab_button, 'on_ui_button_press')
         self.tab_buttons.append(tab_button)
         self.button_li.left += self.button_li.width
 

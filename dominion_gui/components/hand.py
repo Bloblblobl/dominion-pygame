@@ -19,9 +19,7 @@ class Hand(CardView):
         super().__init__(layout_info, container, padding)
         self.messages = []
         self.players = {}
-        self.subscribe(owner=None,
-                       handler_name='on_custom_event',
-                       subscriber=self)
+        self.subscribe(owner=None, handler_name='on_custom_event')
         self.your_turn = False
 
     def on_click(self, ui_element):
@@ -38,5 +36,6 @@ class Hand(CardView):
             your_turn = True
             for c in self.cards:
                 c.enabled = True
+                self.subscribe(c.image, 'on_click')
 
 

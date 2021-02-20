@@ -43,12 +43,10 @@ class CardView(UIElement, EventHandler):
                         image_name=card_name)
 
             card.enabled = card_name not in self.disabled_cards
-
-            self.subscribe(card.image, 'on_click', self)
-
+            self.subscribe(card.image, 'on_click')
             self._cards.append(card)
-
         self.layout(only_if_changed=False)
+
 
     @property
     def visible_content(self):

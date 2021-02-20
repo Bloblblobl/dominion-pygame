@@ -44,7 +44,7 @@ class Shop(UIElement, EventHandler):
 
             pile.enabled = pile_name not in self.disabled_piles
 
-            self.subscribe(pile.image, 'on_click', self)
+            self.subscribe(pile.image, 'on_click')
 
             self._piles.append(pile)
 
