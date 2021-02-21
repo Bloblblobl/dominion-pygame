@@ -31,5 +31,18 @@ class MessageLog(HTMLTextBox, EventHandler):
                     self.players[player] = get_random_color()
                     self.add_message(player)
                 self.add_message('-' * 10)
+            elif event['event'] == 'game over':
+                self.add_message('-' * 10)
+                self.add_message('Game over!')
+                self.add_message('-' * 10)
+                winners = event['winners']
+                if len(winners) == 1:
+                    self.add_message(f'{winners[0]} won the game.')
+                else:
+                    self.add_message(f'the winners are: {", ".join(winners)}.')
+                self.add_message('-' * 10)
+                for player, score in event['scores'].items():
+                    self.add_message(f'{player} - {score[0]} points, ${score[1]}')
+
         elif isinstance(event, str):
             self.add_message(event)
