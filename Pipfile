@@ -17,6 +17,7 @@ pathology = "*"
 pillow = "*"
 pygame = ">=2.0.0.dev6"
 pygame-gui = "*"
+pywin32 = {version = "*", markers = "platform_system == 'Windows'"}
 
 [requires]
 python_version = "3.9"

@@ -6,7 +6,7 @@ from dominion_gui.event_handler import EventHandler
 from dominion_gui.event_manager import get_event_manager, ResponseEvent
 from dominion_gui.responder import Responder
 
-your_turn_message = '<font color=#7df9ff>Your turn!</font>'
+your_turn_message = ['Your turn!', '<font color=#7df9ff>{}</font>']
 
 
 class UIPlayer(object_model.Player, EventHandler):
