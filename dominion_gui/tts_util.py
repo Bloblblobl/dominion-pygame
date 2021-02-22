@@ -4,6 +4,7 @@ import sys
 from threading import Thread
 
 message_queue = queue.Queue()
+keep_running = True
 
 
 def say(text):
@@ -36,7 +37,7 @@ else:
 
 def _process_messages():
     _init()
-    while True:
+    while keep_running:
         try:
             text = message_queue.get_nowait()
             _say(text)
@@ -47,3 +48,8 @@ def _process_messages():
 
 
 Thread(target=_process_messages).start()
+
+
+def shutdown():
+    global keep_running
+    keep_running = False

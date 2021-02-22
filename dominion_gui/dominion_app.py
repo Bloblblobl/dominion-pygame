@@ -11,7 +11,7 @@ from .constants import (
 
 sys.path.append(root_dir)
 
-from . import game_client, util
+from . import game_client, util, tts_util
 
 from .event_handler import EventHandler, MouseButton
 from .constants import screen_size, preloaded_fonts, min_screen_width, min_screen_height, \
@@ -25,7 +25,7 @@ from .ui_player import UIPlayer
 from .components import hand as hand_module
 
 # Replace for each player until we have a name selection in the UI
-player_name = 'Gigi'
+player_name = os.environ.get('DOMINION_PLAYER', 'Gigi')
 
 
 class DominionApp:
@@ -228,3 +228,4 @@ class DominionApp:
                 self.is_running = False
         pygame.quit()
         self.game_client.shutdown()
+        tts_util.shutdown()

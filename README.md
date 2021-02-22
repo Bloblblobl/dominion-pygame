@@ -33,7 +33,7 @@ https://github.com/the-gigi/dominion
 
 Once the local server is running type:
 ```
-PYTHONPATH=$PWD pipenv run python ./dominion_gui/main.py
+DOMINION_PLAYER=<your name> pipenv run python main.py
 ``` 
 
 You will play against Dominion AI players.
@@ -44,7 +44,7 @@ You will need to get the IP addresses of the remote server from the person
 running it. Then type:
 
 ```
-$ pipenv run python dominion_gui/main.py <server IP address>
+$ DOMINION_PLAYER=<your name> pipenv run python main.py <server IP address>
 ```
 
 
