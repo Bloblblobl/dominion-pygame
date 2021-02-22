@@ -3,25 +3,6 @@ import random
 from dominion_gui.components.default import get_default_layout
 from dominion_gui.ui_elements.label import Label
 
-import os
-import sys
-from threading import Thread
-
-if sys.platform == 'win32':
-    import pythoncom
-    import win32com.client
-
-    def _say(text):
-        pythoncom.CoInitialize()
-        speaker = win32com.client.Dispatch("SAPI.SpVoice")
-        speaker.Speak(text)
-
-    def say(text):
-        Thread(target=_say, args=(text,)).start()
-else:
-    def say(text):
-        Thread(target=lambda: os.system(f'say {text}')).start()
-
 dummy = None
 
 

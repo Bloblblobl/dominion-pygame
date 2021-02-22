@@ -1,6 +1,7 @@
 from dominion_gui.event_handler import EventHandler
 from dominion_gui.ui_elements.html_textbox import HTMLTextBox
-from dominion_gui.ui_util import (get_random_color, say)
+from dominion_gui.ui_util import get_random_color
+from dominion_gui.tts_util import say
 
 
 class MessageLog(HTMLTextBox, EventHandler):
