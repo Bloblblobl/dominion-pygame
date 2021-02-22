@@ -46,14 +46,14 @@ running it.
 The next step is to set up a few environment variables. On Mac type in a terminal:
 
 ```
-DOMINION_PLAYER='<your name>'
-DOMINION_HOST='<IP address of the remote server>'
+DOMINION_PLAYER=<your name>
+DOMINION_HOST=<IP address of the remote server>
 ```
 
 On Windows type in a PowerShell window:
 ```
-$env:DOMINION_PLAYER=<your name>
-$env:DOMINION_HOST=<IP address of the remote server>
+$env:DOMINION_PLAYER='<your name>'
+$env:DOMINION_HOST='<IP address of the remote server>'
 ```
 
 Now, you finally launch dominion itself:
