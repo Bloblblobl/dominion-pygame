@@ -100,6 +100,7 @@ class Response(UIElement, EventHandler):
             self.subscribe(card.image, 'on_click', self)
             self.subscribe(card.image, 'on_mouse_enter', self)
             self.subscribe(card.image, 'on_mouse_leave', self)
+        self.scroll_container.layout(only_if_changed=False)
 
     def kill(self):
         for card in self.card_view.cards:
