@@ -134,6 +134,8 @@ class DominionApp:
             self.player.on_state_change(data)
         elif action == 'ack':
             self.name = data['name']
+            data['event'] = 'ack'
+            self.player.on_game_event(data)
         else:
             print('Unknown message type:', action)
 

@@ -31,7 +31,22 @@ class MessageLog(HTMLTextBox, EventHandler):
 
     def on_custom_event(self, event):
         if isinstance(event, dict):
-            if event['event'] == 'game start':
+            if event['event'] == 'ack':
+                self.add_message(f'Connected to server successfully as {event["name"]}')
+                if len(event['players']) > 0:
+                    self.add_message('Current Players:')
+                    for player in event['players']:
+                        self.players[player] = get_random_color()
+                        self.add_message(player)
+                    self.add_message('-' * 10)
+                else:
+                    self.add_message('Waiting for other players...')
+
+            if event['event'] == 'player joined':
+                name = event['name']
+                self.add_message(f'{name} joined the game')
+
+            elif event['event'] == 'game start':
                 self.add_message('Game Started!')
                 self.add_message('Players:')
                 for player in event['player_names']:
