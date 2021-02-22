@@ -8,10 +8,16 @@ import sys
 from threading import Thread
 
 if sys.platform == 'win32':
+    import pythoncom
     import win32com.client
 
-    speaker = win32com.client.Dispatch("SAPI.SpVoice")
-    say = speaker.Speak
+    def _say(text):
+        pythoncom.CoInitialize()
+        speaker = win32com.client.Dispatch("SAPI.SpVoice")
+        speaker.Speak(text)
+
+    def say(text):
+        Thread(target=_say, args=(text,)).start()
 else:
     def say(text):
         Thread(target=lambda: os.system(f'say {text}')).start()
