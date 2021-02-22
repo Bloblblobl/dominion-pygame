@@ -20,7 +20,6 @@ class Hand(CardView):
         self.messages = []
         self.players = {}
         self.subscribe(owner=None, handler_name='on_custom_event')
-        self.your_turn = False
 
     def on_click(self, ui_element):
         card = ui_element.container

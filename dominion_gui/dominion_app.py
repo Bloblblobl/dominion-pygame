@@ -4,16 +4,12 @@ import sys
 import pygame
 import pygame_gui
 
-
 from .constants import (
     root_dir,
     images_dir
 )
 
 sys.path.append(root_dir)
-
-from .components.hand import your_turn
-
 
 from . import game_client, util
 
@@ -25,6 +21,8 @@ from .responder import Responder
 from .ui_manager import get_manager
 from .ui_factory import UI
 from .ui_player import UIPlayer
+
+from .components import hand as hand_module
 
 # Replace for each player until we have a name selection in the UI
 player_name = 'Gigi'
@@ -147,12 +145,7 @@ class DominionApp:
         except Exception as e:
             pass
 
-        if self.player is not None and self.player.pending_response is not None:
-            _, args = self.player.pending_response
-            Responder.get_instance().handle(args['action'], self.player.state, *args['args'])
-            self.player.pending_response = None
-
-        if self.player is None or self.player.state == self.state:
+        if self.player is None or (self.player.state == self.state and self.player.pending_response is None):
             return
 
         actions = self.player.state['actions']
@@ -174,7 +167,7 @@ class DominionApp:
         self.ui.play_area.scrollable.cards = play_area_cards
         self.ui.play_area.layout(only_if_changed=False)
 
-        if your_turn:
+        if hand_module.your_turn:
             f = f'card.type == "Action" and {actions == 0}'
             disabled_hand_cards = util.filter_card_names(hand_cards, f)
         else:
@@ -184,7 +177,16 @@ class DominionApp:
         self.ui.hand.scrollable.cards = hand_cards
         self.ui.hand.layout(only_if_changed=False)
 
+        self.handle_response()
         self.state = self.player.state
+
+    def handle_response(self):
+        if self.player.pending_response is None:
+            return
+
+        _, args = self.player.pending_response
+        Responder.get_instance().handle(args['action'], self.player.state, *args['args'])
+        self.player.pending_response = None
 
     def main_loop(self, manager, events):
         time_delta = self.clock.tick(60) / 1000.0
