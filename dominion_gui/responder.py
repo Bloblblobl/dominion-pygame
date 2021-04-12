@@ -1,6 +1,7 @@
 from dominion_gui import util
 from dominion_gui.components.responses.artisan_response import ArtisanResponse
 from dominion_gui.components.responses.bandit_response import BanditResponse
+from dominion_gui.components.responses.bureaucrat_response import BureaucratResponse
 from dominion_gui.components.responses.cellar_response import CellarResponse
 from dominion_gui.components.responses.chapel_response import ChapelResponse
 from dominion_gui.components.responses.harbinger_response import HarbingerResponse
@@ -54,6 +55,15 @@ class Responder:
                                    tab_button_width=tab_button_width,
                                    tab_factory=BanditResponse,
                                    card_names=args[0])
+        self.tab_container.select_tab(name='Response')
+
+    def handle_bureaucrat(self, state, *args):
+        card_names = [util.get_card_name(card['name']) for card in state['hand']]
+        card_names = util.filter_card_names(card_names, 'card.type == "Victory"')
+        self.tab_container.add_tab(name='Response',
+                                   tab_button_width=tab_button_width,
+                                   tab_factory=BureaucratResponse,
+                                   card_names=card_names)
         self.tab_container.select_tab(name='Response')
 
     def handle_cellar(self, state, *args):
